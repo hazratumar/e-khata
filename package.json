@@ -1,0 +1,17 @@
+{
+	"name": "e-khata",
+	"version": "1.0.0",
+	"description": "",
+	"main": "./client/index.js",
+	"scripts": {
+		"dev": "concurrently \"cd server && pnpm start:dev\" \" cd client && pnpm dev\" ",
+		"build": "concurrently \"cd server && pnpm build\" \"cd client && pnpm build\" ",
+		"start": "concurrently \"cd server && pnpm start\" \"cd client &&  pnpm start\" ",
+		"lint": "concurrently \"cd server && pnpm lint\" \"cd client && pnpm lint\" "
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"concurrently": "^7.5.0"
+	}
+}
