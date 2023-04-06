@@ -12,7 +12,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   name: string;
 
   @Column({ unique: true })
@@ -40,9 +40,6 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @Column({ nullable: true })
-  otp: string;
-
   @CreateDateColumn({
     type: "timestamp with time zone",
     default: () => "CURRENT_TIMESTAMP",
@@ -54,4 +51,8 @@ export class User {
     default: () => "CURRENT_TIMESTAMP",
   })
   updatedAt: Date;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }
