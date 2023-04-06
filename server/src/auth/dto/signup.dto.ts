@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
 
-export class CreateUserDto {
+export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -23,7 +23,4 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   provider: 'email';
-
-  @IsString()
-  refreshToken?: string;
 }
