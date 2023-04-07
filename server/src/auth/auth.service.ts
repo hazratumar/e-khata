@@ -21,7 +21,6 @@ export class AuthService {
     return tokens;
   }
 
-
   async signin(dto: SignInDto): Promise<Tokens> {
     const user = await this.userService.findByEmail(dto.email);
 
@@ -34,7 +33,7 @@ export class AuthService {
   }
 
   async signout(id: number): Promise<boolean> {
-    await this.userService.findOne(id);
+    await this.userService.findOne(id);//--------------->
     await this.userService.update(id, { refreshToken: null })
     return true;
   }
@@ -53,6 +52,24 @@ export class AuthService {
     return tokens;
   }
 
+  async forgetPassword(email: string, oldPassword: string, newPassword: string): Promise<Tokens> {
+    const user = await this.userService.findByEmail(email);
+    const oldPasswordMatches = await argon.verify(user.password, oldPassword);
+
+    if (!oldPasswordMatches) {
+      throw new ForbiddenException('Your old password is incorrect. Please try again.');
+    }
+
+    const hash = await argon.hash(newPassword);
+    await this.userService.update(user.id, { password: hash });
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRtHash(user.id, tokens.refresh_token);
+
+    return tokens;
+  }
+
+
   async updateRtHash(userId: number, rt: string): Promise<void> {
     const hash = await argon.hash(rt);
     await this.userService.update(userId, { refreshToken: hash });
@@ -66,11 +83,11 @@ export class AuthService {
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
-        secret: "AT_SECRET",
+        secret: process.env.AT_SECRET,
         expiresIn: '15m',
       }),
       this.jwtService.signAsync(jwtPayload, {
-        secret: "RT_SECRET",
+        secret: process.env.RT_SECRET,
         expiresIn: '7d',
       }),
     ]);

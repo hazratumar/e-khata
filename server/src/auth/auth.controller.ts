@@ -3,12 +3,14 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 
 import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
-import { RtGuard } from '../common/guards';
+import { AtGuard, RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { Tokens } from './types';
 import { SignInDto, SignUpDto } from './dto';
@@ -46,5 +48,16 @@ export class AuthController {
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<Tokens> {
     return this.authService.refreshTokens(userId, refreshToken);
+  }
+
+  @Public()
+  @Put('forget')
+  @HttpCode(HttpStatus.OK)
+  forgetPassword(
+    @Body('email') email: string,
+    @Body('oldPassword') oldPassword: string,
+    @Body('newPassword') newPassword: string,
+  ): Promise<Tokens> {
+    return this.authService.forgetPassword(email, oldPassword, newPassword);
   }
 }
