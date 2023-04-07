@@ -5,6 +5,8 @@ import { AtGuard } from './common/guards';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
+import { CustomersModule } from './customers/customers.module';
+import { Customer } from './customers/entities/customer.entity';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -14,10 +16,10 @@ import { User } from './users/entities/user.entity';
     username: "postgres",
     password: "1234",
     database: "e-khata",
-    entities: [User],
+    entities: [User, Customer],
     synchronize: true,
   }),
-  TypeOrmModule.forFeature([User]), AuthModule, UsersModule],
+  TypeOrmModule.forFeature([User]), AuthModule, UsersModule, CustomersModule],
   providers: [
     {
       provide: APP_GUARD,
