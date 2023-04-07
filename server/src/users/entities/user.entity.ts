@@ -40,6 +40,9 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
+  @Column({ nullable: true })
+  otp: string;
+
   @CreateDateColumn({
     type: "timestamp with time zone",
     default: () => "CURRENT_TIMESTAMP",

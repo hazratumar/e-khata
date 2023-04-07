@@ -51,7 +51,7 @@ export class AuthController {
   }
 
   @Public()
-  @Put('forget')
+  @Put('change')
   @HttpCode(HttpStatus.OK)
   changePassword(
     @Body('email') email: string,
@@ -59,5 +59,19 @@ export class AuthController {
     @Body('newPassword') newPassword: string,
   ): Promise<Tokens> {
     return this.authService.changePassword(email, oldPassword, newPassword);
+  }
+
+  @Public()
+  @Put('forget')
+  @HttpCode(HttpStatus.OK)
+  sendOTP(@Body('email') email: string): Promise<string> {
+    return this.authService.sendOTP(email);
+  }
+
+  @Public()
+  @Post('forget')
+  @HttpCode(HttpStatus.OK)
+  submitOTP(@Body('email') email: string, @Body('otp') otp: string): Promise<Tokens> {
+    return this.authService.submitOTP(email, otp);
   }
 }
