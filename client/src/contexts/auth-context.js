@@ -124,30 +124,6 @@ export const AuthProvider = (props) => {
     });
   };
 
-  const signIn = async (email, password) => {
-    if (email !== "demo@devias.io" || password !== "Password123!") {
-      throw new Error("Please check your email and password");
-    }
-
-    try {
-      window.sessionStorage.setItem("authenticated", "true");
-    } catch (err) {
-      console.error(err);
-    }
-
-    const user = {
-      id: "5e86809283e28b96d2d38537",
-      avatar: "/assets/avatars/avatar-anika-visser.png",
-      name: "Anika Visser",
-      email: "anika.visser@devias.io",
-    };
-
-    dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user,
-    });
-  };
-
   const signUp = async (email, name, password) => {
     throw new Error("Sign up is not implemented");
   };
@@ -163,7 +139,6 @@ export const AuthProvider = (props) => {
       value={{
         ...state,
         skip,
-        signIn,
         signUp,
         signOut,
       }}

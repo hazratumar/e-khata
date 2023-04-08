@@ -3,7 +3,6 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
   Put,
   UseGuards,
@@ -13,7 +12,7 @@ import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
 import { AtGuard, RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { Tokens } from './types';
-import { SignInDto, SignUpDto } from './dto';
+import { LoginDto, SignUpDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,21 +21,21 @@ export class AuthController {
   @Public()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  signup(@Body() dto: SignUpDto): Promise<Tokens> {
-    return this.authService.signup(dto);
+  signup(@Body() body: SignUpDto): Promise<Tokens> {
+    return this.authService.signup(body);
   }
 
   @Public()
-  @Post('signin')
+  @Post('login')
   @HttpCode(HttpStatus.OK)
-  signin(@Body() dto: SignInDto): Promise<Tokens> {
-    return this.authService.signin(dto);
+  login(@Body() body: LoginDto): Promise<Tokens> {
+    return this.authService.login(body);
   }
 
-  @Post('signout')
+  @Post('logout')
   @HttpCode(HttpStatus.OK)
-  signout(@GetCurrentUserId() userId: number): Promise<boolean> {
-    return this.authService.signout(userId);
+  logout(@GetCurrentUserId() userId: number): Promise<boolean> {
+    return this.authService.logout(userId);
   }
 
   @Public()

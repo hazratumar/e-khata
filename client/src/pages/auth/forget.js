@@ -1,26 +1,20 @@
-import { useState } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
-import {
-  Box,
-  Button,
-  Link,
-  Stack,
-  TextField,
-  Typography,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
+import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { useState } from "react";
 
 const Page = () => {
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(!show);
+  const [send, setSend] = useState(true);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSend(!send);
+  };
   return (
     <>
       <Head>
-        <title>Login | User </title>
+        <title>Forget Password | User</title>
       </Head>
       <Box
         sx={{
@@ -34,12 +28,13 @@ const Page = () => {
         <Box sx={{ maxWidth: 550, px: 3, py: "100px", width: "100%" }}>
           <div>
             <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="h4"> Login </Typography>
+              <Typography variant="h4">Forget Password</Typography>
               <Typography color="text.secondary" variant="body2">
-                Don&apos;t have an account? &nbsp;
+                No problem, you can reset it using our password recovery feature. If you don't have
+                an account yet, you can easily create one by registering with us.&nbsp;
                 <Link
                   component={NextLink}
-                  href="/auth/signup"
+                  href="/auth/register"
                   underline="hover"
                   variant="subtitle2"
                 >
@@ -47,31 +42,20 @@ const Page = () => {
                 </Link>
               </Typography>
             </Stack>
-            <form>
+            <form onSubmit={handleSubmit}>
               <Stack spacing={3}>
-                <TextField fullWidth label="Email Address" name="email" type="email" />
-                <TextField
-                  fullWidth
-                  label="Password"
-                  name="password"
-                  type={show ? "text" : "password"}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={handleShow}>
-                          {show ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+                {send ? (
+                  <TextField fullWidth label="Email Address" name="email" type="email" />
+                ) : (
+                  <TextField fullWidth label="One Time Password" name="otp" type="text" />
+                )}
               </Stack>
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
-                Login
+                {send ? "Send OTP" : "Verify OTP"}
               </Button>
-              <Link component={NextLink} href="/auth/forget" underline="none">
+              <Link component={NextLink} href="/auth/login" underline="none">
                 <Button fullWidth size="large" sx={{ mt: 3 }}>
-                  Forget Password
+                  Login
                 </Button>
               </Link>
             </form>

@@ -2,7 +2,7 @@ import { ForbiddenException, HttpException, HttpStatus, Injectable, InternalServ
 import { JwtService } from '@nestjs/jwt';
 import * as argon from 'argon2';
 
-import { SignInDto, SignUpDto } from './dto';
+import { LoginDto, SignUpDto } from './dto';
 import { JwtPayload, Tokens } from './types';
 import { UsersService } from 'src/users/users.service';
 import { nodemailer } from 'nodemailer';
@@ -22,7 +22,7 @@ export class AuthService {
     return tokens;
   }
 
-  async signin(dto: SignInDto): Promise<Tokens> {
+  async login(dto: LoginDto): Promise<Tokens> {
     const user = await this.userService.findByEmail(dto.email);
 
     const passwordMatches = await argon.verify(user.password, dto.password);
@@ -33,7 +33,7 @@ export class AuthService {
     return tokens;
   }
 
-  async signout(id: number): Promise<boolean> {
+  async logout(id: number): Promise<boolean> {
     await this.userService.findOne(id);//--------------->
     await this.userService.update(id, { refreshToken: null })
     return true;

@@ -17,6 +17,7 @@
     "@emotion/server": "11.10.0",
     "@emotion/styled": "11.10.6",
     "@heroicons/react": "2.0.16",
+    "@material-ui/icons": "^4.11.3",
     "@mui/lab": "5.0.0-alpha.120",
     "@mui/material": "5.11.10",
     "@mui/system": "5.11.9",
@@ -25,12 +26,14 @@
     "apexcharts": "3.37.0",
     "date-fns": "2.29.3",
     "formik": "2.2.9",
+    "jwt-decode": "^3.1.2",
     "next": "13.1.6",
     "nprogress": "0.2.0",
     "prop-types": "15.8.1",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.4.0",
     "react-redux": "^8.0.5",
     "simplebar-react": "^3.2.3",
     "yup": "1.0.0"
@@ -42,6 +45,7 @@
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
     "eslint": "8.34.0",
-    "eslint-config-next": "13.1.6"
+    "eslint-config-next": "13.1.6",
+    "typescript": "^5.0.4"
   }
 }
