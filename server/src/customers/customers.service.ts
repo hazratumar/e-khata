@@ -4,15 +4,19 @@ import { Repository } from 'typeorm';
 import { Customer } from './entities/customer.entity';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class CustomersService {
     constructor(
         @InjectRepository(Customer)
         private readonly customerRepository: Repository<Customer>,
+        private readonly usersService: UsersService,
     ) { }
 
-    async create(customer: CreateCustomerDto): Promise<Customer> {
+    async create(userId, createCustomerDto: CreateCustomerDto): Promise<Customer> {
+        const user = await this.usersService.findOne(userId)
+        const customer = { ...createCustomerDto, user }
         return await this.customerRepository.save(customer);
     }
 
@@ -57,7 +61,7 @@ export class CustomersService {
         return customer;
     }
 
-    async update(id: number, customer: UpdateCustomerDto): Promise<Customer> {
+    async update(id: number, userId: number, customer: UpdateCustomerDto): Promise<Customer> {
         // Input validation
         if (!customer || Object.keys(customer).length === 0) {
             throw new HttpException('Invalid customer data', HttpStatus.BAD_REQUEST);

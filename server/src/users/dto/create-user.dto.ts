@@ -25,5 +25,13 @@ export class CreateUserDto {
   provider: 'email';
 
   @IsString()
+  @IsNotEmpty()
+  role: "Super Admin" | "Admin";
+
+  @IsString()
+  @IsNotEmpty()
+  status: "Pending" | "Active" | "Disable" | "Delete";
+
+  @IsString()
   refreshToken?: string;
 }

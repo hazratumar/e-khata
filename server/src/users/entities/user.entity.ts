@@ -1,8 +1,13 @@
 import { Exclude } from "class-transformer";
+import { Currency } from "src/currency/entities/currency.entity";
+import { Customer } from "src/customers/entities/customer.entity";
+import { Transaction } from "src/transactions/entities/transaction.entity";
+
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -42,6 +47,15 @@ export class User {
 
   @Column({ nullable: true })
   otp: string;
+
+  @OneToMany(() => Customer, (customer) => customer.user)
+  customers: Customer[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transactions: Transaction[];
+
+  @OneToMany(() => Currency, (currency) => currency.user)
+  currency: Currency[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",

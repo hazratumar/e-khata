@@ -23,4 +23,12 @@ export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   provider: 'email';
+
+  @IsString()
+  @IsNotEmpty()
+  role: "Super Admin" | "Admin";
+
+  @IsString()
+  @IsNotEmpty()
+  status: "Pending" | "Active" | "Disable" | "Delete";
 }

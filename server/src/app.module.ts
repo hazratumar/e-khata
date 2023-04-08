@@ -7,19 +7,30 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { CustomersModule } from './customers/customers.module';
 import { Customer } from './customers/entities/customer.entity';
+import { CurrencyModule } from './currency/currency.module';
+import { TransactionsModule } from './transactions/transactions.module';
+import { Transaction } from './transactions/entities/transaction.entity';
+import { Currency } from './currency/entities/currency.entity';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
-    type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    password: "1234",
-    database: "e-khata",
-    entities: [User, Customer],
-    synchronize: true,
-  }),
-  TypeOrmModule.forFeature([User]), AuthModule, UsersModule, CustomersModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: '1234',
+      database: 'e-khata',
+      entities: [User, Customer, Transaction, Currency],
+      synchronize: true,
+    }),
+    TypeOrmModule.forFeature([User, Customer, Transaction, Currency]),
+    AuthModule,
+    UsersModule,
+    CustomersModule,
+    CurrencyModule,
+    TransactionsModule,
+  ],
   providers: [
     {
       provide: APP_GUARD,
