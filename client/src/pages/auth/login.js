@@ -26,7 +26,7 @@ const Page = () => {
     email: "",
     password: "",
   });
-  const [logIn, res] = useLogInMutation();
+  const [logIn, { isSuccess, isLoading, error, data }] = useLogInMutation();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,19 +42,19 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (res?.isSuccess) {
-      dispatch(setToken(res?.data));
+    if (isSuccess) {
+      dispatch(setToken(data));
       router.push("/");
-      console.log("SignUp res", res);
+      console.log("SignUp data", data);
     }
     if (res?.error) {
-      const errorMessage = Array.isArray(res.error.data.message)
-        ? res.error.data.message[0]
-        : res.error.data.message;
+      const errorMessage = Array.isArray(error.data.message)
+        ? error.data.message[0]
+        : error.data.message;
       toast.error(errorMessage);
-      console.log("Error Message", res.error.data);
+      console.log("Error Message", error.data);
     }
-  }, [res]);
+  }, [isSuccess]);
   const handleShow = () => setShow(!show);
 
   return (

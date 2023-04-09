@@ -10,14 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 export const AccountPopover = (props) => {
   const dispatch = useDispatch();
 
-  const { anchorEl, onClose, open } = props;
+  const { anchorEl, onClose, open, user } = props;
   const [logOut, res] = useLogOutMutation();
   const handleSignOut = async () => {
     await logOut();
   };
-  const {
-    user: { name, role },
-  } = useSelector((state) => state.authReducer);
+
   useEffect(() => {
     if (res?.isSuccess) {
       dispatch(removeToken("AT_Token"));
@@ -49,9 +47,9 @@ export const AccountPopover = (props) => {
           px: 2,
         }}
       >
-        <Typography variant="overline">{name}</Typography>
+        <Typography variant="overline">{user?.name}</Typography>
         <Typography color="text.secondary" variant="body2">
-          {role}
+          {user?.role}
         </Typography>
       </Box>
       <MenuList
@@ -64,7 +62,7 @@ export const AccountPopover = (props) => {
           },
         }}
       >
-        <MenuItem onClick={() => router.push("/account")}>User Account</MenuItem>
+        <MenuItem onClick={() => router.push("/account")}>Account Settings</MenuItem>
         <Divider />
         <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
       </MenuList>

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -10,46 +10,54 @@ import {
   TextField,
   Unstable_Grid2 as Grid,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../store/reducers/authSlice";
+import { useUpdateUserMutation } from "../../store/services/userService";
+import { toast } from "react-hot-toast";
 
-const states = [
-  {
-    value: "alabama",
-    label: "Alabama",
-  },
-  {
-    value: "new-york",
-    label: "New York",
-  },
-  {
-    value: "san-francisco",
-    label: "San Francisco",
-  },
-  {
-    value: "los-angeles",
-    label: "Los Angeles",
-  },
-];
-
-export const AccountProfileDetails = () => {
-  const [values, setValues] = useState({
-    firstName: "Anika",
-    lastName: "Visser",
-    email: "demo@devias.io",
-    phone: "",
-    state: "los-angeles",
-    country: "USA",
+export const AccountProfileDetails = ({ user }) => {
+  const [formValues, setFormValues] = useState({
+    name: user?.name,
+    username: user?.username,
+    email: user?.email,
   });
 
-  const handleChange = useCallback((event) => {
-    setValues((prevState) => ({
-      ...prevState,
-      [event.target.name]: event.target.value,
-    }));
-  }, []);
+  const [updateUser, { isSuccess, isLoading, error, data }] = useUpdateUserMutation();
 
-  const handleSubmit = useCallback((event) => {
-    event.preventDefault();
-  }, []);
+  const dispatch = useDispatch();
+
+  const handleChange = useCallback(
+    (e) => {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [setFormValues]
+  );
+
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      await updateUser(formValues);
+    },
+    [formValues, updateUser]
+  );
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setToken(data));
+      toast.success("Your data successfully updated");
+      console.log("Update User", data);
+    }
+    if (error) {
+      const errorMessage = Array.isArray(error.data.message)
+        ? error.data.message[0]
+        : error.data.message;
+      toast.error(errorMessage);
+      console.log("Error Message", error.data);
+    }
+  }, [isSuccess, error, data, dispatch]);
 
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit}>
@@ -61,22 +69,22 @@ export const AccountProfileDetails = () => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  helperText="Please specify the first name"
-                  label="First name"
-                  name="firstName"
+                  helperText="Please specify the full name"
+                  label="Full name"
+                  name="name"
                   onChange={handleChange}
                   required
-                  value={values.firstName}
+                  value={formValues.name}
                 />
               </Grid>
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Last name"
-                  name="lastName"
+                  label="Username"
+                  name="username"
                   onChange={handleChange}
                   required
-                  value={values.lastName}
+                  value={formValues.username}
                 />
               </Grid>
               <Grid xs={12} md={6}>
@@ -86,53 +94,17 @@ export const AccountProfileDetails = () => {
                   name="email"
                   onChange={handleChange}
                   required
-                  value={values.email}
+                  value={formValues.email}
                 />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Phone Number"
-                  name="phone"
-                  onChange={handleChange}
-                  type="number"
-                  value={values.phone}
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Country"
-                  name="country"
-                  onChange={handleChange}
-                  required
-                  value={values.country}
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Select State"
-                  name="state"
-                  onChange={handleChange}
-                  required
-                  select
-                  SelectProps={{ native: true }}
-                  value={values.state}
-                >
-                  {states.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
               </Grid>
             </Grid>
           </Box>
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained"> Save details </Button>
+          <Button variant="contained" type="submit">
+            {isLoading ? "Loading..." : "Save details"}
+          </Button>
         </CardActions>
       </Card>
     </form>

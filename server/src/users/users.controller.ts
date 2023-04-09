@@ -6,10 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { GetCurrentUserId } from "src/common/decorators";
+
 
 @Controller("users")
 export class UsersController {
@@ -34,8 +39,9 @@ export class UsersController {
   }
 
   // Update an existing user
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
+  @Put()
+  @HttpCode(HttpStatus.OK)
+  update(@GetCurrentUserId() id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
