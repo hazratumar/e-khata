@@ -5,7 +5,7 @@ import * as argon from 'argon2';
 import { LoginDto, SignUpDto } from './dto';
 import { JwtPayload, Tokens } from './types';
 import { UsersService } from 'src/users/users.service';
-import { nodemailer } from 'nodemailer';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +17,7 @@ export class AuthService {
 
   async signup(dto: SignUpDto): Promise<Tokens> {
     const user = await this.userService.create(dto);
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user);
     await this.updateRtHash(user.id, tokens.refresh_token);
     return tokens;
   }
@@ -28,13 +28,13 @@ export class AuthService {
     const passwordMatches = await argon.verify(user.password, dto.password);
     if (!passwordMatches) throw new ForbiddenException('Authentication failed - incorrect password');
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user);
     await this.updateRtHash(user.id, tokens.refresh_token);
     return tokens;
   }
 
   async logout(id: number): Promise<boolean> {
-    await this.userService.findOne(id);//--------------->
+    await this.userService.findOne(id);
     await this.userService.update(id, { refreshToken: null })
     return true;
   }
@@ -47,7 +47,7 @@ export class AuthService {
     const rtMatches = await argon.verify(user.refreshToken, rt);
     if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user);
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;
@@ -64,7 +64,7 @@ export class AuthService {
     const hash = await argon.hash(newPassword);
     await this.userService.update(user.id, { password: hash });
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user);
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;
@@ -147,7 +147,7 @@ export class AuthService {
 
     await this.userService.update(user.id, { otp: null });
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user);
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;
@@ -159,10 +159,15 @@ export class AuthService {
     await this.userService.update(userId, { refreshToken: hash });
   }
 
-  async getTokens(userId: number, email: string): Promise<Tokens> {
+  async getTokens(user: User): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
-      sub: userId,
-      email: email,
+      sub: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      image: user.image,
     };
 
     const [at, rt] = await Promise.all([

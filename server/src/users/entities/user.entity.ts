@@ -26,10 +26,10 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ default: "Admin" })
   role: "Super Admin" | "Admin";
 
-  @Column()
+  @Column({ default: "Pending" })
   status: "Pending" | "Active" | "Disable" | "Delete";
 
   @Column({ nullable: true })
@@ -38,9 +38,6 @@ export class User {
 
   @Column({ nullable: true })
   image: string;
-
-  @Column()
-  provider: "email" | "google";
 
   @Column({ nullable: true })
   refreshToken: string;

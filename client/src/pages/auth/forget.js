@@ -6,10 +6,23 @@ import { useState } from "react";
 
 const Page = () => {
   const [send, setSend] = useState(true);
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    console.log(email);
+  };
+
+  const handleOtpChange = (e) => {
+    setOtp(e.target.value);
+    console.log(otp);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSend(!send);
+    console.log(send);
   };
   return (
     <>
@@ -34,20 +47,34 @@ const Page = () => {
                 an account yet, you can easily create one by registering with us.&nbsp;
                 <Link
                   component={NextLink}
-                  href="/auth/register"
+                  href="/auth/signup"
                   underline="hover"
                   variant="subtitle2"
                 >
-                  Register
+                  SignUp
                 </Link>
               </Typography>
             </Stack>
             <form onSubmit={handleSubmit}>
               <Stack spacing={3}>
                 {send ? (
-                  <TextField fullWidth label="Email Address" name="email" type="email" />
+                  <TextField
+                    fullWidth
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    onChange={handleEmailChange}
+                    value={email}
+                  />
                 ) : (
-                  <TextField fullWidth label="One Time Password" name="otp" type="text" />
+                  <TextField
+                    fullWidth
+                    label="One Time Password"
+                    name="otp"
+                    type="text"
+                    onChange={handleOtpChange}
+                    value={otp}
+                  />
                 )}
               </Stack>
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">

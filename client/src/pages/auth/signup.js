@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 import {
@@ -13,10 +13,51 @@ import {
 } from "@mui/material";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { useSignUpMutation } from "../../store/services/authService";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../store/reducers/authSlice";
+import toast from "react-hot-toast";
+import router from "next/router";
 
 const Page = () => {
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
+  const [formValues, setFormValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+    username: "",
+  });
+  const [signUp, res] = useSignUpMutation();
+
   const handleShow = () => setShow(!show);
+
+  const handleChange = (e) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await signUp(formValues);
+  };
+
+  useEffect(() => {
+    if (res?.isSuccess) {
+      dispatch(setToken(res?.data));
+      router.push("/");
+      console.log("SignUp res", res);
+    }
+    if (res?.error) {
+      const errorMessage = Array.isArray(res.error.data.message)
+        ? res.error.data.message[0]
+        : res.error.data.message;
+      toast.error(errorMessage);
+      console.log("Error Message", res.error.data);
+    }
+  }, [res]);
 
   return (
     <>
@@ -49,10 +90,30 @@ const Page = () => {
                 </Link>
               </Typography>
             </Stack>
-            <form>
+            <form onSubmit={handleSubmit}>
               <Stack spacing={3}>
-                <TextField fullWidth label="Name" name="name" />
-                <TextField fullWidth label="Email Address" name="email" type="email" />
+                <TextField
+                  fullWidth
+                  label="Name"
+                  name="name"
+                  value={formValues.name}
+                  onChange={handleChange}
+                />
+                <TextField
+                  fullWidth
+                  label="Username"
+                  name="username"
+                  value={formValues.username}
+                  onChange={handleChange}
+                />
+                <TextField
+                  fullWidth
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  value={formValues.email}
+                  onChange={handleChange}
+                />
                 <TextField
                   fullWidth
                   label="Password"
@@ -67,6 +128,8 @@ const Page = () => {
                       </InputAdornment>
                     ),
                   }}
+                  value={formValues.password}
+                  onChange={handleChange}
                 />
               </Stack>
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 import {
@@ -13,10 +13,50 @@ import {
 } from "@mui/material";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { useLogInMutation } from "../../store/services/authService";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../store/reducers/authSlice";
+import router from "next/router";
+import toast from "react-hot-toast";
 
 const Page = () => {
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+  });
+  const [logIn, res] = useLogInMutation();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await logIn(formValues);
+  };
+
+  useEffect(() => {
+    if (res?.isSuccess) {
+      dispatch(setToken(res?.data));
+      router.push("/");
+      console.log("SignUp res", res);
+    }
+    if (res?.error) {
+      const errorMessage = Array.isArray(res.error.data.message)
+        ? res.error.data.message[0]
+        : res.error.data.message;
+      toast.error(errorMessage);
+      console.log("Error Message", res.error.data);
+    }
+  }, [res]);
   const handleShow = () => setShow(!show);
+
   return (
     <>
       <Head>
@@ -43,13 +83,20 @@ const Page = () => {
                   underline="hover"
                   variant="subtitle2"
                 >
-                  Register
+                  SignUp
                 </Link>
               </Typography>
             </Stack>
-            <form>
+            <form onSubmit={handleSubmit}>
               <Stack spacing={3}>
-                <TextField fullWidth label="Email Address" name="email" type="email" />
+                <TextField
+                  fullWidth
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  value={formValues.email}
+                  onChange={handleInputChange}
+                />
                 <TextField
                   fullWidth
                   label="Password"
@@ -64,6 +111,8 @@ const Page = () => {
                       </InputAdornment>
                     ),
                   }}
+                  value={formValues.password}
+                  onChange={handleInputChange}
                 />
               </Stack>
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
