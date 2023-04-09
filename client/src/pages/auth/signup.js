@@ -26,6 +26,7 @@ const Page = () => {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
     username: "",
   });
   const [signUp, { isSuccess, isLoading, error, data }] = useSignUpMutation();
@@ -131,9 +132,26 @@ const Page = () => {
                   value={formValues.password}
                   onChange={handleChange}
                 />
+                <TextField
+                  fullWidth
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  type={show ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleShow}>
+                          {show ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  value={formValues.confirmPassword}
+                  onChange={handleChange}
+                />
               </Stack>
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
-                SignUp
+                {isLoading ? "Loading..." : "SignUp"}
               </Button>
             </form>
           </div>

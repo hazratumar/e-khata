@@ -16,6 +16,8 @@ import { useUpdateUserMutation } from "../../store/services/userService";
 import { toast } from "react-hot-toast";
 
 export const AccountProfileDetails = ({ user }) => {
+  const dispatch = useDispatch();
+
   const [formValues, setFormValues] = useState({
     name: user?.name,
     username: user?.username,
@@ -23,8 +25,6 @@ export const AccountProfileDetails = ({ user }) => {
   });
 
   const [updateUser, { isSuccess, isLoading, error, data }] = useUpdateUserMutation();
-
-  const dispatch = useDispatch();
 
   const handleChange = useCallback(
     (e) => {

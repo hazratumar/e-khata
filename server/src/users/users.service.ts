@@ -1,15 +1,18 @@
 import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { Not, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as argon from 'argon2';
 import { AuthService } from "src/auth/auth.service";
 import { Tokens } from "src/auth/types";
+import { extname } from 'path';
 
 @Injectable()
 export class UsersService {
+  private readonly allowedExtensions = ['.jpg', '.jpeg', '.png'];
+  private readonly maxFileSizeInBytes = 5242880; // 5 MB
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -90,7 +93,27 @@ export class UsersService {
     return this.userRepository.save(updatedUser);
   }
 
+  validateBase64Image(image: string): void {
+    const base64regex = /^data:image\/(png|jpg|jpeg);base64,/;
+    if (!base64regex.test(image)) {
+      throw new HttpException('Invalid image format', HttpStatus.BAD_REQUEST);
+    }
+
+    const ext = extname(image.split(';')[0].split('/')[1]);
+    if (!this.allowedExtensions.includes(ext)) {
+      throw new HttpException('Invalid image type', HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    const sizeInBytes = Buffer.byteLength(image, 'base64');
+    if (sizeInBytes > this.maxFileSizeInBytes) {
+      throw new HttpException(`Image size exceeds ${this.maxFileSizeInBytes} bytes`, HttpStatus.PAYLOAD_TOO_LARGE);
+    }
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto): Promise<Tokens> {
+    if (updateUserDto?.image) {
+      await this.validateBase64Image(updateUserDto?.image)
+    }
     // Find the existing user in the database
     const existingUser = await this.userRepository.findOne({ where: { id } });
     if (!existingUser) {

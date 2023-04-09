@@ -10,8 +10,14 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../store/reducers/authSlice";
+import { useUpdateUserMutation } from "../../store/services/userService";
+import { toast } from "react-hot-toast";
 
 export const AccountProfile = () => {
+  const dispatch = useDispatch();
+
   const user = useSelector((state) => state.authReducer.user);
   const [state, setState] = useState({
     name: user?.name,
@@ -19,21 +25,43 @@ export const AccountProfile = () => {
     email: user?.email,
     image: user?.image,
   });
+
+  const [updateUser, { isSuccess, isLoading, error, data }] = useUpdateUserMutation();
+
   useEffect(() => {
     setState(user);
   }, [user]);
 
-  const handleImage = (e) => {
+  const handleImage = async (e) => {
+    await updateUser(state);
+
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        setImage(reader.result);
+        setState({
+          ...state,
+          image: reader.result,
+        });
       };
     }
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setToken(data));
+      toast.success("Picture successfully uploaded");
+      console.log("Update User", data);
+    }
+    if (error) {
+      const errorMessage = Array.isArray(error.data.message)
+        ? error.data.message[0]
+        : error.data.message;
+      toast.error(errorMessage);
+      console.log("Error Message", error.data);
+    }
+  }, [isSuccess, error, data, dispatch]);
   return (
     <Card>
       <CardContent>
@@ -74,7 +102,7 @@ export const AccountProfile = () => {
             onChange={handleImage}
           />
           <Button fullWidth component="span">
-            Upload Picture
+            {isLoading ? "Uploading..." : "Upload Picture"}
           </Button>
         </label>
       </CardActions>

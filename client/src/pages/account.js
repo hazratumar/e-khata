@@ -4,7 +4,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { AccountProfile } from "src/sections/account/account-profile";
 import { AccountProfileDetails } from "src/sections/account/account-profile-details";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const Page = () => {
   const { user } = useSelector((state) => state.authReducer);
   const [state, setState] = useState({
@@ -12,6 +12,18 @@ const Page = () => {
     username: user?.username,
     email: user?.email,
     image: user?.image,
+  });
+  useEffect(() => {
+    setState(
+      {
+        ...state,
+        name: user?.name,
+        username: user?.username,
+        email: user?.email,
+        image: user?.image,
+      },
+      [user]
+    );
   });
   return (
     <>

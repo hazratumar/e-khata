@@ -47,7 +47,7 @@ const Page = () => {
       router.push("/");
       console.log("SignUp data", data);
     }
-    if (res?.error) {
+    if (error) {
       const errorMessage = Array.isArray(error.data.message)
         ? error.data.message[0]
         : error.data.message;
