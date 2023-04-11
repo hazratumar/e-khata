@@ -37,7 +37,7 @@
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
-    "typeorm": "^0.3.13",
+    "typeorm": "^0.3.14",
     "webpack": "^5.78.0"
   },
   "devDependencies": {
@@ -49,8 +49,8 @@
     "@types/node": "18.15.11",
     "@types/passport-jwt": "^3.0.8",
     "@types/supertest": "^2.0.12",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",

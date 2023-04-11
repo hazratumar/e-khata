@@ -13,14 +13,11 @@ export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, user } = props;
   const [state, setState] = useState(user);
   useEffect(() => {
-    setState(
-      {
-        ...state,
-        ...user,
-      },
-      [user]
-    );
-  });
+    setState({
+      ...state,
+      ...user,
+    });
+  }, [user]);
   const [logOut, { isSuccess, data, error, isLoading }] = useLogOutMutation();
   const handleSignOut = async () => {
     await logOut();
