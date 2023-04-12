@@ -3,17 +3,16 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
 
 import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
-import { AtGuard, RtGuard } from '../common/guards';
+import { RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { Tokens } from './types';
-import { SignInDto, SignUpDto } from './dto';
+import { LoginDto, SignUpDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,21 +21,21 @@ export class AuthController {
   @Public()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  signup(@Body() dto: SignUpDto): Promise<Tokens> {
-    return this.authService.signup(dto);
+  signup(@Body() body: SignUpDto): Promise<Tokens> {
+    return this.authService.signup(body);
   }
 
   @Public()
-  @Post('signin')
+  @Post('login')
   @HttpCode(HttpStatus.OK)
-  signin(@Body() dto: SignInDto): Promise<Tokens> {
-    return this.authService.signin(dto);
+  login(@Body() body: LoginDto): Promise<Tokens> {
+    return this.authService.login(body);
   }
 
-  @Post('signout')
+  @Post('logout')
   @HttpCode(HttpStatus.OK)
-  signout(@GetCurrentUserId() userId: number): Promise<boolean> {
-    return this.authService.signout(userId);
+  logout(@GetCurrentUserId() userId: string): Promise<boolean> {
+    return this.authService.logout(+userId);
   }
 
   @Public()
@@ -44,20 +43,34 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   refreshTokens(
-    @GetCurrentUserId() userId: number,
+    @GetCurrentUserId() userId: string,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<Tokens> {
-    return this.authService.refreshTokens(userId, refreshToken);
+    return this.authService.refreshTokens(+userId, refreshToken);
+  }
+
+  @Public()
+  @Put('change')
+  @HttpCode(HttpStatus.OK)
+  changePassword(
+    @Body('email') email: string,
+    @Body('oldPassword') oldPassword: string,
+    @Body('newPassword') newPassword: string,
+  ): Promise<Tokens> {
+    return this.authService.changePassword(email, oldPassword, newPassword);
   }
 
   @Public()
   @Put('forget')
   @HttpCode(HttpStatus.OK)
-  forgetPassword(
-    @Body('email') email: string,
-    @Body('oldPassword') oldPassword: string,
-    @Body('newPassword') newPassword: string,
-  ): Promise<Tokens> {
-    return this.authService.forgetPassword(email, oldPassword, newPassword);
+  sendOTP(@Body('email') email: string): Promise<string> {
+    return this.authService.sendOTP(email);
+  }
+
+  @Public()
+  @Post('forget')
+  @HttpCode(HttpStatus.OK)
+  submitOTP(@Body('email') email: string, @Body('otp') otp: string): Promise<Tokens> {
+    return this.authService.submitOTP(email, otp);
   }
 }
