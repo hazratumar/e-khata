@@ -37,7 +37,7 @@ export const AuthGuard = (props) => {
     } else {
       setChecked(true);
     }
-  }, [router.isReady]);
+  }, [router, isAuthenticated]);
 
   if (!checked) {
     return null;

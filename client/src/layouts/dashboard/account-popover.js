@@ -17,8 +17,10 @@ export const AccountPopover = (props) => {
       ...state,
       ...user,
     });
-  }, [user]);
+  }, [user, state]);
+
   const [logOut, { isSuccess, data, error, isLoading }] = useLogOutMutation();
+
   const handleSignOut = async () => {
     await logOut();
   };
@@ -36,7 +38,7 @@ export const AccountPopover = (props) => {
       toast.error(errorMessage);
       console.log("Error Message", error.data);
     }
-  }, [isSuccess]);
+  }, [isSuccess, data, error, dispatch]);
   return (
     <Popover
       anchorEl={anchorEl}

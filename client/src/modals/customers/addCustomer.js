@@ -56,7 +56,7 @@ export const AddCustomer = () => {
       toast.error(errorMessage);
       console.log("Error Message", error);
     }
-  }, [isLoading]);
+  }, [data, error, isLoading, isSuccess]);
   return (
     <div>
       <Button
