@@ -1,7 +1,5 @@
-export class UpdateCustomerDto {
-    name?: string;
-    nickname?: string;
-    phone?: string;
-    address?: string;
-    other?: string;
-}
+import { PartialType } from "@nestjs/mapped-types";
+
+import { Customer } from "../entities/customer.entity";
+
+export class UpdateCustomerDto extends PartialType(Customer) {}

@@ -45,7 +45,7 @@ const Page = () => {
     if (isSuccess) {
       dispatch(setToken(data));
       router.push("/");
-      console.log("SignUp data", data);
+      console.log("SignIn data", data);
     }
     if (error) {
       const errorMessage = Array.isArray(error.data.message)

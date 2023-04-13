@@ -1,14 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 import Head from "next/head";
 import { subDays, subHours } from "date-fns";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
-import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
+import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CustomersTable } from "src/sections/customer/customers-table";
 import { CustomersSearch } from "src/sections/customer/customers-search";
+import { AddCustomer } from "../modals/customers/addCustomer";
 import { applyPagination } from "src/utils/apply-pagination";
 
 const now = new Date();
@@ -192,11 +191,12 @@ const Page = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8,
+          pt: 2,
+          pb: 4,
         }}
       >
         <Container maxWidth="xl">
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="h4">Customers</Typography>
@@ -224,16 +224,7 @@ const Page = () => {
                 </Stack>
               </Stack>
               <div>
-                <Button
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <PlusIcon />
-                    </SvgIcon>
-                  }
-                  variant="contained"
-                >
-                  Add
-                </Button>
+                <AddCustomer />
               </div>
             </Stack>
             <CustomersSearch />

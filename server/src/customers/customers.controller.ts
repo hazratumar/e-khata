@@ -1,37 +1,50 @@
-import { Controller, Get, Param, Post, Body, Put, Delete } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Put,
+  Delete,
+} from "@nestjs/common";
 import { CustomersService } from "./customers.service";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer";
-import { GetCurrentUserId, Public } from "src/common/decorators";
+import { GetCurrentUserId } from "src/common/decorators";
 
-// @Public()
-@Controller('customers')
+@Controller("customers")
 export class CustomersController {
-    constructor(private readonly customersService: CustomersService) { }
+  constructor(private readonly customersService: CustomersService) {}
 
-    @Get(':page/:limit')
-    findAll(@Param('page') page: string, @Param('limit') limit: string) {
-        return this.customersService.findAll(+page, +limit);
-    }
+  @Post()
+  create(
+    @GetCurrentUserId() userId: string,
+    @Body() createCustomerDto: CreateCustomerDto
+  ) {
+    return this.customersService.create(userId, createCustomerDto);
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.customersService.findOne(+id);
-    }
+  @Get(":page/:limit")
+  findAll(@Param("page") page: string, @Param("limit") limit: string) {
+    return this.customersService.findAll(+page, +limit);
+  }
 
-    @Post()
-    create(@GetCurrentUserId() userId: string, @Body() createCustomerDto: CreateCustomerDto) {
-        return this.customersService.create(userId, createCustomerDto);
-    }
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.customersService.findOne(+id);
+  }
 
-    @Put(':id')
-    update(@Param('id') id: string, @GetCurrentUserId() userId: string, @Body() updateCustomerDto: UpdateCustomerDto) {
-        return this.customersService.update(+id, +userId, updateCustomerDto);
-    }
+  @Put(":id")
+  update(
+    @Param("id") id: string,
+    @GetCurrentUserId() userId: string,
+    @Body() updateCustomerDto: UpdateCustomerDto
+  ) {
+    return this.customersService.update(+id, +userId, updateCustomerDto);
+  }
 
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.customersService.remove(+id);
-    }
+  @Delete(":id")
+  remove(@Param("id") id: string) {
+    return this.customersService.remove(+id);
+  }
 }
-
