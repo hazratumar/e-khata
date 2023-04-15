@@ -1,19 +1,27 @@
-import { ForbiddenException, HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException, forwardRef } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as argon from 'argon2';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  forwardRef,
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import * as argon from "argon2";
 
-import { LoginDto, SignUpDto } from './dto';
-import { JwtPayload, Tokens } from './types';
-import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/entities/user.entity';
+import { LoginDto, SignUpDto } from "./dto";
+import { JwtPayload, Tokens } from "./types";
+import { UsersService } from "src/users/users.service";
+import { User } from "src/users/entities/user.entity";
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     @Inject(forwardRef(() => UsersService))
-    private readonly UsersService: UsersService,) { }
-
+    private readonly UsersService: UsersService
+  ) {}
 
   async signup(dto: SignUpDto): Promise<Tokens> {
     const user = await this.UsersService.create(dto);
@@ -26,7 +34,10 @@ export class AuthService {
     const user = await this.UsersService.findByEmail(dto.email);
 
     const passwordMatches = await argon.verify(user.password, dto.password);
-    if (!passwordMatches) throw new ForbiddenException('Authentication failed - incorrect password');
+    if (!passwordMatches)
+      throw new ForbiddenException(
+        "Authentication failed - incorrect password"
+      );
 
     const tokens = await this.getTokens(user);
     await this.updateRtHash(user.id, tokens.refresh_token);
@@ -35,17 +46,18 @@ export class AuthService {
 
   async logout(id: number): Promise<boolean> {
     await this.UsersService.findOne(id);
-    await this.UsersService.refreshToken(id, null)
+    await this.UsersService.refreshToken(id, null);
     return true;
   }
 
   async refreshTokens(userId: number, rt: string): Promise<Tokens> {
-    const user = await this.UsersService.findOne(userId)
+    const user = await this.UsersService.findOne(userId);
 
-    if (!user || !user.refreshToken) throw new ForbiddenException('Access Denied');
+    if (!user || !user.refreshToken)
+      throw new ForbiddenException("Access Denied");
 
     const rtMatches = await argon.verify(user.refreshToken, rt);
-    if (!rtMatches) throw new ForbiddenException('Access Denied');
+    if (!rtMatches) throw new ForbiddenException("Access Denied");
 
     const tokens = await this.getTokens(user);
     await this.updateRtHash(user.id, tokens.refresh_token);
@@ -53,12 +65,18 @@ export class AuthService {
     return tokens;
   }
 
-  async changePassword(email: string, oldPassword: string, newPassword: string): Promise<Tokens> {
+  async changePassword(
+    email: string,
+    oldPassword: string,
+    newPassword: string
+  ): Promise<Tokens> {
     const user = await this.UsersService.findByEmail(email);
     const oldPasswordMatches = await argon.verify(user.password, oldPassword);
 
     if (!oldPasswordMatches) {
-      throw new ForbiddenException('Your old password is incorrect. Please try again.');
+      throw new ForbiddenException(
+        "Your old password is incorrect. Please try again."
+      );
     }
 
     const hash = await argon.hash(newPassword);
@@ -71,8 +89,8 @@ export class AuthService {
   }
 
   generateOTP() {
-    const digits = '0123456789';
-    let otp = '';
+    const digits = "0123456789";
+    let otp = "";
     for (let i = 0; i < 6; i++) {
       otp += digits[Math.floor(Math.random() * 10)];
     }
@@ -133,16 +151,21 @@ export class AuthService {
     const user = await this.UsersService.findByEmail(email);
 
     if (!user?.otp) {
-      throw new HttpException("Please check and try again with a valid OTP.", HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        "Please check and try again with a valid OTP.",
+        HttpStatus.NOT_FOUND
+      );
     }
 
     const isOtpCorrect = await argon.verify(user.otp, otp);
     if (!isOtpCorrect) {
-      throw new ForbiddenException('Your OTP is incorrect. Please try again.');
+      throw new ForbiddenException("Your OTP is incorrect. Please try again.");
     }
 
     if (this.isOtpExpired(user.updatedAt)) {
-      throw new ForbiddenException('Your OTP has expired. Please request a new OTP and try again.');
+      throw new ForbiddenException(
+        "Your OTP has expired. Please request a new OTP and try again."
+      );
     }
 
     await this.UsersService.update(user.id, { otp: null });
@@ -152,7 +175,6 @@ export class AuthService {
 
     return tokens;
   }
-
 
   async updateRtHash(userId: number, rt: string): Promise<void> {
     const hash = await argon.hash(rt);
@@ -173,11 +195,11 @@ export class AuthService {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: process.env.AT_SECRET,
-        expiresIn: '15m',
+        expiresIn: "15h",
       }),
       this.jwtService.signAsync(jwtPayload, {
         secret: process.env.RT_SECRET,
-        expiresIn: '7d',
+        expiresIn: "7d",
       }),
     ]);
 

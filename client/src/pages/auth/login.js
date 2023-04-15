@@ -45,7 +45,7 @@ const Page = () => {
     if (isSuccess) {
       dispatch(setToken(data));
       router.push("/");
-      console.log("SignUp data", data);
+      console.log("SignIn data", data);
     }
     if (error) {
       const errorMessage = Array.isArray(error.data.message)
@@ -54,7 +54,7 @@ const Page = () => {
       toast.error(errorMessage);
       console.log("Error Message", error.data);
     }
-  }, [isSuccess]);
+  }, [isSuccess, data, error, dispatch]);
   const handleShow = () => setShow(!show);
 
   return (

@@ -43,8 +43,8 @@ const Page = () => {
             <Stack spacing={1} sx={{ mb: 3 }}>
               <Typography variant="h4">Forget Password</Typography>
               <Typography color="text.secondary" variant="body2">
-                No problem, you can reset it using our password recovery feature. If you don't have
-                an account yet, you can easily create one by registering with us.&nbsp;
+                No problem, you can reset it using our password recovery feature. If you don&apos;t
+                have an account yet, you can easily create one by registering with us.&nbsp;
                 <Link
                   component={NextLink}
                   href="/auth/signup"

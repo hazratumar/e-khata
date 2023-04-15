@@ -5,6 +5,7 @@ import { AccountProfile } from "src/sections/account/account-profile";
 import { AccountProfileDetails } from "src/sections/account/account-profile-details";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+
 const Page = () => {
   const { user } = useSelector((state) => state.authReducer);
   const [state, setState] = useState({
@@ -13,18 +14,17 @@ const Page = () => {
     email: user?.email,
     image: user?.image,
   });
+
   useEffect(() => {
-    setState(
-      {
-        ...state,
-        name: user?.name,
-        username: user?.username,
-        email: user?.email,
-        image: user?.image,
-      },
-      [user]
-    );
-  });
+    setState({
+      ...state,
+      name: user?.name,
+      username: user?.username,
+      email: user?.email,
+      image: user?.image,
+    });
+  }, [state, user]);
+
   return (
     <>
       <Head>

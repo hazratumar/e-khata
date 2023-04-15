@@ -1,60 +1,50 @@
-import { User } from 'src/users/entities/user.entity';
+import { User } from "src/users/entities/user.entity";
 import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
-    JoinColumn,
-} from 'typeorm';
-import { IsString, IsOptional, IsPhoneNumber, Length } from 'class-validator';
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class Customer {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    @IsString()
-    @Length(2, 100)
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    @IsString()
-    @Length(2, 50)
-    nickname: string;
+  @Column()
+  nickname: string;
 
-    @Column()
-    @IsPhoneNumber('IN')
-    phone: string;
+  @Column()
+  email: string;
 
-    @Column()
-    @IsString()
-    @Length(5, 200)
-    address: string;
+  @Column()
+  phone: string;
 
-    @Column({ nullable: true })
-    @IsOptional()
-    @IsString()
-    @Length(0, 200)
-    other?: string;
+  @Column()
+  address: string;
 
-    @ManyToOne(() => User, (user) => user.customers, {
-        eager: true,
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
-    @JoinColumn()
-    user: User;
+  @Column()
+  other?: string;
 
-    @CreateDateColumn({ type: 'timestamptz' })
-    createdAt: Date;
+  @ManyToOne(() => User, (user) => user.customers, {
+    eager: true,
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  user: User;
 
-    @UpdateDateColumn({ type: 'timestamptz' })
-    updatedAt: Date;
+  @CreateDateColumn({ type: "timestamptz" })
+  createdAt: Date;
 
-    constructor(partial: Partial<Customer>) {
-        Object.assign(this, partial);
-    }
+  @UpdateDateColumn({ type: "timestamptz" })
+  updatedAt: Date;
+
+  constructor(partial: Partial<Customer>) {
+    Object.assign(this, partial);
+  }
 }
