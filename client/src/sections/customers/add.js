@@ -131,15 +131,8 @@ export const AddCustomer = () => {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Address"
-                      multiline
-                      rows={2}
-                      name="address"
-                      onChange={handleChange}
-                    />
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Address" name="address" onChange={handleChange} />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
