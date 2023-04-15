@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { format } from "date-fns";
 import {
   Box,
@@ -12,18 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import { getInitials } from "src/utils/get-initials";
 
 export const CustomersTable = (props) => {
-  const {
-    count = 0,
-    items = [],
-    onPageChange = () => {},
-    onRowsPerPageChange,
-    page = 0,
-    rowsPerPage = 0,
-    selected = [],
-  } = props;
+  const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
+  const options = [5, 10, 25, 50, 100];
+  const rowsPerPageOptions = options.filter((option) => option <= count);
 
   return (
     <Card>
@@ -34,6 +26,7 @@ export const CustomersTable = (props) => {
               <TableRow>
                 <TableCell>FullName</TableCell>
                 <TableCell>Nickname</TableCell>
+                <TableCell>mail</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Address</TableCell>
                 <TableCell>Others</TableCell>
@@ -41,19 +34,16 @@ export const CustomersTable = (props) => {
             </TableHead>
             <TableBody>
               {items.map((customer) => {
-                const isSelected = selected.includes(customer.id);
-                const createdAt = format(customer.createdAt, "dd/MM/yyyy");
                 return (
-                  <TableRow hover key={customer.id} selected={isSelected}>
+                  <TableRow hover key={customer.id}>
                     <TableCell>
                       <Typography variant="subtitle2">{customer.name}</Typography>
                     </TableCell>
+                    <TableCell>{customer.nickname}</TableCell>
                     <TableCell>{customer.email}</TableCell>
-                    <TableCell>
-                      {customer.address.city}, {customer.address.state}, {customer.address.country}
-                    </TableCell>
                     <TableCell>{customer.phone}</TableCell>
-                    <TableCell>{createdAt}</TableCell>
+                    <TableCell>{customer.address}</TableCell>
+                    <TableCell>{customer.other}</TableCell>
                   </TableRow>
                 );
               })}
@@ -68,22 +58,8 @@ export const CustomersTable = (props) => {
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={rowsPerPageOptions}
       />
     </Card>
   );
-};
-
-CustomersTable.propTypes = {
-  count: PropTypes.number,
-  items: PropTypes.array,
-  onDeselectAll: PropTypes.func,
-  onDeselectOne: PropTypes.func,
-  onPageChange: PropTypes.func,
-  onRowsPerPageChange: PropTypes.func,
-  onSelectAll: PropTypes.func,
-  onSelectOne: PropTypes.func,
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
-  selected: PropTypes.array,
 };

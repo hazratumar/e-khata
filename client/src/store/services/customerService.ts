@@ -14,7 +14,14 @@ export const CustomerService = createApi({
       }),
       invalidatesTags: ["customers"],
     }),
+    getCustomers: builder.query({
+      query: ({ page, rowsPerPage }) => ({
+        url: `/customers/${page + 1}/${rowsPerPage}`,
+        method: "GET",
+      }),
+      providesTags: ["customers"],
+    }),
   }),
 });
 
-export const { useAddCustomerMutation } = CustomerService;
+export const { useAddCustomerMutation, useGetCustomersQuery } = CustomerService;

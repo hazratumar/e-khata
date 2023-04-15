@@ -1,29 +1,41 @@
-import React, { useEffect, useState } from "react";
+import Backdrop from "@mui/material/Backdrop";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import {
-  Box,
-  Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
   Divider,
-  TextField,
-  Unstable_Grid2 as Grid,
-  Container,
-  Stack,
-  SvgIcon,
-  Modal,
+  Grid,
   IconButton,
+  SvgIcon,
+  TextField,
 } from "@mui/material";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { useEffect, useState } from "react";
 import { useAddCustomerMutation } from "../../store/services/customerService";
 import toast from "react-hot-toast";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "50%",
+  backgroundColor: "#fff",
+  borderRadius: "10px",
+  boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
+  padding: "10px",
+};
+
 export const AddCustomer = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(!open);
-  };
+  const handleOpen = () => setOpen(!open);
+
   const [formValues, setFormValues] = useState({
     name: "",
     nickname: "",
@@ -32,31 +44,40 @@ export const AddCustomer = () => {
     address: "",
     other: "",
   });
-  const [AddCustomer, { isSuccess, isLoading, error, data }] = useAddCustomerMutation();
+
+  const [addCustomer, { isSuccess, isLoading, error }] = useAddCustomerMutation();
+
   const handleChange = (e) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await AddCustomer(formValues);
+    await addCustomer(formValues);
   };
 
   useEffect(() => {
     if (isSuccess) {
-      console.log("Add data", data);
+      handleOpen();
+      console.log("Add data", formValues);
+      setFormValues({
+        name: "",
+        nickname: "",
+        email: "",
+        phone: "",
+        address: "",
+        other: "",
+      });
     }
     if (error) {
-      const errorMessage = Array.isArray(error.data.message)
+      const errorMessage = Array.isArray(error.data?.message)
         ? error.data.message[0]
-        : error.data.message;
+        : error.data?.message;
       toast.error(errorMessage);
       console.log("Error Message", error);
     }
-  }, [data, error, isLoading, isSuccess]);
+  }, [isSuccess, error]);
   return (
     <div>
       <Button
@@ -68,108 +89,86 @@ export const AddCustomer = () => {
         variant="contained"
         onClick={handleOpen}
       >
-        Add
-      </Button>
+        Add Customer
+      </Button>{" "}
       <Modal
-        keepMounted
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
         open={open}
         onClose={handleOpen}
         closeAfterTransition
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
       >
-        <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
-          <Container maxWidth="lg">
-            <Stack spacing={3}>
-              <div>
-                <Grid container spacing={3} sx={{ display: "flex", justifyContent: "center" }}>
-                  <Grid lg={8}>
-                    <form onSubmit={handleSubmit}>
-                      <Card sx={{ p: 2 }}>
-                        <CardHeader
-                          subheader="The information can be edited"
-                          title="Add Customer"
-                          action={
-                            <IconButton aria-label="close" onClick={handleOpen}>
-                              <SvgIcon fontSize="small">
-                                <XMarkIcon />
-                              </SvgIcon>
-                            </IconButton>
-                          }
-                        />
-                        <CardContent sx={{ pt: 0 }}>
-                          <Box sx={{ m: -1.5 }}>
-                            <Grid container spacing={3}>
-                              <Grid xs={12} md={6}>
-                                <TextField
-                                  fullWidth
-                                  helperText="Please specify the full name"
-                                  label="Full name"
-                                  name="name"
-                                  onChange={handleChange}
-                                />
-                              </Grid>
-                              <Grid xs={12} md={6}>
-                                <TextField
-                                  fullWidth
-                                  label="Nickname"
-                                  name="nickname"
-                                  onChange={handleChange}
-                                />
-                              </Grid>
-                              <Grid xs={12} md={6}>
-                                <TextField
-                                  fullWidth
-                                  label="Email Address"
-                                  name="email"
-                                  onChange={handleChange}
-                                />
-                              </Grid>
-                              <Grid xs={12} md={6}>
-                                <TextField
-                                  fullWidth
-                                  label="Phone Number"
-                                  name="phone"
-                                  onChange={handleChange}
-                                />
-                              </Grid>
-                              <Grid xs={12} md={6}>
-                                <TextField
-                                  fullWidth
-                                  label="Address"
-                                  multiline
-                                  rows={2}
-                                  name="address"
-                                  onChange={handleChange}
-                                />
-                              </Grid>
-                              <Grid xs={12} md={6}>
-                                <TextField
-                                  fullWidth
-                                  label="Other"
-                                  multiline
-                                  rows={2}
-                                  name="other"
-                                  onChange={handleChange}
-                                />
-                              </Grid>
-                            </Grid>
-                          </Box>
-                        </CardContent>
-                        <Divider />
-                        <CardActions sx={{ justifyContent: "flex-end" }}>
-                          <Button variant="contained" type="submit">
-                            {isLoading ? "Loading..." : "Save details"}
-                          </Button>
-                        </CardActions>
-                      </Card>
-                    </form>
+        <Fade in={open}>
+          <Box sx={{ ...style, overflowY: "auto" }}>
+            <CardHeader
+              subheader="Please enter customer information"
+              title="Add Customer"
+              action={
+                <IconButton aria-label="close" onClick={handleOpen}>
+                  <SvgIcon fontSize="small">
+                    <XMarkIcon />
+                  </SvgIcon>
+                </IconButton>
+              }
+              sx={{ width: "100%" }}
+            />
+            <CardContent sx={{ pt: 0 }}>
+              <Box sx={{ m: -1.5 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      required
+                      label="Full name"
+                      name="name"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Nickname" name="nickname" onChange={handleChange} />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Email" name="email" onChange={handleChange} />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Phone number"
+                      name="phone"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Address"
+                      multiline
+                      rows={2}
+                      name="address"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Other information"
+                      multiline
+                      rows={2}
+                      name="other"
+                      onChange={handleChange}
+                    />
                   </Grid>
                 </Grid>
-              </div>
-            </Stack>
-          </Container>
-        </Box>
+              </Box>
+            </CardContent>
+            <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
+              <Button onClick={handleOpen}>Cancel</Button>
+              <Button onClick={handleSubmit} variant="contained" color="primary">
+                Add Customer
+              </Button>
+            </CardActions>
+          </Box>
+        </Fade>
       </Modal>
     </div>
   );

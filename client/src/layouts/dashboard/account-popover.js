@@ -5,7 +5,7 @@ import { useLogOutMutation } from "src/store/services/authService";
 import { useEffect, useState } from "react";
 import { removeToken } from "../../store/reducers/authSlice";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 export const AccountPopover = (props) => {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ export const AccountPopover = (props) => {
       ...state,
       ...user,
     });
-  }, [user, state]);
+  }, []);
 
   const [logOut, { isSuccess, data, error, isLoading }] = useLogOutMutation();
 
@@ -34,11 +34,11 @@ export const AccountPopover = (props) => {
     if (error) {
       const errorMessage = Array.isArray(error.data.message)
         ? error.data.message[0]
-        : eerror.data.message;
+        : error.data.message;
       toast.error(errorMessage);
       console.log("Error Message", error.data);
     }
-  }, [isSuccess, data, error, dispatch]);
+  }, [isLoading]);
   return (
     <Popover
       anchorEl={anchorEl}
