@@ -14,7 +14,9 @@ const Page = () => {
     rowsPerPage: 10,
     count: 0,
     customers: [],
+    searchTerm: "",
   });
+
   const { isSuccess, data, refetch } = useGetCustomersQuery(state);
 
   const onRowsPerPageChange = useCallback((event) => {
@@ -22,10 +24,11 @@ const Page = () => {
   }, []);
 
   const onPageChange = useCallback((event, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      page: value,
-    }));
+    setState((prevState) => ({ ...prevState, page: value }));
+  }, []);
+
+  const onSearch = useCallback((search) => {
+    setState((prevState) => ({ ...prevState, searchTerm: search }));
   }, []);
 
   useEffect(() => {
@@ -33,7 +36,7 @@ const Page = () => {
     if (isSuccess) {
       setState((prevState) => ({ ...prevState, count: data.total, customers: data.customers }));
       console.log(data);
-      console.log(state.page);
+      console.log(state);
     }
   }, [data, refetch]);
 
@@ -75,7 +78,7 @@ const Page = () => {
                 <AddCustomer />
               </div>
             </Stack>
-            <CustomersSearch />
+            <CustomersSearch onSearch={onSearch} />
             <CustomersTable
               page={state.page}
               rowsPerPage={state.rowsPerPage}
