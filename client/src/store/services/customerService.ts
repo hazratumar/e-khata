@@ -15,10 +15,16 @@ export const CustomerService = createApi({
       invalidatesTags: ["customers"],
     }),
     getCustomers: builder.query({
-      query: ({ page, rowsPerPage }) => ({
-        url: `/customers/${page + 1}/${rowsPerPage}`,
-        method: "GET",
-      }),
+      query: ({ page, rowsPerPage, searchTerm }) => {
+        let url = `/customers/${page}/${rowsPerPage}`;
+        if (searchTerm) {
+          url += `/${searchTerm}`;
+        }
+        return {
+          url,
+          method: "GET",
+        };
+      },
       providesTags: ["customers"],
     }),
     updateCustomer: builder.mutation({

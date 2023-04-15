@@ -6,6 +6,7 @@ import {
   Body,
   Put,
   Delete,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { CustomersService } from "./customers.service";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
@@ -24,9 +25,13 @@ export class CustomersController {
     return this.customersService.create(userId, createCustomerDto);
   }
 
-  @Get(":page/:limit")
-  findAll(@Param("page") page: string, @Param("limit") limit: string) {
-    return this.customersService.findAll(+page, +limit);
+  @Get(":page/:limit/:searchTerm?")
+  findAll(
+    @Param("page", ParseIntPipe) page: number,
+    @Param("limit", ParseIntPipe) limit: number,
+    @Param("searchTerm") searchTerm: string
+  ) {
+    return this.customersService.findAll(page, limit, searchTerm);
   }
 
   @Get(":id")

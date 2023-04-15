@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Brackets, Like, Repository } from "typeorm";
 import { Customer } from "./entities/customer.entity";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer";
@@ -25,25 +25,41 @@ export class CustomersService {
 
   async findAll(
     page: number,
-    limit: number
+    limit: number,
+    search?: string
   ): Promise<{
     customers: Customer[];
     total: number;
     page: number;
     totalPages: number;
   }> {
-    // Input validation
-    if (page < 1) {
-      throw new Error("Page number must be greater than or equal to 1.");
-    }
-
     if (limit < 1 || limit > 100) {
       throw new Error("Limit must be between 1 and 100.");
     }
 
-    const skip = (page - 1) * limit;
+    const skip = page * limit;
 
-    const length = await this.customerRepository.count();
+    const queryBuilder = this.customerRepository.createQueryBuilder("customer");
+
+    // Apply search filter if search term is provided
+    if (search?.trim()) {
+      queryBuilder.where(
+        new Brackets((qb) => {
+          qb.where("customer.name ILIKE :search", { search: `%${search}%` })
+            .orWhere("customer.nickname ILIKE :search", {
+              search: `%${search}%`,
+            })
+            .orWhere("customer.email ILIKE :search", { search: `%${search}%` })
+            .orWhere("customer.phone ILIKE :search", { search: `%${search}%` })
+            .orWhere("customer.address ILIKE :search", {
+              search: `%${search}%`,
+            })
+            .orWhere("customer.other ILIKE :search", { search: `%${search}%` });
+        })
+      );
+    }
+
+    const length = await queryBuilder.getCount();
 
     const totalPages = Math.ceil(length / limit);
 
@@ -54,11 +70,11 @@ export class CustomersService {
       );
     }
 
-    const customers = await this.customerRepository.find({
-      skip,
-      take: limit,
-      order: { updatedAt: "DESC" },
-    });
+    const customers = await queryBuilder
+      .orderBy("customer.updatedAt", "DESC")
+      .skip(skip)
+      .take(limit)
+      .getMany();
 
     return { customers, total: length, page, totalPages };
   }
