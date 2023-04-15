@@ -22,7 +22,7 @@ export class CustomersController {
     @GetCurrentUserId() userId: string,
     @Body() createCustomerDto: CreateCustomerDto
   ) {
-    return this.customersService.create(userId, createCustomerDto);
+    return this.customersService.create(+userId, createCustomerDto);
   }
 
   @Get(":page/:limit/:searchTerm?")

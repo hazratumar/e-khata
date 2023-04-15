@@ -1,4 +1,4 @@
-import { User } from "src/users/entities/user.entity";
+import { Users } from "src/users/entities/user.entity";
 import {
   Column,
   CreateDateColumn,
@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 
 @Entity()
-export class Customer {
+export class Customers {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,9 +20,6 @@ export class Customer {
   nickname: string;
 
   @Column()
-  email: string;
-
-  @Column()
   phone: string;
 
   @Column()
@@ -31,12 +28,12 @@ export class Customer {
   @Column()
   other: string;
 
-  @ManyToOne(() => User, (user) => user.customers, {
+  @ManyToOne(() => Users, (user) => user.customers, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
   })
-  user: User;
+  user: Users;
 
   @CreateDateColumn({ type: "timestamptz" })
   createdAt: Date;
@@ -44,7 +41,7 @@ export class Customer {
   @UpdateDateColumn({ type: "timestamptz" })
   updatedAt: Date;
 
-  constructor(partial: Partial<Customer>) {
+  constructor(partial: Partial<Customers>) {
     Object.assign(this, partial);
   }
 }

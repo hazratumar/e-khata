@@ -20,7 +20,6 @@ export const AccountProfileDetails = ({ user }) => {
 
   const [formValues, setFormValues] = useState({
     name: user?.name,
-    username: user?.username,
     email: user?.email,
   });
 
@@ -75,16 +74,6 @@ export const AccountProfileDetails = ({ user }) => {
                   onChange={handleChange}
                   required
                   value={formValues.name}
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Username"
-                  name="username"
-                  onChange={handleChange}
-                  required
-                  value={formValues.username}
                 />
               </Grid>
               <Grid xs={12} md={6}>

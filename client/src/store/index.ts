@@ -3,11 +3,13 @@ import authReducer from "./reducers/authSlice";
 import { AuthService } from "./services/authService";
 import { UserService } from "./services/userService";
 import { CustomerService } from "./services/customerService";
+import { CurrencyService } from "./services/currencyService";
 
 const combinedMiddleware: Middleware[] = [
   AuthService.middleware,
   UserService.middleware,
   CustomerService.middleware,
+  CurrencyService.middleware,
 ];
 
 export function makeStore() {
@@ -16,6 +18,7 @@ export function makeStore() {
       [AuthService.reducerPath]: AuthService.reducer,
       [UserService.reducerPath]: UserService.reducer,
       [CustomerService.reducerPath]: CustomerService.reducer,
+      [CurrencyService.reducerPath]: CurrencyService.reducer,
       authReducer: authReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(combinedMiddleware),

@@ -1,30 +1,30 @@
-import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthModule } from './auth/auth.module';
-import { AtGuard } from './common/guards';
-import { UsersModule } from './users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/entities/user.entity';
-import { CustomersModule } from './customers/customers.module';
-import { Customer } from './customers/entities/customer.entity';
-import { CurrencyModule } from './currency/currency.module';
-import { TransactionsModule } from './transactions/transactions.module';
-import { Transaction } from './transactions/entities/transaction.entity';
-import { Currency } from './currency/entities/currency.entity';
+import { Module } from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
+import { AuthModule } from "./auth/auth.module";
+import { AtGuard } from "./common/guards";
+import { UsersModule } from "./users/users.module";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Users } from "./users/entities/user.entity";
+import { CustomersModule } from "./customers/customers.module";
+import { Customers } from "./customers/entities/customer.entity";
+import { CurrencyModule } from "./currency/currency.module";
+import { TransactionsModule } from "./transactions/transactions.module";
+import { Transactions } from "./transactions/entities/transaction.entity";
+import { Currencies } from "./currency/entities/currency.entity";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
+      type: "postgres",
+      host: "localhost",
       port: 5432,
-      username: 'postgres',
-      password: '1234',
-      database: 'e-khata',
-      entities: [User, Customer, Transaction, Currency],
+      username: "postgres",
+      password: "1234",
+      database: "e-khata",
+      entities: [Users, Customers, Currencies, Transactions],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User, Customer, Transaction, Currency]),
+    TypeOrmModule.forFeature([Users, Customers, Currencies, Transactions]),
     AuthModule,
     UsersModule,
     CustomersModule,
@@ -38,4 +38,4 @@ import { Currency } from './currency/entities/currency.entity';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

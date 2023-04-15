@@ -1,15 +1,11 @@
-import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import {
-  Card,
   CardActions,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   SvgIcon,
@@ -17,7 +13,7 @@ import {
 } from "@mui/material";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
-import { useAddCustomerMutation } from "../../store/services/customerService";
+import { useAddCurrencyMutation } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
 
 const style = {
@@ -32,20 +28,16 @@ const style = {
   padding: "10px",
 };
 
-export const AddCustomer = () => {
+export const AddCurrency = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
   const [formValues, setFormValues] = useState({
     name: "",
-    nickname: "",
-    email: "",
-    phone: "",
-    address: "",
-    other: "",
+    rate: "",
   });
 
-  const [addCustomer, { isSuccess, isLoading, error }] = useAddCustomerMutation();
+  const [AddCurrency, { isSuccess, isLoading, error }] = useAddCurrencyMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +46,7 @@ export const AddCustomer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addCustomer(formValues);
+    await AddCurrency(formValues);
   };
 
   useEffect(() => {
@@ -63,11 +55,7 @@ export const AddCustomer = () => {
       console.log("Add data", formValues);
       setFormValues({
         name: "",
-        nickname: "",
-        email: "",
-        phone: "",
-        address: "",
-        other: "",
+        rate: "",
       });
     }
     if (error) {
@@ -89,7 +77,7 @@ export const AddCustomer = () => {
         variant="contained"
         onClick={handleOpen}
       >
-        Add Customer
+        Add Currency
       </Button>{" "}
       <Modal
         aria-labelledby="transition-modal-title"
@@ -101,8 +89,8 @@ export const AddCustomer = () => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please enter customer information"
-              title="Add Customer"
+              subheader="Please enter currency information"
+              title="Add Currency"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -119,44 +107,13 @@ export const AddCustomer = () => {
                     <TextField
                       fullWidth
                       required
-                      label="Full name"
+                      label="Name"
                       name="name"
                       onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <TextField fullWidth label="Nickname" name="nickname" onChange={handleChange} />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField fullWidth label="Email" name="email" onChange={handleChange} />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label="Phone number"
-                      name="phone"
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Address"
-                      multiline
-                      rows={2}
-                      name="address"
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Other information"
-                      multiline
-                      rows={2}
-                      name="other"
-                      onChange={handleChange}
-                    />
+                    <TextField fullWidth label="Rate" name="rate" onChange={handleChange} />
                   </Grid>
                 </Grid>
               </Box>
@@ -164,7 +121,7 @@ export const AddCustomer = () => {
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
               <Button onClick={handleSubmit} variant="contained" color="primary">
-                {isLoading ? "Loading..." : "Add Customer"}
+                {isLoading ? "Loading..." : "Add Currency"}
               </Button>
             </CardActions>
           </Box>

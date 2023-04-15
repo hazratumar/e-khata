@@ -1,7 +1,7 @@
 import { Exclude } from "class-transformer";
-import { Currency } from "src/currency/entities/currency.entity";
-import { Customer } from "src/customers/entities/customer.entity";
-import { Transaction } from "src/transactions/entities/transaction.entity";
+import { Currencies } from "src/currency/entities/currency.entity";
+import { Customers } from "src/customers/entities/customer.entity";
+import { Transactions } from "src/transactions/entities/transaction.entity";
 
 import {
   Column,
@@ -13,15 +13,12 @@ import {
 } from "typeorm";
 
 @Entity()
-export class User {
+export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: false })
   name: string;
-
-  @Column({ unique: true })
-  username: string;
 
   @Column({ unique: true })
   email: string;
@@ -45,14 +42,14 @@ export class User {
   @Column({ nullable: true })
   otp: string;
 
-  @OneToMany(() => Customer, (customer) => customer.user)
-  customers: Customer[];
+  @OneToMany(() => Customers, (customer) => customer.user)
+  customers: Customers[];
 
-  @OneToMany(() => Transaction, (transaction) => transaction.user)
-  transactions: Transaction[];
+  @OneToMany(() => Transactions, (transaction) => transaction.user)
+  transactions: Transactions[];
 
-  @OneToMany(() => Currency, (currency) => currency.user)
-  currency: Currency[];
+  @OneToMany(() => Currencies, (currency) => currency.user)
+  currency: Currencies[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",
@@ -66,7 +63,7 @@ export class User {
   })
   updatedAt: Date;
 
-  constructor(partial: Partial<User>) {
+  constructor(partial: Partial<Users>) {
     Object.assign(this, partial);
   }
 }

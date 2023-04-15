@@ -10,7 +10,6 @@ const Page = () => {
   const { user } = useSelector((state) => state.authReducer);
   const [state, setState] = useState({
     name: user?.name,
-    username: user?.username,
     email: user?.email,
     image: user?.image,
   });
@@ -19,7 +18,6 @@ const Page = () => {
     setState({
       ...state,
       name: user?.name,
-      username: user?.username,
       email: user?.email,
       image: user?.image,
     });

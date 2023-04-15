@@ -13,7 +13,7 @@ import * as argon from "argon2";
 import { LoginDto, SignUpDto } from "./dto";
 import { JwtPayload, Tokens } from "./types";
 import { UsersService } from "src/users/users.service";
-import { User } from "src/users/entities/user.entity";
+import { Users } from "src/users/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -181,11 +181,10 @@ export class AuthService {
     await this.UsersService.refreshToken(userId, hash);
   }
 
-  async getTokens(user: User): Promise<Tokens> {
+  async getTokens(user: Users): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
       sub: user.id,
       name: user.name,
-      username: user.username,
       email: user.email,
       role: user.role,
       status: user.status,

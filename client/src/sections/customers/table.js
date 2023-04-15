@@ -17,7 +17,7 @@ import {
 import { Scrollbar } from "src/components/scrollbar";
 import { useState } from "react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { UpdateCustomer } from "src/modals/customers/updateCustomer";
+import { UpdateCustomer } from "src/sections/customers/update";
 export const CustomersTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
   const options = [5, 10, 25, 50, 100];
@@ -40,7 +40,6 @@ export const CustomersTable = (props) => {
               <TableRow>
                 <TableCell>FullName</TableCell>
                 <TableCell>Nickname</TableCell>
-                <TableCell>Email</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Address</TableCell>
                 <TableCell>Others</TableCell>
@@ -55,7 +54,6 @@ export const CustomersTable = (props) => {
                       <Typography variant="subtitle2">{customer.name}</Typography>
                     </TableCell>
                     <TableCell>{customer.nickname}</TableCell>
-                    <TableCell>{customer.email}</TableCell>
                     <TableCell>{customer.phone}</TableCell>
                     <TableCell>{customer.address}</TableCell>
                     <TableCell>{customer.other}</TableCell>

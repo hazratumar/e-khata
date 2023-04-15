@@ -1,5 +1,13 @@
-import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString, Matches, MinLength, validate, ValidationError } from 'class-validator';
+import { Transform } from "class-transformer";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  Matches,
+  MinLength,
+  validate,
+  ValidationError,
+} from "class-validator";
 
 export class CreateUserDto {
   @IsString()
@@ -7,12 +15,9 @@ export class CreateUserDto {
   name: string;
 
   @MinLength(3)
-  @Transform(({ value }) => (value as string).toLowerCase().replace(/[ ]/gi, '-'))
-  @Matches(/^[a-z0-9-]+$/, {
-    message: 'username can contain only lowercase characters, numbers and hyphens',
-  })
-  username: string;
-
+  @Transform(({ value }) =>
+    (value as string).toLowerCase().replace(/[ ]/gi, "-")
+  )
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -28,10 +33,10 @@ export class CreateUserDto {
     if (this.password !== this.confirmPassword) {
       errors.push({
         target: this,
-        property: 'confirmPassword',
+        property: "confirmPassword",
         value: this.confirmPassword,
         constraints: {
-          matchesPassword: 'Password and confirm password fields do not match',
+          matchesPassword: "Password and confirm password fields do not match",
         },
       });
     }

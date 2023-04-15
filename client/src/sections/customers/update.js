@@ -3,13 +3,10 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import {
-  Card,
   CardActions,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
@@ -18,7 +15,7 @@ import {
 } from "@mui/material";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
-import { useUpdateCustomerMutation } from "../../store/services/customerService";
+import { useUpdateCustomerMutation } from "src/store/services/customerService";
 import toast from "react-hot-toast";
 
 const style = {
@@ -43,7 +40,6 @@ export const UpdateCustomer = (props) => {
       id: customer.id,
       name: customer.name,
       nickname: customer.nickname,
-      email: customer.email,
       phone: customer.phone,
       address: customer.address,
       other: customer.other,
@@ -54,7 +50,6 @@ export const UpdateCustomer = (props) => {
     id: customer.id,
     name: customer.name,
     nickname: customer.nickname,
-    email: customer.email,
     phone: customer.phone,
     address: customer.address,
     other: customer.other,
@@ -137,15 +132,6 @@ export const UpdateCustomer = (props) => {
                       label="Nickname"
                       name="nickname"
                       value={state.nickname}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label="Email"
-                      name="email"
-                      value={state.email}
                       onChange={handleChange}
                     />
                   </Grid>
