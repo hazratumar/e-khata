@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
@@ -35,8 +35,6 @@ const Page = () => {
     refetch();
     if (isSuccess) {
       setState((prevState) => ({ ...prevState, count: data.total, customers: data.customers }));
-      console.log(data);
-      console.log(state);
     }
   }, [data, refetch]);
 
