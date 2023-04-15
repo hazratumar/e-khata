@@ -40,7 +40,7 @@ export const CustomersTable = (props) => {
               <TableRow>
                 <TableCell>FullName</TableCell>
                 <TableCell>Nickname</TableCell>
-                <TableCell>mail</TableCell>
+                <TableCell>Email</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Address</TableCell>
                 <TableCell>Others</TableCell>
