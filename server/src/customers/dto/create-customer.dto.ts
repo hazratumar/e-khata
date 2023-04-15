@@ -4,6 +4,7 @@ import {
   IsOptional,
   MaxLength,
   IsNumberString,
+  ValidateIf,
 } from "class-validator";
 
 export class CreateCustomerDto {
@@ -19,18 +20,20 @@ export class CreateCustomerDto {
   })
   nickname?: string;
 
+  @ValidateIf((o) => o.email !== "")
   @IsEmail({}, { message: "Email must be a valid email address" })
-  @IsOptional()
   @MaxLength(50, {
     message: "Email must be less than or equal to 50 characters",
   })
-  email?: string;
+  @IsOptional()
+  email: string;
 
-  @IsNotEmpty({ message: "Phone number is required" })
+  @ValidateIf((o) => o.phone !== "")
   @IsNumberString({}, { message: "Phone number must be a number." })
   @MaxLength(15, {
     message: "Phone number must be less than or equal to 15 characters",
   })
+  @IsOptional()
   phone: string;
 
   @IsOptional()

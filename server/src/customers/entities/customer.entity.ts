@@ -29,7 +29,7 @@ export class Customer {
   address: string;
 
   @Column()
-  other?: string;
+  other: string;
 
   @ManyToOne(() => User, (user) => user.customers, {
     eager: true,
