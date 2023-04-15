@@ -73,11 +73,7 @@ export class CustomersService {
     return customer;
   }
 
-  async update(
-    id: number,
-    userId: number,
-    customer: UpdateCustomerDto
-  ): Promise<Customer> {
+  async update(customer: UpdateCustomerDto): Promise<Customer> {
     // Input validation
     if (!customer || Object.keys(customer).length === 0) {
       throw new HttpException("Invalid customer data", HttpStatus.BAD_REQUEST);
@@ -85,8 +81,9 @@ export class CustomersService {
 
     // Find the existing customer in the database
     const existingCustomer = await this.customerRepository.findOne({
-      where: { id },
+      where: { id: customer.id },
     });
+    // console.log(existingCustomer);
 
     // If the customer doesn't exist, throw an error
     if (!existingCustomer) {

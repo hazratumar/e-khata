@@ -12,12 +12,13 @@ import {
   Divider,
   Grid,
   IconButton,
+  MenuItem,
   SvgIcon,
   TextField,
 } from "@mui/material";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
-import { useAddCustomerMutation } from "../../store/services/customerService";
+import { useUpdateCustomerMutation } from "../../store/services/customerService";
 import toast from "react-hot-toast";
 
 const style = {
@@ -32,43 +33,48 @@ const style = {
   padding: "10px",
 };
 
-export const AddCustomer = () => {
+export const UpdateCustomer = (props) => {
+  const { customer } = props;
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = () => {
+    setOpen(!open);
+    setState((prevValues) => ({
+      ...prevValues,
+      id: customer.id,
+      name: customer.name,
+      nickname: customer.nickname,
+      email: customer.email,
+      phone: customer.phone,
+      address: customer.address,
+      other: customer.other,
+    }));
+  };
 
-  const [formValues, setFormValues] = useState({
-    name: "",
-    nickname: "",
-    email: "",
-    phone: "",
-    address: "",
-    other: "",
+  const [state, setState] = useState({
+    id: customer.id,
+    name: customer.name,
+    nickname: customer.nickname,
+    email: customer.email,
+    phone: customer.phone,
+    address: customer.address,
+    other: customer.other,
   });
-
-  const [addCustomer, { isSuccess, isLoading, error }] = useAddCustomerMutation();
+  const [UpdateCustomer, { isSuccess, isLoading, error }] = useUpdateCustomerMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+    setState((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addCustomer(formValues);
+    await UpdateCustomer(state);
   };
 
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
-      console.log("Add data", formValues);
-      setFormValues({
-        name: "",
-        nickname: "",
-        email: "",
-        phone: "",
-        address: "",
-        other: "",
-      });
+      console.log("Update data", state);
     }
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
@@ -80,7 +86,7 @@ export const AddCustomer = () => {
   }, [isSuccess, error]);
   return (
     <div>
-      <Button
+      <MenuItem
         startIcon={
           <SvgIcon fontSize="small">
             <PlusIcon />
@@ -89,8 +95,8 @@ export const AddCustomer = () => {
         variant="contained"
         onClick={handleOpen}
       >
-        Add Customer
-      </Button>{" "}
+        Update
+      </MenuItem>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -101,8 +107,8 @@ export const AddCustomer = () => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please enter customer information"
-              title="Add Customer"
+              subheader="Please update customer information"
+              title="Update Customer"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -121,20 +127,34 @@ export const AddCustomer = () => {
                       required
                       label="Full name"
                       name="name"
+                      value={state.name}
                       onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <TextField fullWidth label="Nickname" name="nickname" onChange={handleChange} />
+                    <TextField
+                      fullWidth
+                      label="Nickname"
+                      name="nickname"
+                      value={state.nickname}
+                      onChange={handleChange}
+                    />
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <TextField fullWidth label="Email" name="email" onChange={handleChange} />
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      name="email"
+                      value={state.email}
+                      onChange={handleChange}
+                    />
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
                       label="Phone number"
                       name="phone"
+                      value={state.phone}
                       onChange={handleChange}
                     />
                   </Grid>
@@ -145,6 +165,7 @@ export const AddCustomer = () => {
                       multiline
                       rows={2}
                       name="address"
+                      value={state.address}
                       onChange={handleChange}
                     />
                   </Grid>
@@ -155,6 +176,7 @@ export const AddCustomer = () => {
                       multiline
                       rows={2}
                       name="other"
+                      value={state.other}
                       onChange={handleChange}
                     />
                   </Grid>
@@ -164,7 +186,7 @@ export const AddCustomer = () => {
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
               <Button onClick={handleSubmit} variant="contained" color="primary">
-                {isLoading ? "Loading..." : "Add Customer"}
+                {isLoading ? "Loading..." : "Update Customer"}
               </Button>
             </CardActions>
           </Box>

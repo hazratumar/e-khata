@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsEmail, IsOptional, MaxLength } from "class-validator";
+import {
+  IsNotEmpty,
+  IsEmail,
+  IsOptional,
+  MaxLength,
+  IsNumberString,
+} from "class-validator";
 
 export class CreateCustomerDto {
   @IsNotEmpty({ message: "Customer Name is required" })
@@ -21,6 +27,7 @@ export class CreateCustomerDto {
   email?: string;
 
   @IsNotEmpty({ message: "Phone number is required" })
+  @IsNumberString({}, { message: "Phone number must be a number." })
   @MaxLength(15, {
     message: "Phone number must be less than or equal to 15 characters",
   })

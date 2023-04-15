@@ -21,7 +21,16 @@ export const CustomerService = createApi({
       }),
       providesTags: ["customers"],
     }),
+    updateCustomer: builder.mutation({
+      query: (payload) => ({
+        url: `/customers`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["customers"],
+    }),
   }),
 });
 
-export const { useAddCustomerMutation, useGetCustomersQuery } = CustomerService;
+export const { useAddCustomerMutation, useGetCustomersQuery, useUpdateCustomerMutation } =
+  CustomerService;

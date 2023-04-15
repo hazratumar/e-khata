@@ -34,13 +34,9 @@ export class CustomersController {
     return this.customersService.findOne(+id);
   }
 
-  @Put(":id")
-  update(
-    @Param("id") id: string,
-    @GetCurrentUserId() userId: string,
-    @Body() updateCustomerDto: UpdateCustomerDto
-  ) {
-    return this.customersService.update(+id, +userId, updateCustomerDto);
+  @Put()
+  update(@Body() updateCustomerDto: UpdateCustomerDto) {
+    return this.customersService.update(updateCustomerDto);
   }
 
   @Delete(":id")
