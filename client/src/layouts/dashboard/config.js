@@ -1,3 +1,4 @@
+import { CurrencyDollarIcon, DocumentChartBarIcon } from "@heroicons/react/24/solid";
 import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
 import CogIcon from "@heroicons/react/24/solid/CogIcon";
 import LockClosedIcon from "@heroicons/react/24/solid/LockClosedIcon";
@@ -19,6 +20,15 @@ export const items = [
     ),
   },
   {
+    title: "Transactions",
+    path: "/transactions",
+    icon: (
+      <SvgIcon fontSize="small">
+        <DocumentChartBarIcon />
+      </SvgIcon>
+    ),
+  },
+  {
     title: "Customers",
     path: "/customers",
     icon: (
@@ -28,14 +38,23 @@ export const items = [
     ),
   },
   {
-    title: "Companies",
-    path: "/companies",
+    title: "Currencies",
+    path: "/currencies",
     icon: (
       <SvgIcon fontSize="small">
-        <ShoppingBagIcon />
+        <CurrencyDollarIcon />
       </SvgIcon>
     ),
   },
+  // {
+  //   title: "Companies",
+  //   path: "/companies",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <ShoppingBagIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
   {
     title: "Account",
     path: "/account",
@@ -54,31 +73,31 @@ export const items = [
       </SvgIcon>
     ),
   },
-  {
-    title: "Login",
-    path: "/auth/login",
-    icon: (
-      <SvgIcon fontSize="small">
-        <LockClosedIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Register",
-    path: "/auth/register",
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserPlusIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Error",
-    path: "/404",
-    icon: (
-      <SvgIcon fontSize="small">
-        <XCircleIcon />
-      </SvgIcon>
-    ),
-  },
+  // {
+  //   title: "Login",
+  //   path: "/auth/login",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <LockClosedIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
+  // {
+  //   title: "Register",
+  //   path: "/auth/register",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <UserPlusIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
+  // {
+  //   title: "Error",
+  //   path: "/404",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <XCircleIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
 ];
