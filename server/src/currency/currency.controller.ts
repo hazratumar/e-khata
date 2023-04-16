@@ -26,6 +26,11 @@ export class CurrencyController {
     return this.currencyService.create(+userId, createCurrencyDto);
   }
 
+  @Get()
+  find() {
+    return this.currencyService.find();
+  }
+
   @Get(":page/:limit/:searchTerm?")
   findAll(
     @Param("page", ParseIntPipe) page: number,

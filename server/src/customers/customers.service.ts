@@ -30,6 +30,9 @@ export class CustomersService {
     const customer = { ...createCustomerDto, user };
     return this.customerRepository.save(customer);
   }
+  async find(): Promise<Customer[]> {
+    return this.customerRepository.find();
+  }
 
   async findAll(
     page: number,

@@ -24,6 +24,10 @@ export class CustomersController {
   ) {
     return this.customersService.create(+userId, createCustomerDto);
   }
+  @Get()
+  find() {
+    return this.customersService.find();
+  }
 
   @Get(":page/:limit/:searchTerm?")
   findAll(

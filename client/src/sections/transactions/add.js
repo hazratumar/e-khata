@@ -23,6 +23,8 @@ import {
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
+import { useAllCustomersQuery } from "src/store/services/customerService";
+import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
 
 const style = {
@@ -41,6 +43,58 @@ const style = {
 export const AddTransaction = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+
+  const [state, setState] = useState({
+    debitFrom: "",
+    debitTo: "",
+    currency: "",
+    amount: "",
+    rate: "",
+    profit: "",
+    status: "Pending",
+  });
+
+  const { data: customerOptions } = useAllCustomersQuery();
+  const { data: currencyOptions } = useAllCurrenciesQuery();
+  const [addTransaction, { isSuccess, isLoading, error }] = useAddTransactionMutation();
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setState({
+      ...state,
+      [name]: parseInt(value, 10),
+    });
+  };
+
+  const handleSaveTransaction = async () => {
+    await addTransaction(state);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      handleOpen();
+      console.log("Add data", state);
+      setState({
+        debitFrom: "",
+        debitTo: "",
+        currency: "",
+        amount: "",
+        rate: "",
+        profit: "",
+        status: "",
+      });
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      const errorMessage = Array.isArray(error.data?.message)
+        ? error.data.message[0]
+        : error.data?.message;
+      toast.error(errorMessage);
+      console.log("Error Message", error);
+    }
+  }, [error]);
 
   return (
     <div>
@@ -81,36 +135,62 @@ export const AddTransaction = () => {
                 <Grid item xs={12} md={6}>
                   <Typography variant="h5">Debit</Typography>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={6} md={6}>
                       <Autocomplete
-                        options={["ali", "farman"]}
+                        getOptionLabel={(option) => option.name}
+                        options={customerOptions ?? ""}
+                        onChange={(event, value) => setState({ ...state, debitFrom: value.id })}
                         renderInput={(params) => <TextField {...params} label="From" />}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Autocomplete
-                        options={["ali", "farman"]}
-                        renderInput={(params) => <TextField {...params} label="TO" />}
                       />
                     </Grid>
                     <Grid item xs={6} md={6}>
                       <Autocomplete
-                        options={["USD", "DR"]}
+                        getOptionLabel={(option) => option.name}
+                        options={customerOptions ?? ""}
+                        onChange={(event, value) => setState({ ...state, debitTo: value.id })}
+                        renderInput={(params) => <TextField {...params} label="To" />}
+                      />
+                    </Grid>
+                    <Grid item xs={6} md={6}>
+                      <Autocomplete
+                        getOptionLabel={(option) => option.name}
+                        options={currencyOptions ?? ""}
+                        onChange={(event, value) => setState({ ...state, currency: value.id })}
                         renderInput={(params) => <TextField {...params} label="Currency" />}
                       />
                     </Grid>
                     <Grid item xs={6} md={6}>
-                      <TextField fullWidth label="Amount" name="amount" />
+                      <TextField
+                        type="number"
+                        fullWidth
+                        label="Amount"
+                        name="amount"
+                        onChange={handleChange}
+                      />
                     </Grid>
                     <Grid item xs={6} md={4}>
-                      <TextField fullWidth label="Rate" name="rate" />
+                      <TextField
+                        type="number"
+                        fullWidth
+                        label="Rate"
+                        name="rate"
+                        onChange={handleChange}
+                      />
                     </Grid>
                     <Grid item xs={6} md={4}>
-                      <TextField fullWidth label="Profit" name="profit" />
+                      <TextField
+                        type="number"
+                        fullWidth
+                        label="Profit"
+                        name="profit"
+                        onChange={handleChange}
+                      />
                     </Grid>
                     <Grid item xs={6} md={4}>
                       <Autocomplete
+                        value={state.status}
                         options={["Pending", "Cash"]}
+                        onChange={(event, value) => setState({ ...state, status: value })}
                         renderInput={(params) => <TextField {...params} label="Status" />}
                       />
                     </Grid>
@@ -119,13 +199,13 @@ export const AddTransaction = () => {
                 <Grid item xs={12} md={6}>
                   <Typography variant="h5">Credit</Typography>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={6} md={6}>
                       <Autocomplete
                         options={["ali", "farman"]}
                         renderInput={(params) => <TextField {...params} label="From" />}
                       />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={6} md={6}>
                       <Autocomplete
                         options={["ali", "farman"]}
                         renderInput={(params) => <TextField {...params} label="To" />}
@@ -165,21 +245,21 @@ export const AddTransaction = () => {
                               <TableCell>342</TableCell>
                               <TableCell>D</TableCell>
                             </TableRow>
-                            <TableRow key={1}>
+                            <TableRow key={2}>
                               <TableCell>Farman</TableCell>
                               <TableCell>Ali Khan</TableCell>
                               <TableCell>4234</TableCell>
                               <TableCell>342</TableCell>
                               <TableCell>D</TableCell>
                             </TableRow>
-                            <TableRow key={1}>
+                            <TableRow key={3}>
                               <TableCell>Farman</TableCell>
                               <TableCell>Ali Khan</TableCell>
                               <TableCell>4234</TableCell>
                               <TableCell>342</TableCell>
                               <TableCell>D</TableCell>
                             </TableRow>
-                            <TableRow key={1}>
+                            <TableRow key={4}>
                               <TableCell>Farman</TableCell>
                               <TableCell>Ali Khan</TableCell>
                               <TableCell>4234</TableCell>
@@ -196,8 +276,8 @@ export const AddTransaction = () => {
             </CardContent>
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button>Cancel</Button>
-              <Button variant="contained" color="primary">
-                Save Transaction
+              <Button variant="contained" color="primary" onClick={handleSaveTransaction}>
+                {isLoading ? "Loading..." : "Save Transaction"}
               </Button>
             </CardActions>
           </Box>

@@ -29,6 +29,10 @@ export class CurrencyService {
     return this.currencyRepository.save(currencies);
   }
 
+  async find(): Promise<Currency[]> {
+    return this.currencyRepository.find();
+  }
+
   async findAll(
     page: number,
     limit: number,

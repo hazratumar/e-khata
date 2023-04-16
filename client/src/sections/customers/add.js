@@ -66,6 +66,9 @@ export const AddCustomer = () => {
         other: "",
       });
     }
+  }, [isSuccess]);
+
+  useEffect(() => {
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
         ? error.data.message[0]
@@ -73,7 +76,7 @@ export const AddCustomer = () => {
       toast.error(errorMessage);
       console.log("Error Message", error);
     }
-  }, [isSuccess, error]);
+  }, [error]);
   return (
     <div>
       <Button

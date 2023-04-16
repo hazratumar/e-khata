@@ -10,14 +10,18 @@ import {
 import { TransactionsService } from "./transactions.service";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
+import { GetCurrentUserId } from "src/common/decorators";
 
 @Controller("transactions")
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionsService.create(createTransactionDto);
+  create(
+    @GetCurrentUserId() userId: string,
+    @Body() createTransactionDto: CreateTransactionDto
+  ) {
+    return this.transactionsService.create(+userId, createTransactionDto);
   }
 
   @Get()

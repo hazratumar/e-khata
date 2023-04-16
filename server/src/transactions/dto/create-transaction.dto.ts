@@ -1,25 +1,36 @@
-import { IsNotEmpty, IsNumber, IsEnum, IsDateString } from "class-validator";
+import { Transform } from "class-transformer";
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsDateString,
+  IsString,
+  IsIn,
+  IsOptional,
+} from "class-validator";
+import { Currency } from "src/currency/entities/currency.entity";
+import { Customer } from "src/customers/entities/customer.entity";
 
 export class CreateTransactionDto {
-  @IsNotEmpty()
-  @IsNumber()
-  userId: number;
+  @IsNotEmpty({ message: "Please select debit customer name" })
+  debitFrom: Customer;
 
-  @IsNotEmpty()
-  @IsNumber()
-  currencyId: number;
+  @IsNotEmpty({ message: "Please select debit customer name" })
+  debitTo: Customer;
 
-  @IsNotEmpty()
-  @IsNumber()
+  @IsNotEmpty({ message: "Please select currency" })
+  currency: Currency;
+
+  @Transform(({ value }) => (value === "" || value === null ? 0 : value))
   amount: number;
 
-  @IsNotEmpty()
-  @IsEnum(["deposit", "withdrawal"])
-  type: "deposit" | "withdrawal";
+  @Transform(({ value }) => (value === "" || value === null ? 0 : value))
+  rate: number;
 
-  @IsDateString()
-  createdAt: string;
+  @Transform(({ value }) => (value === "" || value === null ? 0 : value))
+  profit: number;
 
-  @IsDateString()
-  updatedAt: string;
+  @IsIn(["Pending", "Cash"], {
+    message: 'Please enter either "Pending" or "Cash".',
+  })
+  status: string;
 }

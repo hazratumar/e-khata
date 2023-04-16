@@ -14,6 +14,13 @@ export const CurrencyService = createApi({
       }),
       invalidatesTags: ["currencies"],
     }),
+    allCurrencies: builder.query({
+      query: () => ({
+        url: "/currencies",
+        method: "GET",
+      }),
+      providesTags: ["currencies"],
+    }),
     getCurrencies: builder.query({
       query: ({ page, rowsPerPage, searchTerm }) => {
         let url = `/currencies/${page}/${rowsPerPage}`;
@@ -38,5 +45,9 @@ export const CurrencyService = createApi({
   }),
 });
 
-export const { useAddCurrencyMutation, useGetCurrenciesQuery, useUpdateCurrencyMutation } =
-  CurrencyService;
+export const {
+  useAddCurrencyMutation,
+  useAllCurrenciesQuery,
+  useGetCurrenciesQuery,
+  useUpdateCurrencyMutation,
+} = CurrencyService;
