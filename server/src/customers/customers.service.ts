@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Brackets, Like, Repository } from "typeorm";
-import { Customers } from "./entities/customer.entity";
+import { Customer } from "./entities/customer.entity";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer";
 import { UsersService } from "src/users/users.service";
@@ -9,15 +9,15 @@ import { UsersService } from "src/users/users.service";
 @Injectable()
 export class CustomersService {
   constructor(
-    @InjectRepository(Customers)
-    private readonly customerRepository: Repository<Customers>,
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
     private readonly usersService: UsersService
   ) {}
 
   async create(
     userId: number,
     createCustomerDto: CreateCustomerDto
-  ): Promise<Customers> {
+  ): Promise<Customer> {
     const user = await this.usersService.findOne(userId);
 
     const isDuplicateName = await this.findByName(createCustomerDto.name);
@@ -36,7 +36,7 @@ export class CustomersService {
     limit: number,
     search?: string
   ): Promise<{
-    customers: Customers[];
+    customers: Customer[];
     total: number;
     page: number;
     totalPages: number;
@@ -86,13 +86,13 @@ export class CustomersService {
     return { customers, total: length, page, totalPages };
   }
 
-  async findOne(id: number): Promise<Customers> {
+  async findOne(id: number): Promise<Customer> {
     return this.customerRepository.findOne({ where: { id } });
   }
-  async findByName(name: string): Promise<Customers> {
+  async findByName(name: string): Promise<Customer> {
     return this.customerRepository.findOne({ where: { name } });
   }
-  async update(customer: UpdateCustomerDto): Promise<Customers> {
+  async update(customer: UpdateCustomerDto): Promise<Customer> {
     // Input validation
     if (!customer || Object.keys(customer).length === 0) {
       throw new HttpException("Invalid customer data", HttpStatus.BAD_REQUEST);

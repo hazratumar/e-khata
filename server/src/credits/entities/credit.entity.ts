@@ -10,28 +10,28 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Customer } from "src/customers/entities/customer.entity";
-import { Credit } from "src/credits/entities/credit.entity";
+import { Transaction } from "src/transactions/entities/transaction.entity";
 
 @Entity()
-export class Transaction {
+export class Credit {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Customer, (customer) => customer.debitFrom, {
+  @ManyToOne(() => Customer, (customer) => customer.creditFrom, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
   })
-  debitFrom: Customer;
+  creditFrom: Customer;
 
-  @ManyToOne(() => Customer, (customer) => customer.debitTo, {
+  @ManyToOne(() => Customer, (customer) => customer.creditTo, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
   })
-  debitTo: Customer;
+  creditTo: Customer;
 
-  @ManyToOne(() => Currency, (currency) => currency.transactions, {
+  @ManyToOne(() => Currency, (currency) => currency.credit, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
@@ -41,19 +41,14 @@ export class Transaction {
   @Column()
   amount: number;
 
-  @Column()
-  rate: number;
+  @ManyToOne(() => Transaction, (transaction) => transaction.credit, {
+    eager: true,
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  transaction: Transaction;
 
-  @Column()
-  profit: number;
-
-  @Column()
-  status: string;
-
-  @OneToMany(() => Credit, (credit) => credit.transaction)
-  credit: Credit[];
-
-  @ManyToOne(() => User, (user) => user.transaction, {
+  @ManyToOne(() => User, (user) => user.credit, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",

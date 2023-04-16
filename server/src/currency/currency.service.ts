@@ -2,22 +2,19 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateCurrencyDto } from "./dto/create-currency.dto";
 import { UpdateCurrencyDto } from "./dto/update-currency.dto";
 import { Brackets, Repository } from "typeorm";
-import { Currencies } from "./entities/currency.entity";
+import { Currency } from "./entities/currency.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class CurrencyService {
   constructor(
-    @InjectRepository(Currencies)
-    private readonly currencyRepository: Repository<Currencies>,
+    @InjectRepository(Currency)
+    private readonly currencyRepository: Repository<Currency>,
     private readonly usersService: UsersService
   ) {}
 
-  async create(
-    userId: number,
-    currency: CreateCurrencyDto
-  ): Promise<Currencies> {
+  async create(userId: number, currency: CreateCurrencyDto): Promise<Currency> {
     const user = await this.usersService.findOne(userId);
     const isDuplicateName = await this.findByName(currency.name);
 
@@ -37,7 +34,7 @@ export class CurrencyService {
     limit: number,
     search?: string
   ): Promise<{
-    currencies: Currencies[];
+    currencies: Currency[];
     total: number;
     page: number;
     totalPages: number;
@@ -83,14 +80,14 @@ export class CurrencyService {
     return { currencies, total: length, page, totalPages };
   }
 
-  async findOne(id: number): Promise<Currencies> {
+  async findOne(id: number): Promise<Currency> {
     return this.currencyRepository.findOne({ where: { id } });
   }
-  async findByName(name: string): Promise<Currencies> {
+  async findByName(name: string): Promise<Currency> {
     return this.currencyRepository.findOne({ where: { name } });
   }
 
-  async update(currency: UpdateCurrencyDto): Promise<Currencies> {
+  async update(currency: UpdateCurrencyDto): Promise<Currency> {
     // Input validation
     if (!currency || Object.keys(currency).length === 0) {
       throw new HttpException("Invalid customer data", HttpStatus.BAD_REQUEST);

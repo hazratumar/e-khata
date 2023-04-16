@@ -2,28 +2,28 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
-import { Transactions } from "./entities/transaction.entity";
+import { Transaction } from "./entities/transaction.entity";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 
 @Injectable()
 export class TransactionsService {
   constructor(
-    @InjectRepository(Transactions)
-    private readonly transactionRepository: Repository<Transactions>
+    @InjectRepository(Transaction)
+    private readonly transactionRepository: Repository<Transaction>
   ) {}
 
   async create(
     createTransactionDto: CreateTransactionDto
-  ): Promise<Transactions> {
+  ): Promise<Transaction> {
     const transaction = this.transactionRepository.create(createTransactionDto);
     return this.transactionRepository.save(transaction);
   }
 
-  async findAll(): Promise<Transactions[]> {
+  async findAll(): Promise<Transaction[]> {
     return this.transactionRepository.find();
   }
 
-  async findOne(id: number): Promise<Transactions> {
+  async findOne(id: number): Promise<Transaction> {
     const transaction = await this.transactionRepository.findOne({
       where: { id },
     });
@@ -36,7 +36,7 @@ export class TransactionsService {
   async update(
     id: number,
     updateTransactionDto: UpdateTransactionDto
-  ): Promise<Transactions> {
+  ): Promise<Transaction> {
     const transaction = await this.transactionRepository.findOne({
       where: { id },
     });

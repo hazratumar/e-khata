@@ -1,4 +1,4 @@
-import { Users } from "src/users/entities/user.entity";
+import { User } from "src/users/entities/user.entity";
 import {
   Column,
   CreateDateColumn,
@@ -8,10 +8,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Transactions } from "src/transactions/entities/transaction.entity";
+import { Transaction } from "src/transactions/entities/transaction.entity";
+import { Credit } from "src/credits/entities/credit.entity";
 
 @Entity()
-export class Currencies {
+export class Currency {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,15 +22,18 @@ export class Currencies {
   @Column()
   rate: string;
 
-  @ManyToOne(() => Users, (user) => user.currency, {
+  @ManyToOne(() => User, (user) => user.currency, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
   })
-  user: Users;
+  user: User;
 
-  @OneToMany(() => Transactions, (transaction) => transaction.currency)
-  transactions: Transactions[];
+  @OneToMany(() => Transaction, (transaction) => transaction.currency)
+  transactions: Transaction[];
+
+  @OneToMany(() => Credit, (credit) => credit.currency)
+  credit: Credit[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",
@@ -43,7 +47,7 @@ export class Currencies {
   })
   updatedAt: Date;
 
-  constructor(partial: Partial<Currencies>) {
+  constructor(partial: Partial<Currency>) {
     Object.assign(this, partial);
   }
 }

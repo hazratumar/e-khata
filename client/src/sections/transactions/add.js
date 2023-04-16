@@ -54,7 +54,7 @@ export const AddTransaction = () => {
         onClick={handleOpen}
       >
         Add Transaction
-      </Button>{" "}
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

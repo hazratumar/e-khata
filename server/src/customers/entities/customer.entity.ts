@@ -1,15 +1,18 @@
-import { Users } from "src/users/entities/user.entity";
+import { Credit } from "src/credits/entities/credit.entity";
+import { Transaction } from "src/transactions/entities/transaction.entity";
+import { User } from "src/users/entities/user.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 @Entity()
-export class Customers {
+export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,12 +31,24 @@ export class Customers {
   @Column()
   other: string;
 
-  @ManyToOne(() => Users, (user) => user.customers, {
+  @OneToMany(() => Transaction, (transaction) => transaction.debitFrom)
+  debitFrom: Transaction[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.debitTo)
+  debitTo: Transaction[];
+
+  @OneToMany(() => Credit, (credit) => credit.creditFrom)
+  creditFrom: Credit[];
+
+  @OneToMany(() => Credit, (credit) => credit.creditTo)
+  creditTo: Credit[];
+
+  @ManyToOne(() => User, (user) => user.customer, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
   })
-  user: Users;
+  user: User;
 
   @CreateDateColumn({ type: "timestamptz" })
   createdAt: Date;
@@ -41,7 +56,7 @@ export class Customers {
   @UpdateDateColumn({ type: "timestamptz" })
   updatedAt: Date;
 
-  constructor(partial: Partial<Customers>) {
+  constructor(partial: Partial<Customer>) {
     Object.assign(this, partial);
   }
 }

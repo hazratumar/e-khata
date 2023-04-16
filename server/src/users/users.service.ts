@@ -8,7 +8,7 @@ import {
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Repository } from "typeorm";
-import { Users } from "./entities/user.entity";
+import { User } from "./entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as argon from "argon2";
 import { AuthService } from "src/auth/auth.service";
@@ -20,13 +20,13 @@ export class UsersService {
   private readonly allowedExtensions = [".jpg", ".jpeg", ".png"];
   private readonly maxFileSizeInBytes = 5242880; // 5 MB
   constructor(
-    @InjectRepository(Users)
-    private userRepository: Repository<Users>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Users> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const hash = await argon.hash(createUserDto.password);
     const existingUser = await this.userRepository.findOne({
       where: [{ email: createUserDto.email }],
@@ -41,7 +41,7 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
-  async findAll(): Promise<Users[]> {
+  async findAll(): Promise<User[]> {
     // Find all users in the database
     const users = await this.userRepository.find();
 
@@ -53,7 +53,7 @@ export class UsersService {
     return users;
   }
 
-  async findOne(id: number): Promise<Users> {
+  async findOne(id: number): Promise<User> {
     // Find a user by their ID
     const user = await this.userRepository.findOne({ where: { id } });
 
@@ -65,7 +65,7 @@ export class UsersService {
     return user;
   }
 
-  async findByEmail(email: string): Promise<Users> {
+  async findByEmail(email: string): Promise<User> {
     // Find a user by their email
     const user = await this.userRepository.findOne({ where: { email } });
 
@@ -76,7 +76,7 @@ export class UsersService {
 
     return user;
   }
-  async refreshToken(id: number, token: string): Promise<Users> {
+  async refreshToken(id: number, token: string): Promise<User> {
     // Find the existing user in the database
     const existingUser = await this.userRepository.findOne({ where: { id } });
     if (!existingUser) {

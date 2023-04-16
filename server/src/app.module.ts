@@ -4,13 +4,15 @@ import { AuthModule } from "./auth/auth.module";
 import { AtGuard } from "./common/guards";
 import { UsersModule } from "./users/users.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Users } from "./users/entities/user.entity";
+import { User } from "./users/entities/user.entity";
 import { CustomersModule } from "./customers/customers.module";
-import { Customers } from "./customers/entities/customer.entity";
-import { CurrencyModule } from "./currency/currency.module";
+import { Customer } from "./customers/entities/customer.entity";
+import { CurrenciesModule } from "./currency/currency.module";
 import { TransactionsModule } from "./transactions/transactions.module";
-import { Transactions } from "./transactions/entities/transaction.entity";
-import { Currencies } from "./currency/entities/currency.entity";
+import { Transaction } from "./transactions/entities/transaction.entity";
+import { Currency } from "./currency/entities/currency.entity";
+import { CreditsModule } from "./credits/credits.module";
+import { Credit } from "./credits/entities/credit.entity";
 
 @Module({
   imports: [
@@ -21,15 +23,16 @@ import { Currencies } from "./currency/entities/currency.entity";
       username: "postgres",
       password: "1234",
       database: "e-khata",
-      entities: [Users, Customers, Currencies, Transactions],
+      entities: [User, Customer, Currency, Transaction, Credit],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Users, Customers, Currencies, Transactions]),
+    TypeOrmModule.forFeature([User, Customer, Currency, Transaction, Credit]),
     AuthModule,
     UsersModule,
     CustomersModule,
-    CurrencyModule,
+    CurrenciesModule,
     TransactionsModule,
+    CreditsModule,
   ],
   providers: [
     {
