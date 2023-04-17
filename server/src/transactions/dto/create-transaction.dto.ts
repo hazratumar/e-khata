@@ -1,14 +1,13 @@
-import { Transform } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
   IsNotEmpty,
-  IsNumber,
-  IsDateString,
-  IsString,
   IsIn,
-  IsOptional,
+  ValidateNested,
+  ArrayMinSize,
 } from "class-validator";
 import { Currency } from "src/currency/entities/currency.entity";
 import { Customer } from "src/customers/entities/customer.entity";
+import { Credits } from "./create-credits.dto";
 
 export class CreateTransactionDto {
   @IsNotEmpty({ message: "Please select debit customer name" })
@@ -33,4 +32,9 @@ export class CreateTransactionDto {
     message: 'Please enter either "Pending" or "Cash".',
   })
   status: string;
+
+  @ValidateNested({ each: true })
+  @Type(() => Credits)
+  @ArrayMinSize(1, { message: "At least one credit is required" })
+  credits: Credits[];
 }

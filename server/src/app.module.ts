@@ -11,8 +11,6 @@ import { CurrenciesModule } from "./currency/currency.module";
 import { TransactionsModule } from "./transactions/transactions.module";
 import { Transaction } from "./transactions/entities/transaction.entity";
 import { Currency } from "./currency/entities/currency.entity";
-import { CreditsModule } from "./credits/credits.module";
-import { Credit } from "./credits/entities/credit.entity";
 
 @Module({
   imports: [
@@ -23,16 +21,15 @@ import { Credit } from "./credits/entities/credit.entity";
       username: "postgres",
       password: "1234",
       database: "e-khata",
-      entities: [User, Customer, Currency, Transaction, Credit],
+      entities: [User, Customer, Currency, Transaction],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User, Customer, Currency, Transaction, Credit]),
+    TypeOrmModule.forFeature([User, Customer, Currency, Transaction]),
     AuthModule,
     UsersModule,
     CustomersModule,
     CurrenciesModule,
     TransactionsModule,
-    CreditsModule,
   ],
   providers: [
     {

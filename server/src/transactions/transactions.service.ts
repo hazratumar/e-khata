@@ -19,9 +19,7 @@ export class TransactionsService {
     createTransactionDto: CreateTransactionDto
   ): Promise<Transaction> {
     const user = await this.usersService.findOne(userId);
-
     const transaction = { ...createTransactionDto, user };
-
     return this.transactionRepository.save(transaction);
   }
 

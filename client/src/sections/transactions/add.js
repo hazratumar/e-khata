@@ -20,7 +20,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
 import { useAllCustomersQuery } from "src/store/services/customerService";
@@ -52,6 +52,13 @@ export const AddTransaction = () => {
     rate: "",
     profit: "",
     status: "Pending",
+    credits: [],
+  });
+  const [credit, setCredit] = useState({
+    creditFrom: "",
+    creditTo: "",
+    currency: "",
+    amount: "",
   });
 
   const { data: customerOptions } = useAllCustomersQuery();
@@ -65,24 +72,22 @@ export const AddTransaction = () => {
       [name]: parseInt(value, 10),
     });
   };
+  const handleSaveCredit = () => {
+    setState({
+      ...state,
+      credits: state.credits ? state.credits.concat(credit) : [credit],
+    });
+  };
 
   const handleSaveTransaction = async () => {
     await addTransaction(state);
+    console.log(state);
   };
 
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
       console.log("Add data", state);
-      setState({
-        debitFrom: "",
-        debitTo: "",
-        currency: "",
-        amount: "",
-        rate: "",
-        profit: "",
-        status: "",
-      });
     }
   }, [isSuccess]);
 
@@ -201,75 +206,88 @@ export const AddTransaction = () => {
                   <Grid container spacing={1}>
                     <Grid item xs={6} md={6}>
                       <Autocomplete
-                        options={["ali", "farman"]}
+                        getOptionLabel={(option) => option.name}
+                        options={customerOptions ?? ""}
+                        onChange={(event, value) => setCredit({ ...credit, creditFrom: value.id })}
                         renderInput={(params) => <TextField {...params} label="From" />}
                       />
                     </Grid>
                     <Grid item xs={6} md={6}>
                       <Autocomplete
-                        options={["ali", "farman"]}
-                        renderInput={(params) => <TextField {...params} label="To" />}
+                        getOptionLabel={(option) => option.name}
+                        options={customerOptions ?? ""}
+                        onChange={(event, value) => setCredit({ ...credit, creditTo: value.id })}
+                        renderInput={(params) => <TextField {...params} label="From" />}
                       />
                     </Grid>
                     <Grid item xs={6} md={5}>
                       <Autocomplete
-                        options={["USD", "DR"]}
+                        getOptionLabel={(option) => option.name}
+                        options={currencyOptions ?? ""}
+                        onChange={(event, value) => setCredit({ ...credit, currency: value.id })}
                         renderInput={(params) => <TextField {...params} label="Currency" />}
                       />
                     </Grid>
                     <Grid item xs={6} md={5}>
-                      <TextField fullWidth label="Amount" name="amount" />
+                      <TextField
+                        fullWidth
+                        label="Amount"
+                        onChange={(event) =>
+                          setCredit({ ...credit, amount: parseInt(event.target.value, 10) })
+                        }
+                      />
                     </Grid>
                     <Grid item xs={12} md={2}>
-                      <Button variant="contained" fullWidth>
+                      <Button variant="contained" fullWidth onClick={handleSaveCredit}>
                         Add
                       </Button>
                     </Grid>
-                    <Grid item xs={12} md={12} lg={12}>
-                      <TableContainer component={Paper} sx={{ height: "40vh" }}>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>From</TableCell>
-                              <TableCell>To</TableCell>
-                              <TableCell>Currency</TableCell>
-                              <TableCell>Amount</TableCell>
-                              <TableCell>Delete</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            <TableRow key={1}>
-                              <TableCell>Farman</TableCell>
-                              <TableCell>Ali Khan</TableCell>
-                              <TableCell>4234</TableCell>
-                              <TableCell>342</TableCell>
-                              <TableCell>D</TableCell>
-                            </TableRow>
-                            <TableRow key={2}>
-                              <TableCell>Farman</TableCell>
-                              <TableCell>Ali Khan</TableCell>
-                              <TableCell>4234</TableCell>
-                              <TableCell>342</TableCell>
-                              <TableCell>D</TableCell>
-                            </TableRow>
-                            <TableRow key={3}>
-                              <TableCell>Farman</TableCell>
-                              <TableCell>Ali Khan</TableCell>
-                              <TableCell>4234</TableCell>
-                              <TableCell>342</TableCell>
-                              <TableCell>D</TableCell>
-                            </TableRow>
-                            <TableRow key={4}>
-                              <TableCell>Farman</TableCell>
-                              <TableCell>Ali Khan</TableCell>
-                              <TableCell>4234</TableCell>
-                              <TableCell>342</TableCell>
-                              <TableCell>D</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Grid>
+                    {state?.credits?.length === 0 ? (
+                      "No Data"
+                    ) : (
+                      <Grid item xs={12} md={12} lg={12}>
+                        <TableContainer component={Paper} sx={{ height: "40vh" }}>
+                          <Table>
+                            <TableHead sx={{ position: "sticky", top: 0 }}>
+                              <TableRow>
+                                <TableCell>No</TableCell>
+                                <TableCell>From</TableCell>
+                                <TableCell>To</TableCell>
+                                <TableCell>Currency</TableCell>
+                                <TableCell>Amount</TableCell>
+                                <TableCell>Delete</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {state.credits.map((item) => (
+                                <TableRow key={item.amount}>
+                                  <TableCell>
+                                    {customerOptions.find((i) => i.id === item.creditFrom)?.name}
+                                  </TableCell>
+                                  <TableCell>
+                                    {customerOptions.find((i) => i.id === item.creditFrom)?.name}
+                                  </TableCell>
+                                  <TableCell>
+                                    {customerOptions.find((i) => i.id === item.creditTo)?.name}
+                                  </TableCell>
+                                  <TableCell>
+                                    {currencyOptions.find((i) => i.id === item.currency)?.name}
+                                  </TableCell>
+                                  <TableCell>{item.amount}</TableCell>
+                                  <TableCell>
+                                    <IconButton color="error">
+                                      <SvgIcon>
+                                        <TrashIcon />
+                                      </SvgIcon>
+                                    </IconButton>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Grid>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>

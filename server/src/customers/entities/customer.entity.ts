@@ -1,4 +1,3 @@
-import { Credit } from "src/credits/entities/credit.entity";
 import { Transaction } from "src/transactions/entities/transaction.entity";
 import { User } from "src/users/entities/user.entity";
 import {
@@ -36,12 +35,6 @@ export class Customer {
 
   @OneToMany(() => Transaction, (transaction) => transaction.debitTo)
   debitTo: Transaction[];
-
-  @OneToMany(() => Credit, (credit) => credit.creditFrom)
-  creditFrom: Credit[];
-
-  @OneToMany(() => Credit, (credit) => credit.creditTo)
-  creditTo: Credit[];
 
   @ManyToOne(() => User, (user) => user.customer, {
     eager: true,

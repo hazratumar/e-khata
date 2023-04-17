@@ -5,12 +5,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Customer } from "src/customers/entities/customer.entity";
-import { Credit } from "src/credits/entities/credit.entity";
+import { Credits } from "../dto/create-credits.dto";
 
 @Entity()
 export class Transaction {
@@ -50,15 +49,15 @@ export class Transaction {
   @Column()
   status: string;
 
-  @OneToMany(() => Credit, (credit) => credit.transaction)
-  credit: Credit[];
-
   @ManyToOne(() => User, (user) => user.transaction, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
   })
   user: User;
+
+  @Column({ type: "jsonb", default: {} })
+  credits: Credits[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",

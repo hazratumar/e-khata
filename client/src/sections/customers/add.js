@@ -58,13 +58,6 @@ export const AddCustomer = () => {
     if (isSuccess) {
       handleOpen();
       console.log("Add data", formValues);
-      setFormValues({
-        name: "",
-        nickname: "",
-        phone: "",
-        address: "",
-        other: "",
-      });
     }
   }, [isSuccess]);
 

@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Transaction } from "src/transactions/entities/transaction.entity";
-import { Credit } from "src/credits/entities/credit.entity";
 
 @Entity()
 export class Currency {
@@ -31,9 +30,6 @@ export class Currency {
 
   @OneToMany(() => Transaction, (transaction) => transaction.currency)
   transactions: Transaction[];
-
-  @OneToMany(() => Credit, (credit) => credit.currency)
-  credit: Credit[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",

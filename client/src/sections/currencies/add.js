@@ -53,10 +53,6 @@ export const AddCurrency = () => {
     if (isSuccess) {
       handleOpen();
       console.log("Add data", formValues);
-      setFormValues({
-        name: "",
-        rate: "",
-      });
     }
   }, [isSuccess]);
 
@@ -82,7 +78,7 @@ export const AddCurrency = () => {
         onClick={handleOpen}
       >
         Add Currency
-      </Button>{" "}
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
