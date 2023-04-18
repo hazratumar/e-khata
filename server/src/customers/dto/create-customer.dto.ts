@@ -1,6 +1,5 @@
 import {
   IsNotEmpty,
-  IsEmail,
   IsOptional,
   MaxLength,
   IsNumberString,
@@ -19,14 +18,6 @@ export class CreateCustomerDto {
     message: "Nickname must be less than or equal to 50 characters",
   })
   nickname?: string;
-
-  @ValidateIf((o) => o.email !== "")
-  @IsEmail({}, { message: "Email must be a valid email address" })
-  @MaxLength(50, {
-    message: "Email must be less than or equal to 50 characters",
-  })
-  @IsOptional()
-  email: string;
 
   @ValidateIf((o) => o.phone !== "")
   @IsNumberString({}, { message: "Phone number must be a number." })

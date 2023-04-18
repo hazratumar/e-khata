@@ -2,7 +2,7 @@ import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import { Card, InputAdornment, OutlinedInput, SvgIcon } from "@mui/material";
 import { useState } from "react";
 
-export const CustomersSearch = ({ onSearch }) => {
+export const Search = ({ onSearch, item }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (e) => {
@@ -16,7 +16,7 @@ export const CustomersSearch = ({ onSearch }) => {
       <OutlinedInput
         value={searchTerm}
         fullWidth
-        placeholder="Search customers..."
+        placeholder={`Search ${item}...`}
         onChange={handleSearch}
         startAdornment={
           <InputAdornment position="start">

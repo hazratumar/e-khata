@@ -1,38 +1,45 @@
-import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import * as argon from 'argon2';
+import * as argon from "argon2";
 import { AuthService } from "src/auth/auth.service";
 import { Tokens } from "src/auth/types";
-import { extname } from 'path';
+import { extname } from "path";
 
 @Injectable()
 export class UsersService {
-  private readonly allowedExtensions = ['.jpg', '.jpeg', '.png'];
+  private readonly allowedExtensions = [".jpg", ".jpeg", ".png"];
   private readonly maxFileSizeInBytes = 5242880; // 5 MB
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const hash = await argon.hash(createUserDto.password);
     const existingUser = await this.userRepository.findOne({
-      where: [{ username: createUserDto.username }, { email: createUserDto.email }],
+      where: [{ email: createUserDto.email }],
     });
     if (existingUser) {
-      const field = existingUser.username === createUserDto.username ? "Username" : "Email";
-      throw new HttpException(`${field} already taken`, HttpStatus.CONFLICT);
+      throw new HttpException(`Email already taken`, HttpStatus.CONFLICT);
     }
-    const user = await this.userRepository.create({ ...createUserDto, password: hash });
+    const user = await this.userRepository.create({
+      ...createUserDto,
+      password: hash,
+    });
     return await this.userRepository.save(user);
   }
-
 
   async findAll(): Promise<User[]> {
     // Find all users in the database
@@ -58,17 +65,6 @@ export class UsersService {
     return user;
   }
 
-  async findByUsername(username: string): Promise<User> {
-    // Find a user by their username
-    const user = await this.userRepository.findOne({ where: { username } });
-
-    if (!user) {
-      // If no user with the given username is found, throw an error
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-    }
-
-    return user;
-  }
   async findByEmail(email: string): Promise<User> {
     // Find a user by their email
     const user = await this.userRepository.findOne({ where: { email } });
@@ -96,23 +92,29 @@ export class UsersService {
   validateBase64Image(image: string): void {
     const base64regex = /^data:image\/(png|jpg|jpeg);base64,/;
     if (!base64regex.test(image)) {
-      throw new HttpException('Invalid image format', HttpStatus.BAD_REQUEST);
+      throw new HttpException("Invalid image format", HttpStatus.BAD_REQUEST);
     }
 
-    const ext = extname(image.split(';')[0].split('/')[1]);
+    const ext = extname(image.split(";")[0].split("/")[1]);
     if (!this.allowedExtensions.includes(ext)) {
-      throw new HttpException('Invalid image type', HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+      throw new HttpException(
+        "Invalid image type",
+        HttpStatus.UNSUPPORTED_MEDIA_TYPE
+      );
     }
 
-    const sizeInBytes = Buffer.byteLength(image, 'base64');
+    const sizeInBytes = Buffer.byteLength(image, "base64");
     if (sizeInBytes > this.maxFileSizeInBytes) {
-      throw new HttpException(`Image size exceeds ${this.maxFileSizeInBytes} bytes`, HttpStatus.PAYLOAD_TOO_LARGE);
+      throw new HttpException(
+        `Image size exceeds ${this.maxFileSizeInBytes} bytes`,
+        HttpStatus.PAYLOAD_TOO_LARGE
+      );
     }
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<Tokens> {
     if (updateUserDto?.image) {
-      await this.validateBase64Image(updateUserDto?.image)
+      await this.validateBase64Image(updateUserDto?.image);
     }
     // Find the existing user in the database
     const existingUser = await this.userRepository.findOne({ where: { id } });
@@ -120,15 +122,12 @@ export class UsersService {
       throw new HttpException("User not found", HttpStatus.NOT_FOUND);
     }
 
-    // Check if the provided email or username already exists for another user
-    const { email, username } = updateUserDto;
+    // Check if the provided email already exists for another user
+    const { email } = updateUserDto;
 
-    const userWithSameUsername = await this.userRepository.findOne({ where: { username } });
-    if (userWithSameUsername && userWithSameUsername.id !== id) {
-      throw new HttpException("Username already taken", HttpStatus.CONFLICT);
-    }
-
-    const userWithSameEmail = await this.userRepository.findOne({ where: { email } });
+    const userWithSameEmail = await this.userRepository.findOne({
+      where: { email },
+    });
     if (userWithSameEmail && userWithSameEmail.id !== id) {
       throw new HttpException("Email already taken", HttpStatus.CONFLICT);
     }

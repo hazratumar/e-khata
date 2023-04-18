@@ -1,9 +1,11 @@
+import { Transaction } from "src/transactions/entities/transaction.entity";
 import { User } from "src/users/entities/user.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -20,9 +22,6 @@ export class Customer {
   nickname: string;
 
   @Column()
-  email: string;
-
-  @Column()
   phone: string;
 
   @Column()
@@ -31,7 +30,13 @@ export class Customer {
   @Column()
   other: string;
 
-  @ManyToOne(() => User, (user) => user.customers, {
+  @OneToMany(() => Transaction, (transaction) => transaction.debitFrom)
+  debitFrom: Transaction[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.debitTo)
+  debitTo: Transaction[];
+
+  @ManyToOne(() => User, (user) => user.customer, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",

@@ -21,16 +21,13 @@ export class User {
   name: string;
 
   @Column({ unique: true })
-  username: string;
-
-  @Column({ unique: true })
   email: string;
 
   @Column({ default: "Admin" })
-  role: "Super Admin" | "Admin";
+  role: string;
 
   @Column({ default: "Pending" })
-  status: "Pending" | "Active" | "Disable" | "Delete";
+  status: string;
 
   @Column({ nullable: true })
   @Exclude()
@@ -46,13 +43,13 @@ export class User {
   otp: string;
 
   @OneToMany(() => Customer, (customer) => customer.user)
-  customers: Customer[];
-
-  @OneToMany(() => Transaction, (transaction) => transaction.user)
-  transactions: Transaction[];
+  customer: Customer[];
 
   @OneToMany(() => Currency, (currency) => currency.user)
   currency: Currency[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transaction: Transaction[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",

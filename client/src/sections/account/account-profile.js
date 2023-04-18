@@ -21,7 +21,6 @@ export const AccountProfile = () => {
   const user = useSelector((state) => state.authReducer.user);
   const [state, setState] = useState({
     name: user?.name,
-    username: user?.username,
     email: user?.email,
     image: user?.image,
   });
@@ -82,9 +81,6 @@ export const AccountProfile = () => {
           />
           <Typography gutterBottom variant="h5">
             {state.name}
-          </Typography>
-          <Typography color="text.secondary" variant="body2">
-            {state.username}
           </Typography>
           <Typography color="text.secondary" variant="body2">
             {state.email}

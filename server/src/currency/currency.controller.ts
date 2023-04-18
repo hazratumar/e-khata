@@ -1,34 +1,57 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { CurrencyService } from './currency.service';
-import { CreateCurrencyDto } from './dto/create-currency.dto';
-import { UpdateCurrencyDto } from './dto/update-currency.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Put,
+} from "@nestjs/common";
+import { CurrencyService } from "./currency.service";
+import { CreateCurrencyDto } from "./dto/create-currency.dto";
+import { UpdateCurrencyDto } from "./dto/update-currency.dto";
+import { GetCurrentUserId } from "src/common/decorators";
 
-@Controller('currency')
+@Controller("currencies")
 export class CurrencyController {
-  constructor(private readonly currencyService: CurrencyService) { }
+  constructor(private readonly currencyService: CurrencyService) {}
 
   @Post()
-  create(@Body() createCurrencyDto: CreateCurrencyDto) {
-    return this.currencyService.create(createCurrencyDto);
+  create(
+    @GetCurrentUserId() userId: string,
+    @Body() createCurrencyDto: CreateCurrencyDto
+  ) {
+    return this.currencyService.create(+userId, createCurrencyDto);
   }
 
-  @Get(':page/:limit')
-  findAll() {
-    return this.currencyService.findAll();
+  @Get()
+  find() {
+    return this.currencyService.find();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":page/:limit/:searchTerm?")
+  findAll(
+    @Param("page", ParseIntPipe) page: number,
+    @Param("limit", ParseIntPipe) limit: number,
+    @Param("searchTerm") searchTerm: string
+  ) {
+    return this.currencyService.findAll(page, limit, searchTerm);
+  }
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.currencyService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCurrencyDto: UpdateCurrencyDto) {
-    return this.currencyService.update(+id, updateCurrencyDto);
+  @Put()
+  update(@Body() updateCurrencyDto: UpdateCurrencyDto) {
+    return this.currencyService.update(updateCurrencyDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.currencyService.remove(+id);
   }
 }

@@ -27,7 +27,6 @@ const Page = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    username: "",
   });
   const [signUp, { isSuccess, isLoading, error, data }] = useSignUpMutation();
 
@@ -95,16 +94,9 @@ const Page = () => {
               <Stack spacing={3}>
                 <TextField
                   fullWidth
-                  label="Name"
+                  label="Full Name"
                   name="name"
                   value={formValues.name}
-                  onChange={handleChange}
-                />
-                <TextField
-                  fullWidth
-                  label="Username"
-                  name="username"
-                  value={formValues.username}
                   onChange={handleChange}
                 />
                 <TextField
