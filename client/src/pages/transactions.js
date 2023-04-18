@@ -7,6 +7,7 @@ import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
 import { AddTransaction } from "src/sections/transactions/add";
 import { useGetTransactionsQuery } from "src/store/services/transactionService";
+import { AddSale } from "../sections/transactions/add-sale";
 
 const Page = () => {
   const [state, setState] = useState({
@@ -76,9 +77,8 @@ const Page = () => {
                   </Button>
                 </Stack>
               </Stack>
-              <div>
-                <AddTransaction />
-              </div>
+              <AddTransaction />
+              <AddSale />
             </Stack>
             <Search onSearch={onSearch} item="transactions" />
             <TransactionsTable

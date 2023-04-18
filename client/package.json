@@ -26,6 +26,7 @@
     "apexcharts": "3.37.3",
     "date-fns": "2.29.3",
     "formik": "2.2.9",
+    "joi": "^17.9.1",
     "jwt-decode": "^3.1.2",
     "next": "13.3.0",
     "next-redux-wrapper": "^8.1.0",
