@@ -99,7 +99,7 @@ export const AddTransaction = () => {
   return (
     <div>
       <Button
-        startIcon={
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>

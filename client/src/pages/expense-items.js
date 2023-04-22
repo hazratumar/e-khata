@@ -5,7 +5,7 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/materia
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { ExpenseItemsTable } from "../sections/expense-items/table";
 import { Search } from "src/components/search";
-import { AddCurrency } from "src/sections/expense-items/add";
+import { AddExpenseItem } from "src/sections/expense-items/add";
 import { useGetExpenseItemsQuery } from "src/store/services/expenseItemService";
 
 const Page = () => {
@@ -52,11 +52,11 @@ const Page = () => {
           <Stack spacing={2}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">ExpenseItems</Typography>
+                <Typography variant="h4">Expense Items</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowUpOnSquareIcon />
                       </SvgIcon>
@@ -66,7 +66,7 @@ const Page = () => {
                   </Button>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowDownOnSquareIcon />
                       </SvgIcon>
@@ -77,10 +77,10 @@ const Page = () => {
                 </Stack>
               </Stack>
               <div>
-                <AddCurrency />
+                <AddExpenseItem />
               </div>
             </Stack>
-            <Search onSearch={onSearch} item="expenseItems" />
+            <Search onSearch={onSearch} item="expense items" />
             <ExpenseItemsTable
               page={state.page}
               rowsPerPage={state.rowsPerPage}

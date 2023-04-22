@@ -3,9 +3,9 @@ import Head from "next/head";
 import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { ExpensesTable } from "../sections/expense/table";
+import { ExpensesTable } from "../sections/expenses/table";
 import { Search } from "src/components/search";
-import { AddExpense } from "src/sections/expense/add";
+import { AddExpense } from "src/sections/expenses/add";
 import { useGetExpensesQuery } from "src/store/services/expenseService";
 
 const Page = () => {
@@ -52,7 +52,7 @@ const Page = () => {
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowUpOnSquareIcon />
                       </SvgIcon>
@@ -62,7 +62,7 @@ const Page = () => {
                   </Button>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowDownOnSquareIcon />
                       </SvgIcon>

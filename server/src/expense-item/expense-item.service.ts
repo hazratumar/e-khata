@@ -23,13 +23,13 @@ export class ExpenseItemService {
 
     if (isDuplicateName) {
       throw new HttpException(
-        "The expenseItem name already exists.",
+        "The expense item name already exists.",
         HttpStatus.BAD_REQUEST
       );
     }
 
-    const currencies = { ...expenseItem, user };
-    return this.expenseItemRepository.save(currencies);
+    const expenseItems = { ...expenseItem, user };
+    return this.expenseItemRepository.save(expenseItems);
   }
 
   async findAll(): Promise<ExpenseItem[]> {
@@ -41,7 +41,7 @@ export class ExpenseItemService {
     limit: number,
     search?: string
   ): Promise<{
-    currencies: ExpenseItem[];
+    expenseItems: ExpenseItem[];
     total: number;
     page: number;
     totalPages: number;
@@ -79,13 +79,13 @@ export class ExpenseItemService {
       );
     }
 
-    const currencies = await queryBuilder
+    const expenseItems = await queryBuilder
       .orderBy("expenseItem.updatedAt", "DESC")
       .skip(skip)
       .take(limit)
       .getMany();
 
-    return { currencies, total: length, page, totalPages };
+    return { expenseItems, total: length, page, totalPages };
   }
 
   async findOne(id: number): Promise<ExpenseItem> {

@@ -34,7 +34,8 @@ export const AddExpenseItem = () => {
 
   const [formValues, setFormValues] = useState({
     name: "",
-    rate: "",
+    price: "",
+    detail: "",
   });
 
   const [AddExpenseItem, { isSuccess, isLoading, error }] = useAddExpenseItemMutation();
@@ -69,7 +70,7 @@ export const AddExpenseItem = () => {
   return (
     <div>
       <Button
-        startIcon={
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>
@@ -77,7 +78,7 @@ export const AddExpenseItem = () => {
         variant="contained"
         onClick={handleOpen}
       >
-        Add ExpenseItem
+        Add Expense Item
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -89,8 +90,8 @@ export const AddExpenseItem = () => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please enter expenseItem information"
-              title="Add ExpenseItem"
+              subheader="Please enter expense item information"
+              title="Add Expense Item"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -104,16 +105,26 @@ export const AddExpenseItem = () => {
               <Box sx={{ m: -1.5 }}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Name" name="name" onChange={handleChange} />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
                     <TextField
+                      type="number"
                       fullWidth
-                      required
-                      label="Name"
-                      name="name"
+                      label="Price"
+                      name="price"
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField fullWidth label="Rate" name="rate" onChange={handleChange} />
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={3}
+                      label="Detail"
+                      name="detail"
+                      onChange={handleChange}
+                    />
                   </Grid>
                 </Grid>
               </Box>
@@ -121,7 +132,7 @@ export const AddExpenseItem = () => {
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
               <Button onClick={handleSubmit} variant="contained" color="primary">
-                {isLoading ? "Loading..." : "Add ExpenseItem"}
+                {isLoading ? "Loading..." : "Add Expense Item"}
               </Button>
             </CardActions>
           </Box>

@@ -69,7 +69,7 @@ export const AddExpense = () => {
   return (
     <div>
       <Button
-        startIcon={
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>

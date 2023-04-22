@@ -19,6 +19,9 @@ export class ExpenseItem {
   name: string;
 
   @Column()
+  price: number;
+
+  @Column()
   detail: string;
 
   @OneToMany(() => Expense, (expense) => expense.expenseItem)

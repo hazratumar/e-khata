@@ -82,7 +82,7 @@ export const UpdateTransaction = (props) => {
   return (
     <div>
       <MenuItem
-        startIcon={
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>

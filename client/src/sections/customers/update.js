@@ -82,7 +82,7 @@ export const UpdateCustomer = (props) => {
   return (
     <div>
       <MenuItem
-        startIcon={
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>

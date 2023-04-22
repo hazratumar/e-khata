@@ -51,7 +51,7 @@ const Page = () => (
           <Button
             component={NextLink}
             href="/"
-            startIcon={
+            starticon={
               <SvgIcon fontSize="small">
                 <ArrowLeftIcon />
               </SvgIcon>

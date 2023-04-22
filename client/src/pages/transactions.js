@@ -57,7 +57,7 @@ const Page = () => {
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowUpOnSquareIcon />
                       </SvgIcon>
@@ -67,7 +67,7 @@ const Page = () => {
                   </Button>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowDownOnSquareIcon />
                       </SvgIcon>

@@ -16,7 +16,7 @@ export class Expense {
   id: number;
 
   @Column()
-  amount: number;
+  price: number;
 
   @Column()
   quantity: number;

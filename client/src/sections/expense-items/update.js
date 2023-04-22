@@ -5,11 +5,9 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {
-  Card,
   CardActions,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
@@ -35,6 +33,7 @@ const style = {
 
 export const UpdateExpenseItem = (props) => {
   const { expenseItem } = props;
+  console.log(expenseItem);
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(!open);
@@ -42,14 +41,16 @@ export const UpdateExpenseItem = (props) => {
       ...prevValues,
       id: expenseItem.id,
       name: expenseItem.name,
-      rate: expenseItem.rate,
+      price: expenseItem.price,
+      detail: expenseItem.detail,
     }));
   };
 
   const [state, setState] = useState({
     id: expenseItem.id,
     name: expenseItem.name,
-    rate: expenseItem.rate,
+    price: expenseItem.price,
+    detail: expenseItem.detail,
   });
   const [UpdateExpenseItem, { isSuccess, isLoading, error }] = useUpdateExpenseItemMutation();
 
@@ -79,7 +80,7 @@ export const UpdateExpenseItem = (props) => {
   return (
     <div>
       <MenuItem
-        startIcon={
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>
@@ -99,8 +100,8 @@ export const UpdateExpenseItem = (props) => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please update expenseItem information"
-              title="Update ExpenseItem"
+              subheader="Please update expense item information"
+              title="Update Expense Item"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -116,19 +117,30 @@ export const UpdateExpenseItem = (props) => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      required
+                      value={state.name}
                       label="Name"
                       name="name"
-                      value={state.name}
                       onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <TextField
+                      type="number"
                       fullWidth
-                      label="Rate"
-                      name="rate"
-                      value={state.rate}
+                      value={state.price}
+                      label="Price"
+                      name="price"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={3}
+                      value={state.detail}
+                      label="Detail"
+                      name="detail"
                       onChange={handleChange}
                     />
                   </Grid>

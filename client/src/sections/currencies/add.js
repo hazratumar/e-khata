@@ -69,7 +69,7 @@ export const AddCurrency = () => {
   return (
     <div>
       <Button
-        startIcon={
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>

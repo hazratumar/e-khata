@@ -17,8 +17,8 @@ import {
 import { Scrollbar } from "src/components/scrollbar";
 import { useState } from "react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { UpdateExpense } from "src/sections/currencies/update";
-export const CurrenciesTable = (props) => {
+import { UpdateExpense } from "src/sections/expenses/update";
+export const ExpensesTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
   const options = [5, 10, 25, 50, 100];
   const rowsPerPageOptions = options.filter((option) => option <= count);

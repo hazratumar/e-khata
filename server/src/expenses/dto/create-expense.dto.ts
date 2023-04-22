@@ -7,9 +7,9 @@ import {
 } from "class-validator";
 
 export class CreateExpenseDto {
-  @IsNotEmpty({ message: "Expense amount is required" })
-  @IsNumber({}, { message: "Expense amount must be a number" })
-  amount: number;
+  @IsNotEmpty({ message: "Expense price is required" })
+  @IsNumber({}, { message: "Expense price must be a number" })
+  price: number;
 
   @ValidateIf((o) => o.quantity !== "")
   @IsNotEmpty({ message: "Expense quantity is required" })

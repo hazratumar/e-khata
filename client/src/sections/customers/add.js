@@ -73,7 +73,7 @@ export const AddCustomer = () => {
   return (
     <div>
       <Button
-        startIcon={
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>

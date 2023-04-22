@@ -12,14 +12,14 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { useState } from "react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { UpdateExpenseItem } from "src/sections/currencies/update";
+import { UpdateExpenseItem } from "src/sections/expense-items/update";
 export const ExpenseItemsTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
+  console.log(items);
   const options = [5, 10, 25, 50, 100];
   const rowsPerPageOptions = options.filter((option) => option <= count);
 
@@ -38,8 +38,10 @@ export const ExpenseItemsTable = (props) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ExpenseItem</TableCell>
-                <TableCell>Rate</TableCell>
+                <TableCell>Serial No</TableCell>
+                <TableCell>Expense Item</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>Detail</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -47,10 +49,10 @@ export const ExpenseItemsTable = (props) => {
               {items.map((expenseItem) => {
                 return (
                   <TableRow hover key={expenseItem.id}>
-                    <TableCell>
-                      <Typography variant="subtitle2">{expenseItem.name}</Typography>
-                    </TableCell>
-                    <TableCell>{expenseItem.rate}</TableCell>
+                    <TableCell>{expenseItem.id}</TableCell>
+                    <TableCell>{expenseItem.name}</TableCell>
+                    <TableCell>{expenseItem.price}</TableCell>
+                    <TableCell>{expenseItem.detail}</TableCell>
                     <TableCell>
                       <div>
                         <IconButton onClick={handleClick}>
