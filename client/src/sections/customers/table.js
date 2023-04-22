@@ -23,14 +23,6 @@ export const CustomersTable = (props) => {
   const options = [5, 10, 25, 50, 100];
   const rowsPerPageOptions = options.filter((option) => option <= count);
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   return (
     <Card>
       <Scrollbar>
@@ -48,6 +40,14 @@ export const CustomersTable = (props) => {
             </TableHead>
             <TableBody>
               {items.map((customer) => {
+                const [anchorEl, setAnchorEl] = useState(null);
+                const open = Boolean(anchorEl);
+                const handleClick = (event) => {
+                  setAnchorEl(event.currentTarget);
+                };
+                const handleClose = () => {
+                  setAnchorEl(null);
+                };
                 return (
                   <TableRow hover key={customer.id}>
                     <TableCell>
