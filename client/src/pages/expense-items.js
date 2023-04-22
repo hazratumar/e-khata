@@ -45,7 +45,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>ExpenseItems | e-khata</title>
+        <title>Expense Items | e-khata</title>
       </Head>
       <Box component="main" sx={{ flexGrow: 1, pt: 2, pb: 4 }}>
         <Container maxWidth="xl">
