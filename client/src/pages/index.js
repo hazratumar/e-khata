@@ -62,7 +62,7 @@ const Page = () => (
           <Grid xs={12} md={6} lg={4}>
             <OverviewTraffic
               chartSeries={[63, 15, 22]}
-              labels={["Desktop", "Tablet", "Phone"]}
+              labels={["USD", "PKR", "DRH"]}
               sx={{ height: "100%" }}
             />
           </Grid>
@@ -71,32 +71,32 @@ const Page = () => (
               products={[
                 {
                   id: "5ece2c077e39da27658aa8a9",
-                  image: "/assets/products/product-1.png",
-                  name: "Healthcare Erbology",
+                  // image: "/assets/products/product-1.png",
+                  name: "PKR (Pakistani Rupees)",
                   updatedAt: subHours(now, 6).getTime(),
                 },
                 {
                   id: "5ece2c0d16f70bff2cf86cd8",
-                  image: "/assets/products/product-2.png",
-                  name: "Makeup Lancome Rouge",
+                  // image: "/assets/products/product-2.png",
+                  name: "USD (United State Dollar)",
                   updatedAt: subDays(subHours(now, 8), 2).getTime(),
                 },
                 {
                   id: "b393ce1b09c1254c3a92c827",
-                  image: "/assets/products/product-5.png",
-                  name: "Skincare Soja CO",
+                  //  image: "/assets/products/product-5.png",
+                  name: "Riyal (Saudi Arabia Riyal)",
                   updatedAt: subDays(subHours(now, 1), 1).getTime(),
                 },
                 {
                   id: "a6ede15670da63f49f752c89",
-                  image: "/assets/products/product-6.png",
-                  name: "Makeup Lipstick",
+                  //  image: "/assets/products/product-6.png",
+                  name: "AED (United Arab Emirates)",
                   updatedAt: subDays(subHours(now, 3), 3).getTime(),
                 },
                 {
                   id: "bcad5524fe3a2f8f8620ceda",
-                  image: "/assets/products/product-7.png",
-                  name: "Healthcare Ritual",
+                  //  image: "/assets/products/product-7.png",
+                  name: "Afghani (Afghanistan)",
                   updatedAt: subDays(subHours(now, 5), 6).getTime(),
                 },
               ]}
@@ -108,10 +108,10 @@ const Page = () => (
               orders={[
                 {
                   id: "f69f88012978187a6c12897f",
-                  ref: "DEV1049",
+                  ref: "AM1049",
                   amount: 30.5,
                   customer: {
-                    name: "Ekaterina Tankova",
+                    name: "Ali Muhammad",
                   },
                   createdAt: 1555016400000,
                   status: "pending",
@@ -121,7 +121,7 @@ const Page = () => (
                   ref: "DEV1048",
                   amount: 25.1,
                   customer: {
-                    name: "Cao Yu",
+                    name: "Jahan Zaib",
                   },
                   createdAt: 1555016400000,
                   status: "delivered",
@@ -131,7 +131,7 @@ const Page = () => (
                   ref: "DEV1047",
                   amount: 10.99,
                   customer: {
-                    name: "Alexa Richardson",
+                    name: "Abdullah",
                   },
                   createdAt: 1554930000000,
                   status: "refunded",
@@ -141,7 +141,7 @@ const Page = () => (
                   ref: "DEV1046",
                   amount: 96.43,
                   customer: {
-                    name: "Anje Keizer",
+                    name: "Haroon Rashid",
                   },
                   createdAt: 1554757200000,
                   status: "pending",
@@ -151,7 +151,7 @@ const Page = () => (
                   ref: "DEV1045",
                   amount: 32.54,
                   customer: {
-                    name: "Clarke Gillebert",
+                    name: "Jan Bahdar",
                   },
                   createdAt: 1554670800000,
                   status: "delivered",
@@ -161,7 +161,7 @@ const Page = () => (
                   ref: "DEV1044",
                   amount: 16.76,
                   customer: {
-                    name: "Adam Denisov",
+                    name: "Mukhtar Khan",
                   },
                   createdAt: 1554670800000,
                   status: "delivered",
