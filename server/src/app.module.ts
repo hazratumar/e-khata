@@ -2,15 +2,19 @@ import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module";
 import { AtGuard } from "./common/guards";
-import { UsersModule } from "./users/users.module";
+import { UserModule } from "./users/users.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users/entities/user.entity";
 import { CustomersModule } from "./customers/customers.module";
 import { Customer } from "./customers/entities/customer.entity";
-import { CurrenciesModule } from "./currency/currency.module";
-import { TransactionsModule } from "./transactions/transactions.module";
+import { CurrencyModule } from "./currency/currency.module";
+import { TransactionModule } from "./transactions/transactions.module";
 import { Transaction } from "./transactions/entities/transaction.entity";
 import { Currency } from "./currency/entities/currency.entity";
+import { ExpenseItem } from "./expense-item/entities/expense-item.entity";
+import { Expense } from "./expenses/entities/expense.entity";
+import { ExpenseItemModule } from "./expense-item/expense-item.module";
+import { ExpenseModule } from "./expenses/expense.module";
 
 @Module({
   imports: [
@@ -21,15 +25,24 @@ import { Currency } from "./currency/entities/currency.entity";
       username: "postgres",
       password: "1234",
       database: "e-khata",
-      entities: [User, Customer, Currency, Transaction],
+      entities: [User, Customer, Currency, Transaction, ExpenseItem, Expense],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User, Customer, Currency, Transaction]),
+    TypeOrmModule.forFeature([
+      User,
+      Customer,
+      Currency,
+      Transaction,
+      ExpenseItem,
+      Expense,
+    ]),
     AuthModule,
-    UsersModule,
+    UserModule,
     CustomersModule,
-    CurrenciesModule,
-    TransactionsModule,
+    CurrencyModule,
+    TransactionModule,
+    ExpenseItemModule,
+    ExpenseModule,
   ],
   providers: [
     {
