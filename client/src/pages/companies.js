@@ -74,15 +74,9 @@ const companies = [
 const Page = () => (
   <>
     <Head>
-      <title>Companies | Devias Kit</title>
+      <title>Companies | e-khata</title>
     </Head>
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8,
-      }}
-    >
+    <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <Stack direction="row" justifyContent="space-between" spacing={4}>

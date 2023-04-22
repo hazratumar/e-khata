@@ -7,7 +7,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 const Page = () => (
   <>
     <Head>
-      <title>Settings | Devias Kit</title>
+      <title>Settings | e-khata</title>
     </Head>
     <Box
       component="main"
