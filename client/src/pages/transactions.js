@@ -5,9 +5,9 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/materia
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
-import { AddTransaction } from "src/sections/transactions/add";
+import { AddBuying } from "src/sections/transactions/buying/add";
+import { AddSelling } from "src/sections/transactions/selling/add";
 import { useGetTransactionsQuery } from "src/store/services/transactionService";
-import { AddSale } from "../sections/transactions/add-sale";
 
 const Page = () => {
   const [state, setState] = useState({
@@ -77,8 +77,8 @@ const Page = () => {
                   </Button>
                 </Stack>
               </Stack>
-              <AddTransaction />
-              <AddSale />
+              <AddBuying />
+              <AddSelling />
             </Stack>
             <Search onSearch={onSearch} item="transactions" />
             <TransactionsTable

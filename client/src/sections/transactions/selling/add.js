@@ -19,8 +19,8 @@ import { useAddTransactionMutation } from "src/store/services/transactionService
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
-import { AddCredit } from "./credits/add";
-import { CreditTable } from "./credits/table";
+import { AddCredit } from "./add-item";
+import { CreditTable } from "./table";
 
 const style = {
   position: "absolute",
@@ -35,7 +35,7 @@ const style = {
   padding: "10px",
 };
 
-export const AddTransaction = () => {
+export const AddSelling = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
@@ -107,7 +107,7 @@ export const AddTransaction = () => {
         variant="contained"
         onClick={handleOpen}
       >
-        Buy
+        Sale
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -120,7 +120,7 @@ export const AddTransaction = () => {
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
               subheader="Please enter transaction information"
-              title="Buying"
+              title="Selling"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -133,7 +133,7 @@ export const AddTransaction = () => {
             <CardContent sx={{ p: 2 }}>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={12} md={6}>
-                  <Typography variant="h5">Debit</Typography>
+                  <Typography variant="h5">Credit</Typography>
                   <Grid container spacing={1}>
                     <Grid item xs={6} md={6}>
                       <Autocomplete
@@ -197,7 +197,7 @@ export const AddTransaction = () => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <Typography variant="h5">Credit</Typography>
+                  <Typography variant="h5">Debit</Typography>
                   <Grid container spacing={1}>
                     <AddCredit addItem={addItem} />
                     <CreditTable items={state.credits} deleteItem={deleteItem} />
