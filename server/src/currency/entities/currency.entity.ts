@@ -28,9 +28,6 @@ export class Currency {
   })
   user: User;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.currency)
-  transactions: Transaction[];
-
   @CreateDateColumn({
     type: "timestamp with time zone",
     default: () => "CURRENT_TIMESTAMP",

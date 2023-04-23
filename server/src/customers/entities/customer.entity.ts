@@ -30,12 +30,6 @@ export class Customer {
   @Column()
   other: string;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.debitFrom)
-  debitFrom: Transaction[];
-
-  @OneToMany(() => Transaction, (transaction) => transaction.debitTo)
-  debitTo: Transaction[];
-
   @ManyToOne(() => User, (user) => user.customer, {
     eager: true,
     cascade: true,
