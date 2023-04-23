@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Put,
 } from "@nestjs/common";
 import { TransactionsService } from "./transactions.service";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
@@ -44,9 +45,9 @@ export class TransactionsController {
     return this.transactionsService.findOne(+id);
   }
 
-  @Patch(":id")
+  @Put()
   update(
-    @Param("id") id: string,
+    @Body("id") id: string,
     @Body() updateTransactionDto: UpdateTransactionDto
   ) {
     return this.transactionsService.update(+id, updateTransactionDto);

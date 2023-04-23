@@ -46,8 +46,8 @@ export class CurrencyController {
   }
 
   @Put()
-  update(@Body() updateCurrencyDto: UpdateCurrencyDto) {
-    return this.currencyService.update(updateCurrencyDto);
+  update(@Body("id") id: string, @Body() updateCurrencyDto: UpdateCurrencyDto) {
+    return this.currencyService.update(+id, updateCurrencyDto);
   }
 
   @Delete(":id")

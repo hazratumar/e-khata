@@ -44,9 +44,9 @@ export class ExpenseItemController {
     return this.expenseItemService.findOne(+id);
   }
 
-  @Put(":id")
+  @Put()
   update(
-    @Param("id") id: string,
+    @Body("id") id: string,
     @Body() updateExpenseItemDto: UpdateExpenseItemDto
   ) {
     return this.expenseItemService.update(+id, updateExpenseItemDto);

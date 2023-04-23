@@ -46,7 +46,7 @@ export class ExpenseController {
   }
 
   @Put()
-  update(@Param("id") id: string, @Body() updateExpenseDto: UpdateExpenseDto) {
+  update(@Body("id") id: string, @Body() updateExpenseDto: UpdateExpenseDto) {
     return this.expenseService.update(+id, updateExpenseDto);
   }
 
