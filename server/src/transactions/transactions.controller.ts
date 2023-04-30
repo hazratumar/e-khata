@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   ParseIntPipe,
@@ -13,17 +12,39 @@ import { TransactionsService } from "./transactions.service";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { GetCurrentUserId } from "src/common/decorators";
+import { CreateTransactionItemDto } from "src/transaction-items/dto/create-transaction-item.dto";
+import { TransactionItemService } from "src/transaction-items/transaction-item.service";
 
 @Controller("transactions")
 export class TransactionsController {
-  constructor(private readonly transactionsService: TransactionsService) {}
+  constructor(
+    private readonly transactionsService: TransactionsService,
+    private readonly transactionItemService: TransactionItemService
+  ) {}
 
   @Post()
-  create(
+  async create(
     @GetCurrentUserId() userId: string,
-    @Body() createTransactionDto: CreateTransactionDto
+    @Body("isCreated") isCreated: boolean,
+    @Body("transaction") transaction: CreateTransactionDto,
+    @Body("item") item: CreateTransactionItemDto
   ) {
-    return this.transactionsService.create(+userId, createTransactionDto);
+    // if (isCreated) {
+    //   return this.transactionsService.create(+userId, id, type, status);
+    // }
+    if (!isCreated) {
+      const createdTransaction = await this.transactionsService.create(
+        +userId,
+        transaction
+      );
+
+      await this.transactionItemService.create(+userId, {
+        ...item,
+        transaction: createdTransaction?.id,
+      });
+
+      return createdTransaction;
+    }
   }
 
   @Get()

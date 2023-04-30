@@ -57,7 +57,7 @@ export const TransactionsTable = (props) => {
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            {/* <TableBody>
               {items.map((transaction) => {
                 return (
                   <TableRow hover key={transaction.id}>
@@ -127,7 +127,7 @@ export const TransactionsTable = (props) => {
                   </TableRow>
                 );
               })}
-            </TableBody>
+            </TableBody> */}
           </Table>
         </Box>
       </Scrollbar>

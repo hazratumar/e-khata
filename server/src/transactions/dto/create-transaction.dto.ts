@@ -1,6 +1,4 @@
-import { Transform, Type } from "class-transformer";
-import { IsIn, ValidateNested, ArrayMinSize } from "class-validator";
-import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
+import { IsIn } from "class-validator";
 
 export class CreateTransactionDto {
   @IsIn(["Buy", "Sale"], {
@@ -12,9 +10,4 @@ export class CreateTransactionDto {
     message: 'Please enter either "Pending" or "Cash".',
   })
   status: string;
-
-  @ValidateNested({ each: true })
-  @Type(() => TransactionItem)
-  @ArrayMinSize(1, { message: "At least one credit is required" })
-  transactionItem: TransactionItem[];
 }

@@ -1,35 +1,32 @@
-import { IsNotEmpty, IsString, IsNumber } from "class-validator";
+import { IsNotEmpty, IsString, IsNumber, IsIn } from "class-validator";
 
 export class CreateTransactionItemDto {
-  @IsNotEmpty()
-  @IsString()
+  @IsIn(["Credit", "Debit"], {
+    message: 'Please select "Credit" or "Debit".',
+  })
   type: string;
 
-  @IsNotEmpty()
-  @IsNumber()
+  @IsNotEmpty({ message: "From field cannot be empty" })
+  @IsNumber({}, { message: `Select from customer` })
   from: number;
 
-  @IsNotEmpty()
-  @IsNumber()
+  @IsNotEmpty({ message: "To field cannot be empty" })
+  @IsNumber({}, { message: "Select to customerr" })
   to: number;
 
-  @IsNotEmpty()
-  @IsNumber()
+  @IsNotEmpty({ message: "Currency field cannot be empty" })
+  @IsNumber({}, { message: "Currency field must be a number" })
   currency: number;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: "Amount field cannot be empty" })
+  @IsString({ message: "Amount field must be a string" })
   amount: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: "Rate field cannot be empty" })
+  @IsString({ message: "Rate field must be a string" })
   rate: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: "Profit field cannot be empty" })
+  @IsString({ message: "Profit field must be a string" })
   profit: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  transaction: number;
 }

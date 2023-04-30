@@ -38,22 +38,26 @@ const style = {
 export const AddSelling = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const [isCreated, setCreated] = useState(false);
+  const [transaction, setTransaction] = useState();
+  const [item, setItem] = useState();
 
-  const [state, setState] = useState({
-    isSave: false,
-    id: "",
-    type: "Sale",
-    status: "Pending",
-  });
-  const [item, setItem] = useState({
-    type: "Credit",
-    from: "",
-    to: "",
-    currency: "",
-    amount: "",
-    rate: "",
-    profit: "",
-  });
+  useEffect(() => {
+    setCreated(false);
+    setTransaction({
+      type: "Sale",
+      status: "Pending",
+    });
+    setItem({
+      type: "Credit",
+      from: "",
+      to: "",
+      currency: "",
+      amount: "",
+      rate: "",
+      profit: "",
+    });
+  }, [open]);
 
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
@@ -65,14 +69,13 @@ export const AddSelling = () => {
   };
 
   const handleSaveTransaction = async () => {
-    console.log(state, item);
-    await addTransaction({ parent: state, child: item });
+    await addTransaction({ isCreated, transaction, item });
   };
 
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
-      console.log("Add data", state);
+      console.log("Add data", transaction);
     }
   }, [isSuccess]);
 
@@ -129,7 +132,7 @@ export const AddSelling = () => {
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
                         options={customerOptions ?? ""}
-                        onChange={(event, value) => setItem({ ...state, debitFrom: value.id })}
+                        onChange={(event, value) => setItem({ ...item, from: value.id })}
                         renderInput={(params) => <TextField {...params} label="From" />}
                       />
                     </Grid>
@@ -137,7 +140,7 @@ export const AddSelling = () => {
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
                         options={customerOptions ?? ""}
-                        onChange={(event, value) => setItem({ ...state, debitTo: value.id })}
+                        onChange={(event, value) => setItem({ ...item, to: value.id })}
                         renderInput={(params) => <TextField {...params} label="To" />}
                       />
                     </Grid>
@@ -145,7 +148,7 @@ export const AddSelling = () => {
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
                         options={currencyOptions ?? ""}
-                        onChange={(event, value) => setItem({ ...state, currency: value.id })}
+                        onChange={(event, value) => setItem({ ...item, currency: value.id })}
                         renderInput={(params) => <TextField {...params} label="Currency" />}
                       />
                     </Grid>
@@ -178,9 +181,11 @@ export const AddSelling = () => {
                     </Grid>
                     <Grid item xs={6} md={4}>
                       <Autocomplete
-                        value={state.status}
+                        value={transaction?.status}
                         options={["Pending", "Cash"]}
-                        onChange={(event, value) => setState({ ...state, status: value })}
+                        onChange={(event, value) =>
+                          setTransaction({ ...transaction, status: value })
+                        }
                         renderInput={(params) => <TextField {...params} label="Status" />}
                       />
                     </Grid>
@@ -191,7 +196,7 @@ export const AddSelling = () => {
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button>Cancel</Button>
               <Button variant="contained" color="primary" onClick={handleSaveTransaction}>
-                Save Transaction
+                {isLoading ? "Loading..." : "Save Transaction"}
               </Button>
             </CardActions>
           </Box>
