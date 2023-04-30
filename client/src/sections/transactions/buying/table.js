@@ -19,7 +19,7 @@ export const CreditTable = ({ items, deleteItem }) => {
   const { data: currencyOptions } = useAllCurrenciesQuery();
   return (
     <Grid item xs={12} md={12} lg={12}>
-      <TableContainer component={Paper} sx={{ height: "40vh" }}>
+      <TableContainer component={Paper} sx={{ height: "35vh" }}>
         <Table>
           <TableHead sx={{ position: "sticky", top: 0 }}>
             <TableRow>

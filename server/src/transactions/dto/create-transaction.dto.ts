@@ -1,15 +1,10 @@
 import { Transform, Type } from "class-transformer";
-import {
-  IsNotEmpty,
-  IsIn,
-  ValidateNested,
-  ArrayMinSize,
-} from "class-validator";
-import { TransactionItem } from "./create-transaction-type.dto";
+import { IsIn, ValidateNested, ArrayMinSize } from "class-validator";
+import { TransactionItem } from "./create-transaction-item.dto";
 
 export class CreateTransactionDto {
-  @IsIn(["Buy", "Sell"], {
-    message: 'Please enter either "Buy" or "Sell".',
+  @IsIn(["Buy", "Sale"], {
+    message: 'Please enter either "Buy" or "Sale".',
   })
   type: string;
 

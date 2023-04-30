@@ -6,7 +6,7 @@ export class TransactionItem {
   id: number;
 
   @IsNotEmpty({ message: "Type is required" })
-  type: "credit" | "debit";
+  type: "Credit" | "Debit";
 
   @IsNotEmpty({ message: "From is required" })
   @IsNumber({}, { message: "From must be a number" })

@@ -18,9 +18,9 @@ import { useEffect, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
+import { AddCredit } from "src/sections/transactions/selling/add-item";
+import { CreditTable } from "src/sections/transactions/selling/table";
 import toast from "react-hot-toast";
-import { AddCredit } from "./add-item";
-import { CreditTable } from "./table";
 
 const style = {
   position: "absolute",
@@ -119,8 +119,8 @@ export const AddBuying = () => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please enter transaction information"
-              title="Buying"
+              subheader="Please enter Buying information"
+              title="Add Buying"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">

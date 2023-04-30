@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { TransactionItem } from "../dto/create-transaction-type.dto";
+import { TransactionItem } from "../dto/create-transaction-item.dto";
 
 @Entity()
 export class Transaction {

@@ -19,7 +19,7 @@ export const CreditTable = ({ items, deleteItem }) => {
   const { data: currencyOptions } = useAllCurrenciesQuery();
   return (
     <Grid item xs={12} md={12} lg={12}>
-      <TableContainer component={Paper} sx={{ height: "40vh" }}>
+      <TableContainer component={Paper} sx={{ height: "35vh" }}>
         <Table>
           <TableHead sx={{ position: "sticky", top: 0 }}>
             <TableRow>
@@ -32,12 +32,12 @@ export const CreditTable = ({ items, deleteItem }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((item, index) => (
+            {items?.map((item, index) => (
               <TableRow key={index + 1}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{customerOptions.find((i) => i.id === item.creditFrom)?.name}</TableCell>
                 <TableCell>{customerOptions.find((i) => i.id === item.creditTo)?.name}</TableCell>
-                <TableCell> {currencyOptions.find((i) => i.id === item.currency)?.name}</TableCell>
+                <TableCell>{currencyOptions.find((i) => i.id === item.currency)?.name}</TableCell>
                 <TableCell>{item.amount}</TableCell>
                 <TableCell>
                   <IconButton color="error" onClick={() => deleteItem(index)}>

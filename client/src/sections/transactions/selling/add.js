@@ -18,9 +18,9 @@ import { useEffect, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
+import { AddCredit } from "src/sections/transactions/selling/add-item";
+import { CreditTable } from "src/sections/transactions/selling/table";
 import toast from "react-hot-toast";
-import { AddCredit } from "./add-item";
-import { CreditTable } from "./table";
 
 const style = {
   position: "absolute",
@@ -40,14 +40,18 @@ export const AddSelling = () => {
   const handleOpen = () => setOpen(!open);
 
   const [state, setState] = useState({
-    debitFrom: "",
-    debitTo: "",
-    currency: "",
-    amount: 0,
-    rate: 0,
-    profit: 0,
+    type: "Sale",
     status: "Pending",
-    credits: [],
+    transationItem: [],
+  });
+  const [item, setItem] = useState({
+    type: "Credit",
+    from: "",
+    to: "",
+    currency: "",
+    amount: "",
+    rate: "",
+    profit: "",
   });
 
   const { data: customerOptions } = useAllCustomersQuery();
@@ -56,27 +60,22 @@ export const AddSelling = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setState({
-      ...state,
-      [name]: parseInt(value, 10) ?? 0,
-    });
+    setItem({ ...item, [name]: value });
   };
 
   const addItem = (credit) => {
-    const updatedCredits = state.credits ? state.credits.concat(credit) : [credit];
-    setState({ ...state, credits: updatedCredits });
-    console.log(state);
+    setState({ ...state, transationItem: [...state.transationItem, credit] });
   };
+
   const deleteItem = (index) => {
     console.log(`Deleting item at index ${index}`);
-    const updatedCredits = [...state.credits];
-    updatedCredits.splice(index, 1);
-    setState({ ...state, credits: updatedCredits });
+    setState({ ...state, transationItem: [...state.transationItem].splice(index, 1) });
   };
 
   const handleSaveTransaction = async () => {
-    await addTransaction(state);
+    setState({ ...state, transationItem: [...state.transationItem, item] });
     console.log(state);
+    // await addTransaction(state);
   };
 
   useEffect(() => {
@@ -119,8 +118,8 @@ export const AddSelling = () => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please enter transaction information"
-              title="Selling"
+              subheader="Please enter Selling information"
+              title="Add Selling"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -139,7 +138,7 @@ export const AddSelling = () => {
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
                         options={customerOptions ?? ""}
-                        onChange={(event, value) => setState({ ...state, debitFrom: value.id })}
+                        onChange={(event, value) => setItem({ ...state, debitFrom: value.id })}
                         renderInput={(params) => <TextField {...params} label="From" />}
                       />
                     </Grid>
@@ -147,7 +146,7 @@ export const AddSelling = () => {
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
                         options={customerOptions ?? ""}
-                        onChange={(event, value) => setState({ ...state, debitTo: value.id })}
+                        onChange={(event, value) => setItem({ ...state, debitTo: value.id })}
                         renderInput={(params) => <TextField {...params} label="To" />}
                       />
                     </Grid>
@@ -155,7 +154,7 @@ export const AddSelling = () => {
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
                         options={currencyOptions ?? ""}
-                        onChange={(event, value) => setState({ ...state, currency: value.id })}
+                        onChange={(event, value) => setItem({ ...state, currency: value.id })}
                         renderInput={(params) => <TextField {...params} label="Currency" />}
                       />
                     </Grid>
@@ -200,7 +199,7 @@ export const AddSelling = () => {
                   <Typography variant="h5">Debit</Typography>
                   <Grid container spacing={1}>
                     <AddCredit addItem={addItem} />
-                    <CreditTable items={state.credits} deleteItem={deleteItem} />
+                    <CreditTable items={state.transationItem} deleteItem={deleteItem} />
                   </Grid>
                 </Grid>
               </Grid>
