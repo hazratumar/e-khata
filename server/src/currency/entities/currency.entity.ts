@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Transaction } from "src/transactions/entities/transaction.entity";
+import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 
 @Entity()
 export class Currency {
@@ -20,6 +21,12 @@ export class Currency {
 
   @Column()
   rate: string;
+
+  @OneToMany(
+    () => TransactionItem,
+    (transactionItem) => transactionItem.currency
+  )
+  transactionItem: TransactionItem[];
 
   @ManyToOne(() => User, (user) => user.currency, {
     eager: true,

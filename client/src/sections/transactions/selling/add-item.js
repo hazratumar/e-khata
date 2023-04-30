@@ -83,7 +83,7 @@ export const AddCredit = ({ addItem }) => {
         <Autocomplete
           getOptionLabel={(option) => option.name}
           options={currencyOptions ?? ""}
-          value={currencyOptions.find((option) => option.id === credit.currency) || null}
+          value={currencyOptions?.find((option) => option.id === credit.currency) || null}
           onChange={(event, value) => setCredit({ ...credit, currency: value?.id || "" })}
           renderInput={(params) => (
             <TextField

@@ -11,10 +11,12 @@ import { CurrencyModule } from "./currency/currency.module";
 import { TransactionModule } from "./transactions/transactions.module";
 import { Transaction } from "./transactions/entities/transaction.entity";
 import { Currency } from "./currency/entities/currency.entity";
-import { ExpenseItem } from "./expense-item/entities/expense-item.entity";
 import { Expense } from "./expenses/entities/expense.entity";
-import { ExpenseItemModule } from "./expense-item/expense-item.module";
 import { ExpenseModule } from "./expenses/expense.module";
+import { ExpenseItemModule } from "./expense-items/expense-item.module";
+import { ExpenseItem } from "./expense-items/entities/expense-item.entity";
+import { TransactionItem } from "./transaction-items/entities/transaction-item.entity";
+import { TransactionItemModule } from "./transaction-items/transaction-item.module";
 
 @Module({
   imports: [
@@ -25,7 +27,15 @@ import { ExpenseModule } from "./expenses/expense.module";
       username: "postgres",
       password: "1234",
       database: "e-khata",
-      entities: [User, Customer, Currency, Transaction, ExpenseItem, Expense],
+      entities: [
+        User,
+        Customer,
+        Currency,
+        Transaction,
+        TransactionItem,
+        ExpenseItem,
+        Expense,
+      ],
       synchronize: true,
     }),
     TypeOrmModule.forFeature([
@@ -41,6 +51,7 @@ import { ExpenseModule } from "./expenses/expense.module";
     CustomersModule,
     CurrencyModule,
     TransactionModule,
+    TransactionItemModule,
     ExpenseItemModule,
     ExpenseModule,
   ],

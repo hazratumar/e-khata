@@ -1,4 +1,4 @@
-import { ExpenseItem } from "src/expense-item/entities/expense-item.entity";
+import { ExpenseItem } from "src/expense-items/entities/expense-item.entity";
 import { User } from "src/users/entities/user.entity";
 import {
   Column,

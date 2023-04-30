@@ -1,6 +1,6 @@
 import { Transform, Type } from "class-transformer";
 import { IsIn, ValidateNested, ArrayMinSize } from "class-validator";
-import { TransactionItem } from "./create-transaction-item.dto";
+import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 
 export class CreateTransactionDto {
   @IsIn(["Buy", "Sale"], {

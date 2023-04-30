@@ -5,10 +5,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { TransactionItem } from "../dto/create-transaction-item.dto";
+import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 
 @Entity()
 export class Transaction {
@@ -21,8 +22,11 @@ export class Transaction {
   @Column()
   status: string;
 
-  @Column({ type: "jsonb", default: {} })
-  transaction: TransactionItem[];
+  @OneToMany(
+    () => TransactionItem,
+    (transactionItem) => transactionItem.transaction
+  )
+  transactionItem: TransactionItem[];
 
   @ManyToOne(() => User, (user) => user.transaction, {
     eager: true,

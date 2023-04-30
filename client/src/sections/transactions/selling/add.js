@@ -40,9 +40,10 @@ export const AddSelling = () => {
   const handleOpen = () => setOpen(!open);
 
   const [state, setState] = useState({
+    isSave: false,
+    id: "",
     type: "Sale",
     status: "Pending",
-    transationItem: [],
   });
   const [item, setItem] = useState({
     type: "Credit",
@@ -63,19 +64,9 @@ export const AddSelling = () => {
     setItem({ ...item, [name]: value });
   };
 
-  const addItem = (credit) => {
-    setState({ ...state, transationItem: [...state.transationItem, credit] });
-  };
-
-  const deleteItem = (index) => {
-    console.log(`Deleting item at index ${index}`);
-    setState({ ...state, transationItem: [...state.transationItem].splice(index, 1) });
-  };
-
   const handleSaveTransaction = async () => {
-    setState({ ...state, transationItem: [...state.transationItem, item] });
-    console.log(state);
-    // await addTransaction(state);
+    console.log(state, item);
+    await addTransaction({ parent: state, child: item });
   };
 
   useEffect(() => {
@@ -195,19 +186,12 @@ export const AddSelling = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h5">Debit</Typography>
-                  <Grid container spacing={1}>
-                    <AddCredit addItem={addItem} />
-                    <CreditTable items={state.transationItem} deleteItem={deleteItem} />
-                  </Grid>
-                </Grid>
               </Grid>
             </CardContent>
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button>Cancel</Button>
               <Button variant="contained" color="primary" onClick={handleSaveTransaction}>
-                {isLoading ? "Loading..." : "Save Transaction"}
+                Save Transaction
               </Button>
             </CardActions>
           </Box>

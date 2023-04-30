@@ -1,4 +1,4 @@
-import { Transaction } from "src/transactions/entities/transaction.entity";
+import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 import { User } from "src/users/entities/user.entity";
 import {
   Column,
@@ -29,6 +29,12 @@ export class Customer {
 
   @Column()
   other: string;
+
+  @OneToMany(() => TransactionItem, (transactionItem) => transactionItem.from)
+  from: TransactionItem[];
+
+  @OneToMany(() => TransactionItem, (transactionItem) => transactionItem.to)
+  to: TransactionItem[];
 
   @ManyToOne(() => User, (user) => user.customer, {
     eager: true,

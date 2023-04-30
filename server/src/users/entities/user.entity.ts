@@ -1,9 +1,10 @@
 import { Exclude } from "class-transformer";
 import { Currency } from "src/currency/entities/currency.entity";
 import { Customer } from "src/customers/entities/customer.entity";
-import { ExpenseItem } from "src/expense-item/entities/expense-item.entity";
 import { Expense } from "src/expenses/entities/expense.entity";
+import { ExpenseItem } from "src/expense-items/entities/expense-item.entity";
 import { Transaction } from "src/transactions/entities/transaction.entity";
+import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 
 import {
   Column,
@@ -53,11 +54,14 @@ export class User {
   @OneToMany(() => Transaction, (transaction) => transaction.user)
   transaction: Transaction[];
 
-  @OneToMany(() => ExpenseItem, (expenseItem) => expenseItem.user)
-  expenseItem: ExpenseItem[];
+  @OneToMany(() => TransactionItem, (transactionItem) => transactionItem.user)
+  transactionItem: TransactionItem[];
 
   @OneToMany(() => Expense, (expense) => expense.user)
   expense: Expense[];
+
+  @OneToMany(() => ExpenseItem, (expenseItem) => expenseItem.user)
+  expenseItem: ExpenseItem[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",
