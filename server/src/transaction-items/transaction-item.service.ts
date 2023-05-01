@@ -77,6 +77,12 @@ export class TransactionItemService {
     return { transactionItems, total: length, page, totalPages };
   }
 
+  async getByTransaction(id: number): Promise<TransactionItem[]> {
+    return this.transactionItemRepository.find({
+      where: { transaction: { id } },
+    });
+  }
+
   async findOne(id: number): Promise<TransactionItem> {
     return this.transactionItemRepository.findOne({ where: { id } });
   }

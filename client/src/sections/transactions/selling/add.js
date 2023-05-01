@@ -216,10 +216,10 @@ export const AddSelling = () => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <Typography variant="h5">Credit</Typography>
+                  <Typography variant="h5">Debit</Typography>
                   <Grid container spacing={1}>
                     <AddDebit addItem={addItem} />
-                    <DebitTable items={transaction?.id} />
+                    <DebitTable isCreated={isCreated} transactionId={transaction?.id} />
                   </Grid>
                 </Grid>
               </Grid>

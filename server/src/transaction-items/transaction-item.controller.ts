@@ -30,11 +30,6 @@ export class TransactionItemController {
     );
   }
 
-  @Get()
-  findAll() {
-    return this.transactionItemService.findAll();
-  }
-
   @Get(":page/:limit/:searchTerm?")
   find(
     @Param("page", ParseIntPipe) page: number,
@@ -42,6 +37,11 @@ export class TransactionItemController {
     @Param("searchTerm") searchTerm: string
   ) {
     return this.transactionItemService.find(page, limit, searchTerm);
+  }
+
+  @Get(":id")
+  getByTransaction(@Param("id") id: string) {
+    return this.transactionItemService.getByTransaction(+id);
   }
 
   @Get(":id")
