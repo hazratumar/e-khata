@@ -199,8 +199,8 @@ export const AddBuying = () => {
                 <Grid item xs={12} md={6}>
                   <Typography variant="h5">Credit</Typography>
                   <Grid container spacing={1}>
-                    <AddCredit addItem={addItem} />
-                    <CreditTable items={state.credits} deleteItem={deleteItem} />
+                    {/* <AddCredit addItem={addItem} /> */}
+                    {/* <CreditTable items={state.credits} deleteItem={deleteItem} /> */}
                   </Grid>
                 </Grid>
               </Grid>

@@ -29,9 +29,16 @@ export class TransactionsController {
     @Body("transaction") transaction: CreateTransactionDto,
     @Body("item") item: CreateTransactionItemDto
   ) {
-    // if (isCreated) {
-    //   return this.transactionsService.create(+userId, id, type, status);
-    // }
+    if (isCreated) {
+      const updatedTransaction = await this.transactionsService.update(
+        transaction
+      );
+      await this.transactionItemService.create(+userId, {
+        ...item,
+        transaction: updatedTransaction?.id,
+      });
+      return updatedTransaction;
+    }
     if (!isCreated) {
       const createdTransaction = await this.transactionsService.create(
         +userId,
@@ -64,14 +71,6 @@ export class TransactionsController {
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.transactionsService.findOne(+id);
-  }
-
-  @Put()
-  update(
-    @Body("id") id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto
-  ) {
-    return this.transactionsService.update(+id, updateTransactionDto);
   }
 
   @Delete(":id")

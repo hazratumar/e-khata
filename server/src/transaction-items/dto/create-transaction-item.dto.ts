@@ -21,12 +21,4 @@ export class CreateTransactionItemDto {
   @IsNotEmpty({ message: "Amount field cannot be empty" })
   @IsString({ message: "Amount field must be a string" })
   amount: string;
-
-  @IsNotEmpty({ message: "Rate field cannot be empty" })
-  @IsString({ message: "Rate field must be a string" })
-  rate: string;
-
-  @IsNotEmpty({ message: "Profit field cannot be empty" })
-  @IsString({ message: "Profit field must be a string" })
-  profit: string;
 }

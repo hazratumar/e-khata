@@ -18,8 +18,8 @@ import { useEffect, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
-import { AddCredit } from "src/sections/transactions/selling/add-item";
-import { CreditTable } from "src/sections/transactions/selling/table";
+import { AddDebit } from "src/sections/transactions/selling/add-item";
+import { DebitTable } from "src/sections/transactions/selling/table";
 import toast from "react-hot-toast";
 
 const style = {
@@ -61,7 +61,9 @@ export const AddSelling = () => {
 
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
-  const [addTransaction, { isSuccess, isLoading, error }] = useAddTransactionMutation();
+  const [addTransaction, { isSuccess, isLoading, error, data }] = useAddTransactionMutation();
+  const [addTransactionItem, { isSuccess: isSuccessItem, error: errorItem, data: dataItem }] =
+    useAddTransactionMutation();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -72,10 +74,32 @@ export const AddSelling = () => {
     await addTransaction({ isCreated, transaction, item });
   };
 
+  const addItem = async (item) => {
+    await addTransactionItem({ isCreated, transaction, item });
+  };
+
+  useEffect(() => {
+    if (isSuccessItem) {
+      setCreated(true);
+      setTransaction({ ...transaction, id: dataItem?.id });
+      console.log("Add data", dataItem);
+    }
+  }, [isSuccessItem]);
+
+  useEffect(() => {
+    if (errorItem) {
+      const errorMessage = Array.isArray(errorItem.data?.message)
+        ? errorItem.data.message[0]
+        : errorItem.data?.message;
+      toast.error(errorMessage);
+      console.log("Error Message", errorItem);
+    }
+  }, [errorItem]);
+
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
-      console.log("Add data", transaction);
+      console.log("Add data", data);
     }
   }, [isSuccess]);
 
@@ -131,7 +155,7 @@ export const AddSelling = () => {
                     <Grid item xs={6} md={6}>
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
-                        options={customerOptions ?? ""}
+                        options={customerOptions ?? []}
                         onChange={(event, value) => setItem({ ...item, from: value.id })}
                         renderInput={(params) => <TextField {...params} label="From" />}
                       />
@@ -139,7 +163,7 @@ export const AddSelling = () => {
                     <Grid item xs={6} md={6}>
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
-                        options={customerOptions ?? ""}
+                        options={customerOptions ?? []}
                         onChange={(event, value) => setItem({ ...item, to: value.id })}
                         renderInput={(params) => <TextField {...params} label="To" />}
                       />
@@ -147,7 +171,7 @@ export const AddSelling = () => {
                     <Grid item xs={6} md={6}>
                       <Autocomplete
                         getOptionLabel={(option) => option.name}
-                        options={currencyOptions ?? ""}
+                        options={currencyOptions ?? []}
                         onChange={(event, value) => setItem({ ...item, currency: value.id })}
                         renderInput={(params) => <TextField {...params} label="Currency" />}
                       />
@@ -189,6 +213,13 @@ export const AddSelling = () => {
                         renderInput={(params) => <TextField {...params} label="Status" />}
                       />
                     </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Credit</Typography>
+                  <Grid container spacing={1}>
+                    <AddDebit addItem={addItem} />
+                    <DebitTable items={transaction?.id} />
                   </Grid>
                 </Grid>
               </Grid>

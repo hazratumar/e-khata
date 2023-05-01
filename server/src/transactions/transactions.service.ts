@@ -23,6 +23,15 @@ export class TransactionsService {
     return this.transactionRepository.save(transaction);
   }
 
+  async update(
+    updateTransactionDto: UpdateTransactionDto
+  ): Promise<Transaction> {
+    const transaction = await this.findOne(updateTransactionDto.id);
+    Object.assign(transaction, updateTransactionDto);
+    await this.transactionRepository.save(transaction);
+    return await this.findOne(updateTransactionDto.id);
+  }
+
   async find(): Promise<Transaction[]> {
     return this.transactionRepository.find();
   }
@@ -72,24 +81,6 @@ export class TransactionsService {
       throw new NotFoundException(`Transaction with id ${id} not found`);
     }
     return transaction;
-  }
-
-  async update(
-    id: number,
-    updateTransactionDto: UpdateTransactionDto
-  ): Promise<Transaction> {
-    const transaction = await this.transactionRepository.findOne({
-      where: { id },
-    });
-    if (!transaction) {
-      throw new NotFoundException(`Transaction with id ${id} not found`);
-    }
-
-    const updatedTransaction = this.transactionRepository.merge(
-      transaction,
-      updateTransactionDto
-    );
-    return this.transactionRepository.save(updatedTransaction);
   }
 
   async remove(id: number): Promise<void> {
