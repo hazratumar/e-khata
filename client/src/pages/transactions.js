@@ -5,7 +5,7 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/materia
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
-import { AddBuying } from "src/sections/transactions/buying/add";
+import { AddBuying } from "src/sections/transactions/buying/stepper";
 import { AddSelling } from "src/sections/transactions/selling/stepper";
 import { useGetTransactionsQuery } from "src/store/services/transactionService";
 
