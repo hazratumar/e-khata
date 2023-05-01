@@ -6,11 +6,9 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Put,
 } from "@nestjs/common";
 import { TransactionsService } from "./transactions.service";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
-import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { GetCurrentUserId } from "src/common/decorators";
 import { CreateTransactionItemDto } from "src/transaction-items/dto/create-transaction-item.dto";
 import { TransactionItemService } from "src/transaction-items/transaction-item.service";

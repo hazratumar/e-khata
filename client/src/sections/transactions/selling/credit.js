@@ -5,6 +5,7 @@ import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import { useDispatch, useSelector } from "react-redux";
 import { storeTransaction } from "src/store/reducers/transactionSlice";
+import { useGetTransactionItemsQuery } from "src/store/services/transactionItemService";
 import toast from "react-hot-toast";
 
 export const AddCredit = forwardRef((props, ref) => {
@@ -23,10 +24,27 @@ export const AddCredit = forwardRef((props, ref) => {
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
   const [addTransaction, { isSuccess, error, data }] = useAddTransactionMutation();
+  const { data: getItem, refetch } = useGetTransactionItemsQuery({ transactionId: store?.id });
+  const creditItem = getItem?.find((item) => item.type === "Credit");
+
+  useEffect(() => {
+    if (creditItem) {
+      setItem({
+        ...item,
+        id: creditItem.id,
+        from: creditItem.from.id,
+        to: creditItem.to.id,
+        currency: creditItem.currency.id,
+        amount: creditItem.amount,
+        rate: creditItem.rate,
+        profit: creditItem.profit,
+      });
+    }
+  }, [creditItem]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setItem({ ...item, [name]: value });
+    setItem((prevItem) => ({ ...prevItem, [name]: value }));
   };
 
   const saveCredit = async () => {
@@ -42,7 +60,7 @@ export const AddCredit = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Credit added successfully");
+      toast.success(`Credit ${store?.isCreated ? "updated" : "added"} successfully`);
       dispatch(
         storeTransaction({ isCreated: true, id: data?.id, type: data?.type, status: data?.status })
       );
@@ -58,6 +76,10 @@ export const AddCredit = forwardRef((props, ref) => {
       console.log("Error Message", error);
     }
   }, [error]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <Stack sx={{ height: "50vh" }}>
@@ -87,13 +109,34 @@ export const AddCredit = forwardRef((props, ref) => {
           />
         </Grid>
         <Grid item xs={6} md={6}>
-          <TextField type="number" fullWidth label="Amount" name="amount" onChange={handleChange} />
+          <TextField
+            type="number"
+            value={item.amount}
+            fullWidth
+            label="Amount"
+            name="amount"
+            onChange={handleChange}
+          />
         </Grid>
         <Grid item xs={6} md={4}>
-          <TextField type="number" fullWidth label="Rate" name="rate" onChange={handleChange} />
+          <TextField
+            type="number"
+            value={item.rate}
+            fullWidth
+            label="Rate"
+            name="rate"
+            onChange={handleChange}
+          />
         </Grid>
         <Grid item xs={6} md={4}>
-          <TextField type="number" fullWidth label="Profit" name="profit" onChange={handleChange} />
+          <TextField
+            type="number"
+            value={item.profit}
+            fullWidth
+            label="Profit"
+            name="profit"
+            onChange={handleChange}
+          />
         </Grid>
         <Grid item xs={6} md={4}>
           <Autocomplete

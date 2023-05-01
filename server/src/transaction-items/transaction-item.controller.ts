@@ -40,8 +40,12 @@ export class TransactionItemController {
   }
 
   @Get(":id")
-  getByTransaction(@Param("id") id: string) {
-    return this.transactionItemService.getByTransaction(+id);
+  getByTransaction(@Param("id") id: string | null) {
+    if (id === null || isNaN(+id)) {
+      return [];
+    } else {
+      return this.transactionItemService.getByTransaction(+id);
+    }
   }
 
   @Get(":id")

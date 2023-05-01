@@ -15,11 +15,9 @@ import {
   TableRow,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { UpdateTransaction } from "src/sections/transactions/update";
-import { useAllCustomersQuery } from "src/store/services/customerService";
-import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 
 export const TransactionsTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
@@ -33,8 +31,6 @@ export const TransactionsTable = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { data: customerOptions } = useAllCustomersQuery();
-  const { data: currencyOptions } = useAllCurrenciesQuery();
   return (
     <Card>
       <Scrollbar>
@@ -43,6 +39,7 @@ export const TransactionsTable = (props) => {
             <TableHead>
               <TableRow>
                 <TableCell>Id</TableCell>
+                <TableCell>Type</TableCell>
                 <TableCell>From</TableCell>
                 <TableCell>To</TableCell>
                 <TableCell>Currency</TableCell>
@@ -57,50 +54,22 @@ export const TransactionsTable = (props) => {
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
-            {/* <TableBody>
+            <TableBody>
               {items.map((transaction) => {
                 return (
                   <TableRow hover key={transaction.id}>
                     <TableCell>{transaction.id}</TableCell>
-                    <TableCell>{transaction.debitFrom.name}</TableCell>
-                    <TableCell>{transaction.debitTo.name}</TableCell>
-                    <TableCell>{transaction.currency.name}</TableCell>
-                    <TableCell>{transaction.amount}</TableCell>
-                    <TableCell>{transaction.rate}</TableCell>
-                    <TableCell>{transaction.profit}</TableCell>
-                    <TableCell>
-                      {transaction.credits.map((item, index) => (
-                        <Fragment key={item.id}>
-                          {customerOptions.find((i) => i.id === item.creditFrom)?.name}
-                          {index < transaction.credits.length - 1 && <Divider />}
-                        </Fragment>
-                      ))}
-                    </TableCell>
-                    <TableCell>
-                      {transaction.credits.map((item, index) => (
-                        <Fragment key={item.id}>
-                          {customerOptions.find((i) => i.id === item.creditTo)?.name}
-                          {index < transaction.credits.length - 1 && <Divider />}
-                        </Fragment>
-                      ))}
-                    </TableCell>
-                    <TableCell>
-                      {transaction.credits.map((item, index) => (
-                        <Fragment key={item.id}>
-                          {currencyOptions.find((i) => i.id === item.currency)?.name}
-                          {index < transaction.credits.length - 1 && <Divider />}
-                        </Fragment>
-                      ))}
-                    </TableCell>
-                    <TableCell>
-                      {transaction.credits.map((item, index) => (
-                        <Fragment key={item.id}>
-                          {item.amount}
-                          {index < transaction.credits.length - 1 && <Divider />}
-                        </Fragment>
-                      ))}
-                    </TableCell>
-                    <TableCell>{transaction.status}</TableCell>
+                    <TableCell>{transaction.type}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
                     <TableCell>
                       <div>
                         <IconButton onClick={handleClick}>
@@ -127,7 +96,7 @@ export const TransactionsTable = (props) => {
                   </TableRow>
                 );
               })}
-            </TableBody> */}
+            </TableBody>
           </Table>
         </Box>
       </Scrollbar>
