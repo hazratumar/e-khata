@@ -6,7 +6,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
 import { AddBuying } from "src/sections/transactions/buying/add";
-import { AddSelling } from "src/sections/transactions/selling/add";
+import { AddSelling } from "src/sections/transactions/selling/stepper";
 import { useGetTransactionsQuery } from "src/store/services/transactionService";
 
 const Page = () => {

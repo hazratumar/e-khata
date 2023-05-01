@@ -15,7 +15,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { useGetTransactionItemsQuery } from "src/store/services/transactionItemService";
 
 export const DebitTable = ({ transactionId }) => {
-  const { data } = useGetTransactionItemsQuery({ transactionId });
+  // const { data } = useGetTransactionItemsQuery({ transactionId });
   return (
     <Grid item xs={12} md={12} lg={12}>
       <TableContainer component={Paper} sx={{ height: "35vh" }}>
@@ -31,7 +31,7 @@ export const DebitTable = ({ transactionId }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((item) => (
+            {/* {data.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.from}</TableCell>
@@ -46,7 +46,7 @@ export const DebitTable = ({ transactionId }) => {
                   </IconButton>
                 </TableCell>
               </TableRow>
-            ))}
+            ))} */}
           </TableBody>
         </Table>
       </TableContainer>

@@ -18,8 +18,8 @@ import { useEffect, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
-import { AddCredit } from "src/sections/transactions/selling/add-item";
-import { CreditTable } from "src/sections/transactions/selling/table";
+// import { AddCredit } from "src/sections/transactions/selling/add-item";
+// import { CreditTable } from "src/sections/transactions/selling/table";
 import toast from "react-hot-toast";
 
 const style = {
