@@ -6,6 +6,14 @@ export const TransactionItemsService = createApi({
   tagTypes: ["transactionItems"],
   baseQuery: api,
   endpoints: (builder) => ({
+    addTransactionItem: builder.mutation({
+      query: (payload) => ({
+        url: `/transaction-items`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["transactionItems"],
+    }),
     getTransactionItems: builder.query({
       query: ({ transactionId }) => ({
         url: `/transaction-items/${transactionId}`,
@@ -16,4 +24,5 @@ export const TransactionItemsService = createApi({
   }),
 });
 
-export const { useGetTransactionItemsQuery } = TransactionItemsService;
+export const { useGetTransactionItemsQuery, useAddTransactionItemMutation } =
+  TransactionItemsService;

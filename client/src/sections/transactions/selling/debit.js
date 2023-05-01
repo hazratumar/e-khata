@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import { Autocomplete, Stack, Typography, Grid, TextField } from "@mui/material";
+import { Autocomplete, Stack, Grid, TextField } from "@mui/material";
+import { useAddTransactionItemMutation } from "src/store/services/transactionItemService";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import { DebitTable } from "./debitTable";
+import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 
 export const AddDebit = () => {
+  const store = useSelector((state) => state.transaction);
   const [item, setItem] = useState({
+    transaction: store?.id,
     type: "Debit",
     from: "",
     to: "",
@@ -18,9 +23,25 @@ export const AddDebit = () => {
 
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
+  const [addTransactionItem, { isSuccess, error }] = useAddTransactionItemMutation();
 
-  const handleSaveCredit = () => addItem(item);
+  const saveDebit = async () => await addTransactionItem(item);
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Debit added successfully");
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      const errorMessage = Array.isArray(error.data?.message)
+        ? error.data.message[0]
+        : error.data?.message;
+      toast.error(errorMessage);
+      console.log("Error Message", error);
+    }
+  }, [error]);
   return (
     <Stack sx={{ height: "50vh" }}>
       <Grid container spacing={1}>
@@ -57,7 +78,7 @@ export const AddDebit = () => {
           />
         </Grid>
         <Grid item xs={12} md={2}>
-          <Button variant="contained" fullWidth onClick={handleSaveCredit}>
+          <Button variant="contained" fullWidth onClick={saveDebit}>
             Add
           </Button>
         </Grid>

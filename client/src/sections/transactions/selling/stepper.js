@@ -52,6 +52,9 @@ export const AddSelling = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
     }
+    if (activeStep === 1) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleBack = () => {
