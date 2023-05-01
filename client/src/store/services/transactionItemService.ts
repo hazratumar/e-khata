@@ -21,8 +21,18 @@ export const TransactionItemsService = createApi({
       }),
       providesTags: ["transactionItems"],
     }),
+    deleteTransactionItem: builder.mutation({
+      query: ({ transactionId }) => ({
+        url: `/transaction-items/${transactionId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["transactionItems"],
+    }),
   }),
 });
 
-export const { useGetTransactionItemsQuery, useAddTransactionItemMutation } =
-  TransactionItemsService;
+export const {
+  useGetTransactionItemsQuery,
+  useAddTransactionItemMutation,
+  useDeleteTransactionItemMutation,
+} = TransactionItemsService;

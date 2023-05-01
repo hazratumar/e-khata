@@ -101,6 +101,6 @@ export class TransactionItemService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} transactionItem`;
+    return this.transactionItemRepository.delete({ id });
   }
 }

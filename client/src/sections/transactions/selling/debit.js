@@ -44,45 +44,47 @@ export const AddDebit = () => {
   }, [error]);
   return (
     <Stack sx={{ height: "50vh" }}>
-      <Grid container spacing={1}>
-        <Grid item xs={6} md={6}>
-          <Autocomplete
-            getOptionLabel={(option) => option.name}
-            options={customerOptions ?? []}
-            onChange={(event, value) => setItem({ ...item, from: value.id })}
-            renderInput={(params) => <TextField {...params} label="From" />}
-          />
+      <form onSubmit={saveDebit}>
+        <Grid container spacing={1}>
+          <Grid item xs={6} md={6}>
+            <Autocomplete
+              getOptionLabel={(option) => option.name}
+              options={customerOptions ?? []}
+              onChange={(event, value) => setItem({ ...item, from: value.id })}
+              renderInput={(params) => <TextField {...params} label="From" />}
+            />
+          </Grid>
+          <Grid item xs={6} md={6}>
+            <Autocomplete
+              getOptionLabel={(option) => option.name}
+              options={customerOptions ?? []}
+              onChange={(event, value) => setItem({ ...item, to: value.id })}
+              renderInput={(params) => <TextField {...params} label="To" />}
+            />
+          </Grid>
+          <Grid item xs={6} md={5}>
+            <Autocomplete
+              getOptionLabel={(option) => option.name}
+              options={currencyOptions ?? []}
+              onChange={(event, value) => setItem({ ...item, currency: value.id })}
+              renderInput={(params) => <TextField {...params} label="Currency" />}
+            />
+          </Grid>
+          <Grid item xs={6} md={5}>
+            <TextField
+              type="number"
+              fullWidth
+              label="Amount"
+              onChange={(event) => setItem({ ...item, amount: event.target.value })}
+            />
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <Button variant="contained" fullWidth onClick={saveDebit}>
+              Add
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={6} md={6}>
-          <Autocomplete
-            getOptionLabel={(option) => option.name}
-            options={customerOptions ?? []}
-            onChange={(event, value) => setItem({ ...item, to: value.id })}
-            renderInput={(params) => <TextField {...params} label="To" />}
-          />
-        </Grid>
-        <Grid item xs={6} md={5}>
-          <Autocomplete
-            getOptionLabel={(option) => option.name}
-            options={currencyOptions ?? []}
-            onChange={(event, value) => setItem({ ...item, currency: value.id })}
-            renderInput={(params) => <TextField {...params} label="Currency" />}
-          />
-        </Grid>
-        <Grid item xs={6} md={5}>
-          <TextField
-            type="number"
-            fullWidth
-            label="Amount"
-            onChange={(event) => setItem({ ...item, amount: event.target.value })}
-          />
-        </Grid>
-        <Grid item xs={12} md={2}>
-          <Button variant="contained" fullWidth onClick={saveDebit}>
-            Add
-          </Button>
-        </Grid>
-      </Grid>
+      </form>
       <DebitTable />
     </Stack>
   );

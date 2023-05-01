@@ -13,16 +13,16 @@ import {
 } from "@mui/material";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { useGetTransactionItemsQuery } from "src/store/services/transactionItemService";
+import { useDeleteTransactionItemMutation } from "src/store/services/transactionItemService";
 import { useSelector } from "react-redux";
 
 export const DebitTable = () => {
   const store = useSelector((state) => state.transaction);
 
-  const { data } = useGetTransactionItemsQuery({ transactionId: store?.id });
-
-  const handleDelete = (id) => {
-    // TODO: Implement delete logic
-    console.log("Deleting item with id", id);
+  const { data, isLoading } = useGetTransactionItemsQuery({ transactionId: store?.id });
+  const [deleteItem] = useDeleteTransactionItemMutation();
+  const handleDelete = async (transactionId) => {
+    await deleteItem({ transactionId });
   };
 
   return (
@@ -40,22 +40,34 @@ export const DebitTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.map((item) => (
-              <TableRow key={item?.id}>
-                <TableCell>{item?.id}</TableCell>
-                <TableCell>{item?.from?.id}</TableCell>
-                <TableCell>{item?.to?.id}</TableCell>
-                <TableCell>{item?.currency?.id}</TableCell>
-                <TableCell>{item.amount}</TableCell>
-                <TableCell>
-                  <IconButton color="error" onClick={() => handleDelete(item?.id)}>
-                    <SvgIcon>
-                      <TrashIcon />
-                    </SvgIcon>
-                  </IconButton>
-                </TableCell>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={6}>Loading...</TableCell>
               </TableRow>
-            ))}
+            ) : (
+              data
+                ?.filter((item) => item.type === "Debit")
+                ?.map((item) => (
+                  <TableRow key={item?.id}>
+                    <TableCell>{item?.id}</TableCell>
+                    <TableCell>{item?.from?.name}</TableCell>
+                    <TableCell>{item?.to?.name}</TableCell>
+                    <TableCell>{item?.currency?.name}</TableCell>
+                    <TableCell>{item.amount}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDelete(item?.id)}
+                        disabled={deleteItem.isLoading}
+                      >
+                        <SvgIcon>
+                          <TrashIcon />
+                        </SvgIcon>
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

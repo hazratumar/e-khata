@@ -11,7 +11,7 @@ export class CreateTransactionItemDto {
   from: number;
 
   @IsNotEmpty({ message: "To field cannot be empty" })
-  @IsNumber({}, { message: "Select to customerr" })
+  @IsNumber({}, { message: "Select to customer" })
   to: number;
 
   @IsNotEmpty({ message: "Currency field cannot be empty" })

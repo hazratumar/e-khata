@@ -17,7 +17,9 @@ import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useRef, useState } from "react";
 import { AddCredit } from "./credit";
 import { AddDebit } from "./debit";
-
+import { useDispatch } from "react-redux";
+import { removeTransaction } from "src/store/reducers/transactionSlice";
+import { Done } from "./done";
 const steps = ["Add Credits", "Add Debits", "Done"];
 
 const style = {
@@ -34,18 +36,17 @@ const style = {
 };
 
 export const AddSelling = () => {
+  const dispatch = useDispatch();
   const creditRef = useRef(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(!open);
     setActiveStep(0);
+    dispatch(removeTransaction());
   };
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = async () => {
-    if (activeStep === 2) {
-      handleOpen();
-    }
     if (activeStep === 0) {
       const isSuccess = await creditRef.current.saveCredit();
       if (isSuccess) {
@@ -55,10 +56,18 @@ export const AddSelling = () => {
     if (activeStep === 1) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
+    if (activeStep === 2) {
+      handleOpen();
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const resetFrom = () => {
+    setActiveStep(0);
+    dispatch(removeTransaction());
   };
 
   return (
@@ -112,6 +121,7 @@ export const AddSelling = () => {
                   <Stack sx={{ mt: 2 }}>
                     {activeStep === 0 && <AddCredit ref={creditRef} />}
                     {activeStep === 1 && <AddDebit />}
+                    {activeStep === 2 && <Done resetFrom={resetFrom} handleOpen={handleOpen} />}
                   </Stack>
                   <Box sx={{ display: "flex", flexDirection: "row" }}>
                     <Button
