@@ -61,6 +61,7 @@ export class TransactionsService {
         },
         take: limit,
         skip: skip,
+        relations: ["user", "transactionItem"],
       }
     );
 

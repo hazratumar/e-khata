@@ -75,7 +75,7 @@ export const CustomersTable = (props) => {
                           TransitionComponent={Fade}
                         >
                           <UpdateCustomer customer={customer} />
-                          <MenuItem onClick={handleClose}>Transition</MenuItem>
+                          <MenuItem onClick={handleClose}>Transaction</MenuItem>
                           <MenuItem onClick={handleClose}>Delete "disable"</MenuItem>
                         </Menu>
                       </div>

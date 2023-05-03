@@ -12,13 +12,14 @@ import {
   Step,
   StepLabel,
   Stack,
+  MenuItem,
 } from "@mui/material";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useRef, useState } from "react";
 import { AddDebit } from "./debit";
 import { AddCredit } from "./credit";
 import { useDispatch } from "react-redux";
-import { removeTransaction } from "src/store/reducers/transactionSlice";
+import { storeTransaction, removeTransaction } from "src/store/reducers/transactionSlice";
 import { Done } from "./done";
 const steps = ["Add Debits", "Add Credits", "Done"];
 
@@ -35,14 +36,18 @@ const style = {
   padding: "20px",
 };
 
-export const AddBuying = () => {
+export const AddBuying = (props) => {
+  const { update, id, type, status } = props;
   const dispatch = useDispatch();
   const debitRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(!open);
-    setActiveStep(0);
-    dispatch(removeTransaction());
+  const handleOpen = async () => {
+    (await update) && dispatch(storeTransaction({ isCreated: true, id, type, status }));
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    resetFrom();
   };
   const [activeStep, setActiveStep] = useState(0);
 
@@ -72,31 +77,45 @@ export const AddBuying = () => {
 
   return (
     <div>
-      <Button
-        starticon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={handleOpen}
-      >
-        Buy
-      </Button>
+      {update ? (
+        <MenuItem
+          starticon={
+            <SvgIcon fontSize="small">
+              <PlusIcon />
+            </SvgIcon>
+          }
+          variant="contained"
+          onClick={handleOpen}
+        >
+          Update
+        </MenuItem>
+      ) : (
+        <Button
+          starticon={
+            <SvgIcon fontSize="small">
+              <PlusIcon />
+            </SvgIcon>
+          }
+          variant="contained"
+          onClick={handleOpen}
+        >
+          Buy
+        </Button>
+      )}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
-        onClose={handleOpen}
+        onClose={handleClose}
         closeAfterTransition
       >
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please enter Buying information"
-              title="Add Buying"
+              subheader={`Please ${update ? "update" : "enter"} Buying information`}
+              title={`${update ? "Update" : "Add"} Buying`}
               action={
-                <IconButton aria-label="close" onClick={handleOpen}>
+                <IconButton aria-label="close" onClick={handleClose}>
                   <SvgIcon fontSize="small">
                     <XMarkIcon />
                   </SvgIcon>

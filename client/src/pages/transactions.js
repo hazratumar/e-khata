@@ -41,7 +41,7 @@ const Page = () => {
         transactions: data.transactions,
       }));
     }
-  }, [data, refetch]);
+  }, [data]);
 
   return (
     <>

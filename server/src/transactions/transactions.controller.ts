@@ -23,33 +23,20 @@ export class TransactionsController {
   @Post()
   async create(
     @GetCurrentUserId() userId: string,
-    @Body("isCreated") isCreated: boolean,
     @Body("transaction") transaction: CreateTransactionDto,
-    @Body("item") item: CreateTransactionItemDto
+    @Body("item") item: CreateTransactionItemDto,
+    @Body("isCreated") isCreated: boolean
   ) {
-    if (isCreated) {
-      const updatedTransaction = await this.transactionsService.update(
-        transaction
-      );
-      await this.transactionItemService.create(+userId, {
-        ...item,
-        transaction: updatedTransaction?.id,
-      });
-      return updatedTransaction;
-    }
-    if (!isCreated) {
-      const createdTransaction = await this.transactionsService.create(
-        +userId,
-        transaction
-      );
+    const tx = isCreated
+      ? await this.transactionsService.update(transaction)
+      : await this.transactionsService.create(+userId, transaction);
 
-      await this.transactionItemService.create(+userId, {
-        ...item,
-        transaction: createdTransaction?.id,
-      });
+    await this.transactionItemService.create(+userId, {
+      ...item,
+      transaction: tx?.id,
+    });
 
-      return createdTransaction;
-    }
+    return tx;
   }
 
   @Get()
