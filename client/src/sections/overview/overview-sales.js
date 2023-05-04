@@ -115,7 +115,7 @@ export const OverviewSales = (props) => {
           <Button
             color="inherit"
             size="small"
-            startIcon={
+            starticon={
               <SvgIcon fontSize="small">
                 <ArrowPathIcon />
               </SvgIcon>

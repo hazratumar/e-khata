@@ -22,7 +22,7 @@ export const OverviewLatestProducts = (props) => {
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest Products" />
+      <CardHeader title="Latest Currencies" />
       <List>
         {products.map((product, index) => {
           const hasDivider = index < products.length - 1;

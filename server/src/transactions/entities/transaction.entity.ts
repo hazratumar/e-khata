@@ -5,49 +5,28 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Customer } from "src/customers/entities/customer.entity";
-import { Credits } from "../dto/create-credits.dto";
+import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Customer, (customer) => customer.debitFrom, {
-    eager: true,
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  debitFrom: Customer;
-
-  @ManyToOne(() => Customer, (customer) => customer.debitTo, {
-    eager: true,
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  debitTo: Customer;
-
-  @ManyToOne(() => Currency, (currency) => currency.transactions, {
-    eager: true,
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  currency: Currency;
-
   @Column()
-  amount: number;
-
-  @Column()
-  rate: number;
-
-  @Column()
-  profit: number;
+  type: string;
 
   @Column()
   status: string;
+
+  @OneToMany(
+    () => TransactionItem,
+    (transactionItem) => transactionItem.transaction
+  )
+  transactionItem: TransactionItem[];
 
   @ManyToOne(() => User, (user) => user.transaction, {
     eager: true,
@@ -55,9 +34,6 @@ export class Transaction {
     onDelete: "CASCADE",
   })
   user: User;
-
-  @Column({ type: "jsonb", default: {} })
-  credits: Credits[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",

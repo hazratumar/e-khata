@@ -5,9 +5,9 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/materia
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
-import { AddTransaction } from "src/sections/transactions/add";
+import { AddBuying } from "src/sections/transactions/buying/stepper";
+import { AddSelling } from "src/sections/transactions/selling/stepper";
 import { useGetTransactionsQuery } from "src/store/services/transactionService";
-import { AddSale } from "../sections/transactions/add-sale";
 
 const Page = () => {
   const [state, setState] = useState({
@@ -41,12 +41,12 @@ const Page = () => {
         transactions: data.transactions,
       }));
     }
-  }, [data, refetch]);
+  }, [data]);
 
   return (
     <>
       <Head>
-        <title>Transactions | Devias Kit</title>
+        <title>Transactions | e-khata</title>
       </Head>
       <Box component="main" sx={{ flexGrow: 1, pt: 2, pb: 4 }}>
         <Container maxWidth="xl">
@@ -57,7 +57,7 @@ const Page = () => {
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowUpOnSquareIcon />
                       </SvgIcon>
@@ -67,7 +67,7 @@ const Page = () => {
                   </Button>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowDownOnSquareIcon />
                       </SvgIcon>
@@ -77,8 +77,8 @@ const Page = () => {
                   </Button>
                 </Stack>
               </Stack>
-              <AddTransaction />
-              <AddSale />
+              <AddBuying />
+              <AddSelling />
             </Stack>
             <Search onSearch={onSearch} item="transactions" />
             <TransactionsTable

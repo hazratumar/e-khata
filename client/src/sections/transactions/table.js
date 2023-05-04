@@ -1,11 +1,9 @@
 import {
   Box,
   Card,
-  Divider,
   Fade,
   IconButton,
   Menu,
-  MenuItem,
   SvgIcon,
   Table,
   TableBody,
@@ -15,26 +13,20 @@ import {
   TableRow,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { UpdateTransaction } from "src/sections/transactions/update";
-import { useAllCustomersQuery } from "src/store/services/customerService";
-import { useAllCurrenciesQuery } from "src/store/services/currencyService";
+import { ViewTransaction } from "./view";
+import { AddBuying } from "./buying/stepper";
+import { AddSelling } from "./selling/stepper";
+import { useDispatch } from "react-redux";
+import { storeTransaction, removeTransaction } from "src/store/reducers/transactionSlice";
 
 export const TransactionsTable = (props) => {
+  const dispatch = useDispatch();
+
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
   const options = [5, 10, 25, 50, 100];
   const rowsPerPageOptions = options.filter((option) => option <= count);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const { data: customerOptions } = useAllCustomersQuery();
-  const { data: currencyOptions } = useAllCurrenciesQuery();
   return (
     <Card>
       <Scrollbar>
@@ -43,64 +35,41 @@ export const TransactionsTable = (props) => {
             <TableHead>
               <TableRow>
                 <TableCell>Id</TableCell>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Description</TableCell>
                 <TableCell>Currency</TableCell>
-                <TableCell>Amount</TableCell>
                 <TableCell>Rate</TableCell>
                 <TableCell>Profit</TableCell>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
-                <TableCell>Currency</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Credit Amount</TableCell>
+                <TableCell>Debit Amount</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((transaction) => {
+                const singleItem = transaction.transactionItem.find(
+                  (item) => item.type === (transaction.type === "Sale" ? "Credit" : "Debit")
+                );
+                const [anchorEl, setAnchorEl] = useState(null);
+                const open = Boolean(anchorEl);
+                const handleClick = (event) => setAnchorEl(event.currentTarget);
+                const handleClose = () => setAnchorEl(null);
+
                 return (
                   <TableRow hover key={transaction.id}>
                     <TableCell>{transaction.id}</TableCell>
-                    <TableCell>{transaction.debitFrom.name}</TableCell>
-                    <TableCell>{transaction.debitTo.name}</TableCell>
-                    <TableCell>{transaction.currency.name}</TableCell>
-                    <TableCell>{transaction.amount}</TableCell>
-                    <TableCell>{transaction.rate}</TableCell>
-                    <TableCell>{transaction.profit}</TableCell>
+                    <TableCell>{transaction.type}</TableCell>
+                    <TableCell>{transaction?.status}</TableCell>
                     <TableCell>
-                      {transaction.credits.map((item, index) => (
-                        <Fragment key={item.id}>
-                          {customerOptions.find((i) => i.id === item.creditFrom)?.name}
-                          {index < transaction.credits.length - 1 && <Divider />}
-                        </Fragment>
-                      ))}
+                      {singleItem?.type &&
+                        `${singleItem.type} from ${singleItem.from?.name} to ${singleItem.to?.name}`}
                     </TableCell>
-                    <TableCell>
-                      {transaction.credits.map((item, index) => (
-                        <Fragment key={item.id}>
-                          {customerOptions.find((i) => i.id === item.creditTo)?.name}
-                          {index < transaction.credits.length - 1 && <Divider />}
-                        </Fragment>
-                      ))}
-                    </TableCell>
-                    <TableCell>
-                      {transaction.credits.map((item, index) => (
-                        <Fragment key={item.id}>
-                          {currencyOptions.find((i) => i.id === item.currency)?.name}
-                          {index < transaction.credits.length - 1 && <Divider />}
-                        </Fragment>
-                      ))}
-                    </TableCell>
-                    <TableCell>
-                      {transaction.credits.map((item, index) => (
-                        <Fragment key={item.id}>
-                          {item.amount}
-                          {index < transaction.credits.length - 1 && <Divider />}
-                        </Fragment>
-                      ))}
-                    </TableCell>
-                    <TableCell>{transaction.status}</TableCell>
+                    <TableCell>{singleItem?.currency?.name}</TableCell>
+                    <TableCell>{singleItem?.rate}</TableCell>
+                    <TableCell>{singleItem?.profit}</TableCell>
+                    <TableCell>{singleItem?.type === "Debit" ? singleItem?.amount : 0}</TableCell>
+                    <TableCell>{singleItem?.type === "Credit" ? singleItem?.amount : 0}</TableCell>
                     <TableCell>
                       <div>
                         <IconButton onClick={handleClick}>
@@ -110,17 +79,29 @@ export const TransactionsTable = (props) => {
                         </IconButton>
                         <Menu
                           id="fade-menu"
-                          MenuListProps={{
-                            "aria-labelledby": "fade-button",
-                          }}
+                          MenuListProps={{ "aria-labelledby": "fade-button" }}
                           anchorEl={anchorEl}
                           open={open}
                           onClose={handleClose}
                           TransitionComponent={Fade}
                         >
-                          <UpdateTransaction transaction={transaction} />
-                          <MenuItem onClick={handleClose}>Transition</MenuItem>
-                          <MenuItem onClick={handleClose}>Delete "disable"</MenuItem>
+                          {transaction.type === "Sale" && (
+                            <AddSelling
+                              update={true}
+                              id={transaction.id}
+                              type={transaction.type}
+                              status={transaction.status}
+                            />
+                          )}
+                          {transaction.type === "Buy" && (
+                            <AddBuying
+                              update={true}
+                              id={transaction.id}
+                              type={transaction.type}
+                              status={transaction.status}
+                            />
+                          )}
+                          <ViewTransaction transaction={transaction} />
                         </Menu>
                       </div>
                     </TableCell>

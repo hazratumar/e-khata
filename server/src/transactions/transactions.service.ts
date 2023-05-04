@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Brackets, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { Transaction } from "./entities/transaction.entity";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
@@ -19,8 +19,20 @@ export class TransactionsService {
     createTransactionDto: CreateTransactionDto
   ): Promise<Transaction> {
     const user = await this.usersService.findOne(userId);
-    const transaction = { ...createTransactionDto, user };
+    const transaction = this.transactionRepository.create({
+      ...createTransactionDto,
+      user,
+    });
     return this.transactionRepository.save(transaction);
+  }
+
+  async update(
+    updateTransactionDto: UpdateTransactionDto
+  ): Promise<Transaction> {
+    const transaction = await this.findOne(updateTransactionDto.id);
+    Object.assign(transaction, updateTransactionDto);
+    await this.transactionRepository.save(transaction);
+    return await this.findOne(updateTransactionDto.id);
   }
 
   async find(): Promise<Transaction[]> {
@@ -49,6 +61,7 @@ export class TransactionsService {
         },
         take: limit,
         skip: skip,
+        relations: ["user", "transactionItem"],
       }
     );
 
@@ -72,24 +85,6 @@ export class TransactionsService {
       throw new NotFoundException(`Transaction with id ${id} not found`);
     }
     return transaction;
-  }
-
-  async update(
-    id: number,
-    updateTransactionDto: UpdateTransactionDto
-  ): Promise<Transaction> {
-    const transaction = await this.transactionRepository.findOne({
-      where: { id },
-    });
-    if (!transaction) {
-      throw new NotFoundException(`Transaction with id ${id} not found`);
-    }
-
-    const updatedTransaction = this.transactionRepository.merge(
-      transaction,
-      updateTransactionDto
-    );
-    return this.transactionRepository.save(updatedTransaction);
   }
 
   async remove(id: number): Promise<void> {

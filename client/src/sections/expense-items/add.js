@@ -1,4 +1,3 @@
-import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
@@ -9,13 +8,12 @@ import {
   CardHeader,
   Grid,
   IconButton,
-  MenuItem,
   SvgIcon,
   TextField,
 } from "@mui/material";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
-import { useUpdateTransactionMutation } from "src/store/services/transactionService";
+import { useAddExpenseItemMutation } from "src/store/services/expenseItemService";
 import toast from "react-hot-toast";
 
 const style = {
@@ -30,47 +28,36 @@ const style = {
   padding: "10px",
 };
 
-export const UpdateTransaction = (props) => {
-  const { transaction } = props;
+export const AddExpenseItem = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(!open);
-    setState((prevValues) => ({
-      ...prevValues,
-      id: transaction.id,
-      name: transaction.name,
-      nickname: transaction.nickname,
-      phone: transaction.phone,
-      address: transaction.address,
-      other: transaction.other,
-    }));
-  };
+  const handleOpen = () => setOpen(!open);
 
-  const [state, setState] = useState({
-    id: transaction.id,
-    name: transaction.name,
-    nickname: transaction.nickname,
-    phone: transaction.phone,
-    address: transaction.address,
-    other: transaction.other,
+  const [formValues, setFormValues] = useState({
+    name: "",
+    price: "",
+    detail: "",
   });
-  const [UpdateTransaction, { isSuccess, isLoading, error }] = useUpdateTransactionMutation();
+
+  const [AddExpenseItem, { isSuccess, isLoading, error }] = useAddExpenseItemMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setState((prevValues) => ({ ...prevValues, [name]: value }));
+    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await UpdateTransaction(state);
+    await AddExpenseItem(formValues);
   };
 
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
-      console.log("Update data", state);
+      console.log("Add data", formValues);
     }
+  }, [isSuccess]);
+
+  useEffect(() => {
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
         ? error.data.message[0]
@@ -78,11 +65,12 @@ export const UpdateTransaction = (props) => {
       toast.error(errorMessage);
       console.log("Error Message", error);
     }
-  }, [isSuccess, error]);
+  }, [error]);
+
   return (
     <div>
-      <MenuItem
-        startIcon={
+      <Button
+        starticon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>
@@ -90,8 +78,8 @@ export const UpdateTransaction = (props) => {
         variant="contained"
         onClick={handleOpen}
       >
-        Update
-      </MenuItem>
+        Add Expense Item
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -102,8 +90,8 @@ export const UpdateTransaction = (props) => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please update transaction information"
-              title="Update Transaction"
+              subheader="Please enter expense item information"
+              title="Add Expense Item"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -117,52 +105,24 @@ export const UpdateTransaction = (props) => {
               <Box sx={{ m: -1.5 }}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      required
-                      label="Full name"
-                      name="name"
-                      value={state.name}
-                      onChange={handleChange}
-                    />
+                    <TextField fullWidth label="Name" name="name" onChange={handleChange} />
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <TextField
+                      type="number"
                       fullWidth
-                      label="Nickname"
-                      name="nickname"
-                      value={state.nickname}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label="Phone number"
-                      name="phone"
-                      value={state.phone}
+                      label="Price"
+                      name="price"
                       onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
-                      label="Address"
                       multiline
-                      rows={2}
-                      name="address"
-                      value={state.address}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Other information"
-                      multiline
-                      rows={2}
-                      name="other"
-                      value={state.other}
+                      rows={3}
+                      label="Detail"
+                      name="detail"
                       onChange={handleChange}
                     />
                   </Grid>
@@ -172,7 +132,7 @@ export const UpdateTransaction = (props) => {
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
               <Button onClick={handleSubmit} variant="contained" color="primary">
-                {isLoading ? "Loading..." : "Update Transaction"}
+                {isLoading ? "Loading..." : "Add Expense Item"}
               </Button>
             </CardActions>
           </Box>

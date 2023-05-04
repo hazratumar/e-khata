@@ -11,4 +11,4 @@ import { AuthModule } from "src/auth/auth.module";
   providers: [UsersService],
   exports: [UsersService],
 })
-export class UsersModule {}
+export class UserModule {}

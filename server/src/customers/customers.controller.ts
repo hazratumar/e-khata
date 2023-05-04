@@ -44,8 +44,8 @@ export class CustomersController {
   }
 
   @Put()
-  update(@Body() updateCustomerDto: UpdateCustomerDto) {
-    return this.customersService.update(updateCustomerDto);
+  update(@Body("id") id: string, @Body() updateCustomerDto: UpdateCustomerDto) {
+    return this.customersService.update(+id, updateCustomerDto);
   }
 
   @Delete(":id")

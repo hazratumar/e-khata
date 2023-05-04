@@ -74,15 +74,9 @@ const companies = [
 const Page = () => (
   <>
     <Head>
-      <title>Companies | Devias Kit</title>
+      <title>Companies | e-khata</title>
     </Head>
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8,
-      }}
-    >
+    <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <Stack direction="row" justifyContent="space-between" spacing={4}>
@@ -91,7 +85,7 @@ const Page = () => (
               <Stack alignItems="center" direction="row" spacing={1}>
                 <Button
                   color="inherit"
-                  startIcon={
+                  starticon={
                     <SvgIcon fontSize="small">
                       <ArrowUpOnSquareIcon />
                     </SvgIcon>
@@ -101,7 +95,7 @@ const Page = () => (
                 </Button>
                 <Button
                   color="inherit"
-                  startIcon={
+                  starticon={
                     <SvgIcon fontSize="small">
                       <ArrowDownOnSquareIcon />
                     </SvgIcon>
@@ -113,7 +107,7 @@ const Page = () => (
             </Stack>
             <div>
               <Button
-                startIcon={
+                starticon={
                   <SvgIcon fontSize="small">
                     <PlusIcon />
                   </SvgIcon>

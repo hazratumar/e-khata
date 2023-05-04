@@ -41,7 +41,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Customers | Devias Kit</title>
+        <title>Customers | e-khata</title>
       </Head>
       <Box component="main" sx={{ flexGrow: 1, pt: 2, pb: 4 }}>
         <Container maxWidth="xl">
@@ -52,7 +52,7 @@ const Page = () => {
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowUpOnSquareIcon />
                       </SvgIcon>
@@ -62,7 +62,7 @@ const Page = () => {
                   </Button>
                   <Button
                     color="inherit"
-                    startIcon={
+                    starticon={
                       <SvgIcon fontSize="small">
                         <ArrowDownOnSquareIcon />
                       </SvgIcon>

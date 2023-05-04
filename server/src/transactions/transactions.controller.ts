@@ -3,26 +3,40 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   ParseIntPipe,
 } from "@nestjs/common";
 import { TransactionsService } from "./transactions.service";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
-import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { GetCurrentUserId } from "src/common/decorators";
+import { CreateTransactionItemDto } from "src/transaction-items/dto/create-transaction-item.dto";
+import { TransactionItemService } from "src/transaction-items/transaction-item.service";
 
 @Controller("transactions")
 export class TransactionsController {
-  constructor(private readonly transactionsService: TransactionsService) {}
+  constructor(
+    private readonly transactionsService: TransactionsService,
+    private readonly transactionItemService: TransactionItemService
+  ) {}
 
   @Post()
-  create(
+  async create(
     @GetCurrentUserId() userId: string,
-    @Body() createTransactionDto: CreateTransactionDto
+    @Body("transaction") transaction: CreateTransactionDto,
+    @Body("item") item: CreateTransactionItemDto,
+    @Body("isCreated") isCreated: boolean
   ) {
-    return this.transactionsService.create(+userId, createTransactionDto);
+    const tx = isCreated
+      ? await this.transactionsService.update(transaction)
+      : await this.transactionsService.create(+userId, transaction);
+
+    await this.transactionItemService.create(+userId, {
+      ...item,
+      transaction: tx?.id,
+    });
+
+    return tx;
   }
 
   @Get()
@@ -42,14 +56,6 @@ export class TransactionsController {
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.transactionsService.findOne(+id);
-  }
-
-  @Patch(":id")
-  update(
-    @Param("id") id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto
-  ) {
-    return this.transactionsService.update(+id, updateTransactionDto);
   }
 
   @Delete(":id")

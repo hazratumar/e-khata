@@ -28,14 +28,14 @@ export class CreateCustomerDto {
   phone: string;
 
   @IsOptional()
-  @MaxLength(100, {
-    message: "Address must be less than or equal to 100 characters",
+  @MaxLength(150, {
+    message: "Address must be less than or equal to 150 characters",
   })
   address?: string;
 
   @IsOptional()
-  @MaxLength(500, {
-    message: "Other field must be less than or equal to 500 characters",
+  @MaxLength(150, {
+    message: "Other field must be less than or equal to 150 characters",
   })
   other?: string;
 }

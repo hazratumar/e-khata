@@ -91,17 +91,17 @@ export class CurrencyService {
     return this.currencyRepository.findOne({ where: { name } });
   }
 
-  async update(currency: UpdateCurrencyDto): Promise<Currency> {
+  async update(id: number, currency: UpdateCurrencyDto): Promise<Currency> {
     // Input validation
     if (!currency || Object.keys(currency).length === 0) {
       throw new HttpException("Invalid customer data", HttpStatus.BAD_REQUEST);
     }
-    const existingCurrency = await this.findOne(currency.id);
+    const existingCurrency = await this.findOne(id);
     if (!existingCurrency) {
       throw new HttpException("Customer not found", HttpStatus.NOT_FOUND);
     }
     const isDuplicateName = await this.findByName(currency.name);
-    if (isDuplicateName && isDuplicateName.id !== currency.id) {
+    if (isDuplicateName && isDuplicateName.id !== id) {
       throw new HttpException(
         "The Currency is presently available.",
         HttpStatus.BAD_REQUEST

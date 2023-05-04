@@ -95,17 +95,17 @@ export class CustomersService {
   async findByName(name: string): Promise<Customer> {
     return this.customerRepository.findOne({ where: { name } });
   }
-  async update(customer: UpdateCustomerDto): Promise<Customer> {
+  async update(id: number, customer: UpdateCustomerDto): Promise<Customer> {
     // Input validation
     if (!customer || Object.keys(customer).length === 0) {
       throw new HttpException("Invalid customer data", HttpStatus.BAD_REQUEST);
     }
-    const existingCustomer = await this.findOne(customer.id);
+    const existingCustomer = await this.findOne(id);
     if (!existingCustomer) {
       throw new HttpException("Customer not found", HttpStatus.NOT_FOUND);
     }
     const isDuplicateName = await this.findByName(customer.name);
-    if (isDuplicateName && isDuplicateName.id !== customer.id) {
+    if (isDuplicateName && isDuplicateName.id !== id) {
       throw new HttpException(
         "The customer name already exists",
         HttpStatus.BAD_REQUEST

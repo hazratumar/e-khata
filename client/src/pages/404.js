@@ -6,7 +6,7 @@ import { Box, Button, Container, SvgIcon, Typography } from "@mui/material";
 const Page = () => (
   <>
     <Head>
-      <title>404 | Devias Kit</title>
+      <title>404 | e-khata</title>
     </Head>
     <Box
       component="main"
@@ -51,7 +51,7 @@ const Page = () => (
           <Button
             component={NextLink}
             href="/"
-            startIcon={
+            starticon={
               <SvgIcon fontSize="small">
                 <ArrowLeftIcon />
               </SvgIcon>

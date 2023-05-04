@@ -26,7 +26,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Account | Devias Kit</title>
+        <title>Account | e-khata</title>
       </Head>
       <Box
         component="main"
