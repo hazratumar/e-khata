@@ -16,7 +16,7 @@ import { GetCurrentUserId } from "src/common/decorators";
 
 @Controller("currencies")
 export class CurrencyController {
-  constructor(private readonly currencyService: CurrencyService) {}
+  constructor(private readonly currencyService: CurrencyService) { }
 
   @Post()
   create(

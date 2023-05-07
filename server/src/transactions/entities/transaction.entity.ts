@@ -27,17 +27,17 @@ export class Transaction {
   currency: Currency;
 
   @Column()
-  amount: number;
+  amount: string;
 
   @ManyToOne(() => Currency, (currency) => currency.transactions, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
   })
-  exchangeCurrency: Currency;
+  exCurrency: Currency;
 
   @Column()
-  exchangeRate: number;
+  exRate: string;
 
   @Column()
   description: string;

@@ -41,7 +41,7 @@ export const AddCurrency = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+    setFormValues((prevValues) => ({ ...prevValues, [name]: value.trim() }));
   };
 
   const handleSubmit = async (e) => {

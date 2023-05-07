@@ -23,6 +23,9 @@ export class Wallet {
   })
   customer: Customer;
 
+  @Column()
+  type: string;
+
   @ManyToOne(() => Transaction, (transaction) => transaction.wallets, {
     eager: true,
     cascade: true,

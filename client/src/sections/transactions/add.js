@@ -1,35 +1,36 @@
 import { Autocomplete, Button, Grid, Stack, TextField, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
 
-export const AddTransaction = () => {
+export const AddTransaction = forwardRef((props, ref) => {
   const [state, setState] = useState({
-    creditFrom: "",
-    debitTo: "",
+    creditCustomer: "",
+    debitCustomer: "",
     currency: "",
     amount: "",
     exCurrency: "",
     exRate: "",
+    description: "",
   });
 
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
-  const [addTransaction, { isSuccess, error, data }] = useAddTransactionMutation();
+  const [addTransaction, { isSuccess, isLoading, error, data }] = useAddTransactionMutation();
 
-  const handleChange = useCallback(
-    (event) => {
-      const { name, value } = event.target;
-      setState((prevFormData) => ({ ...prevFormData, [name]: value }));
-    },
-    []
-  );
-  const onSubmit = () => {
-    console.log(state);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setState((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
+  const saveTransaction = async () => {
+    await addTransaction(state);
+  };
+  useImperativeHandle(ref, () => ({
+    saveTransaction,
+  }));
   useEffect(() => {
     if (isSuccess) {
       toast.success("Transaction added successfully");
@@ -47,25 +48,25 @@ export const AddTransaction = () => {
   }, [error]);
 
   return (
-    <Stack>
+    <>
       <Grid container spacing={2}>
-        <Grid xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
             options={customerOptions ?? ""}
-            onChange={(event, value) => setState({ ...state, creditFrom: value.id })}
-            renderInput={(params) => <TextField {...params} label="Credit From" />}
+            onChange={(event, value) => setState({ ...state, creditCustomer: value.id })}
+            renderInput={(params) => <TextField {...params} label="Credit Customer" />}
           />
         </Grid>
-        <Grid xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
             options={customerOptions ?? ""}
-            onChange={(event, value) => setState({ ...state, debitTo: value.id })}
-            renderInput={(params) => <TextField {...params} label="Debit To" />}
+            onChange={(event, value) => setState({ ...state, debitCustomer: value.id })}
+            renderInput={(params) => <TextField {...params} label="Debit Customer" />}
           />
         </Grid>
-        <Grid xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
             options={currencyOptions ?? ""}
@@ -73,7 +74,7 @@ export const AddTransaction = () => {
             renderInput={(params) => <TextField {...params} label="Currency" />}
           />
         </Grid>
-        <Grid xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <TextField
             type="number"
             value={state.amount}
@@ -83,7 +84,7 @@ export const AddTransaction = () => {
             onChange={handleChange}
           />
         </Grid>
-        <Grid xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
             options={currencyOptions ?? ""}
@@ -91,7 +92,7 @@ export const AddTransaction = () => {
             renderInput={(params) => <TextField {...params} label="Exchange Currency" />}
           />
         </Grid>
-        <Grid xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <TextField
             type="number"
             value={state.exRate}
@@ -100,15 +101,23 @@ export const AddTransaction = () => {
             name="exRate"
             onChange={handleChange}
           />
+        </Grid> <Grid item xs={12} md={12}>
+          <TextField
+            type="number"
+            value={state.description}
+            fullWidth
+            multiline
+            rows={2}
+            label="Description"
+            name="description"
+            onChange={handleChange}
+          />
         </Grid>
-        <Grid xs={12} md={6}>
-          <Typography>lkf</Typography>
-        </Grid>
-        <Grid xs={12} md={6}>
-          <Button fullWidth onClick={onSubmit}>Submit</Button>
+        <Grid item xs={12} md={12}>
+          <Typography>{`${state.exCurrency}: ${state.amount * state.exRate}`}</Typography>
         </Grid>
       </Grid>
-    </Stack>
+    </>
   );
-};
+});
 

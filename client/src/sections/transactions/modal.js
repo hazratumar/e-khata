@@ -9,9 +9,10 @@ import {
   SvgIcon,
   MenuItem,
   Modal,
+  CardActions,
 } from "@mui/material";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AddTransaction } from "./add";
 
 const style = {
@@ -28,16 +29,18 @@ const style = {
 };
 
 export const TransactionModal = () => {
-
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(!open);
+  const addTransactionRef = useRef(null);
+
+  const handleSubmit = () => {
+    addTransactionRef.current.saveTransaction()
+  };
 
   return (
     <div>
-
       <Button
-        starticon={
+        startIcon={
           <SvgIcon fontSize="small">
             <PlusIcon />
           </SvgIcon>
@@ -45,37 +48,46 @@ export const TransactionModal = () => {
         variant="contained"
         onClick={handleOpen}
       >
-        Add Transacion
+        Add Customer
       </Button>
-
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
-        onClose={handleClose}
+        onClose={handleOpen}
         closeAfterTransition
       >
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please enter trasaction information"
-              title="Add Trasaction"
+              subheader="Please enter customer information"
+              title="Add Customer"
               action={
-                <IconButton aria-label="close" onClick={handleClose}>
+                <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
                     <XMarkIcon />
                   </SvgIcon>
                 </IconButton>
               }
-              sx={{ width: "100%", padding: "10px" }}
+              sx={{ width: "100%" }}
             />
-            <CardContent>
-              <Grid container direction="row" spacing={2}>
-                <Box sx={{ width: "100%" }}>
-                  <AddTransaction />
-                </Box>
-              </Grid>
+            <CardContent sx={{ pt: 0 }}>
+              <Box sx={{ m: -1.5 }}>
+                <AddTransaction ref={addTransactionRef} />
+              </Box>
             </CardContent>
+            <CardActions
+              style={{ justifyContent: "space-between", alignItems: "center" }}
+            >
+              <Button onClick={handleOpen}>Cancel</Button>
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+              >
+                Add Transaction
+              </Button>
+            </CardActions>
           </Box>
         </Fade>
       </Modal>

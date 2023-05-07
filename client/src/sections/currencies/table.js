@@ -74,8 +74,8 @@ export const CurrenciesTable = (props) => {
                         }}
                       >
                         <UpdateCurrency currency={currency} />
-                        <MenuItem onClick={handleClose}>Transition</MenuItem>
-                        <MenuItem onClick={handleClose}>Delete "disable"</MenuItem>
+                        {/* <MenuItem onClick={handleClose}>Transition</MenuItem>
+                        <MenuItem onClick={handleClose}>Delete "disable"</MenuItem> */}
                       </Popover>
                     </div>
                   </TableCell>

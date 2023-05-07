@@ -87,7 +87,7 @@ export const AddCustomer = () => {
         onClick={handleOpen}
       >
         Add Customer
-      </Button>{" "}
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

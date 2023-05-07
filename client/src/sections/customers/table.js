@@ -83,7 +83,7 @@ export const CustomersTable = (props) => {
                       >
                         <UpdateCustomer customer={customer} />
                         <MenuItem onClick={() => handleClose(index)}>Transaction</MenuItem>
-                        <MenuItem onClick={() => handleClose(index)}>Delete "disable"</MenuItem>
+                        {/* <MenuItem onClick={() => handleClose(index)}>Delete "disable"</MenuItem> */}
                       </Popover>
                     </div>
                   </TableCell>

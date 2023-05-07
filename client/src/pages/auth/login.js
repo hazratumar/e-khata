@@ -48,11 +48,11 @@ const Page = () => {
       console.log("SignIn data", data);
     }
     if (error) {
-      const errorMessage = Array.isArray(error.data.message)
-        ? error.data.message[0]
-        : error.data.message;
+      const errorMessage = Array.isArray(error?.data?.message)
+        ? error?.data?.message[0]
+        : error?.data?.message;
       toast.error(errorMessage);
-      console.log("Error Message", error.data);
+      console.log("Error Message", error?.data);
     }
   }, [isSuccess, data, error, dispatch]);
   const handleShow = () => setShow(!show);

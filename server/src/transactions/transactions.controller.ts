@@ -8,7 +8,7 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 import { TransactionsService } from "./transactions.service";
-import { CreateTransactionDto } from "./dto/create-transaction.dto";
+import { CreateAllTransactionDto } from "./dto/create-all-transaction.dto";
 import { GetCurrentUserId } from "src/common/decorators";
 import { WalletService } from "src/wallets/wallet.service";
 import { CreateWalletDto } from "src/wallets/dto/create-wallet.dto";
@@ -23,20 +23,12 @@ export class TransactionsController {
   @Post()
   async create(
     @GetCurrentUserId() userId: string,
-    @Body("transaction") transaction: CreateTransactionDto,
-    @Body("item") item: CreateWalletDto,
-    @Body("isCreated") isCreated: boolean
+    @Body() transaction: CreateAllTransactionDto,
   ) {
-    const tx = isCreated
-      ? await this.transactionsService.update(transaction)
-      : await this.transactionsService.create(+userId, transaction);
 
-    await this.walletService.create(+userId, {
-      ...item,
-      transaction: tx?.id,
-    });
+    const savedTransaction = await this.transactionsService.create(+userId, transaction)
+    await this.walletService.create(+userId, transaction)
 
-    return tx;
   }
 
   @Get()

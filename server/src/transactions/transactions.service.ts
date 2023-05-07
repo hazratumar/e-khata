@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { Transaction } from "./entities/transaction.entity";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { UsersService } from "src/users/users.service";
+import { CreateTransactionDto } from "./dto/create-Transaction.dto copy";
 
 @Injectable()
 export class TransactionsService {
@@ -19,7 +19,7 @@ export class TransactionsService {
     createTransactionDto: CreateTransactionDto
   ): Promise<Transaction> {
     const user = await this.usersService.findOne(userId);
-    const transaction = this.transactionRepository.create({
+    const transaction = await this.transactionRepository.create({
       ...createTransactionDto,
       user,
     });

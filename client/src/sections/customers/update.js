@@ -61,7 +61,7 @@ export const UpdateCustomer = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setState((prevValues) => ({ ...prevValues, [name]: value }));
+    setState((prevValues) => ({ ...prevValues, [name]: value.trim() }));
   };
   const handleChangeCheckbox = (event) => {
     setState((prevValues) => ({ ...prevValues, isSelf: event.target.checked }));
