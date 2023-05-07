@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ConflictException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateCurrencyDto } from "./dto/create-currency.dto";
 import { UpdateCurrencyDto } from "./dto/update-currency.dto";
 import { Brackets, Repository } from "typeorm";
@@ -12,21 +12,21 @@ export class CurrencyService {
     @InjectRepository(Currency)
     private readonly currencyRepository: Repository<Currency>,
     private readonly usersService: UsersService
-  ) {}
+  ) { }
 
   async create(userId: number, currency: CreateCurrencyDto): Promise<Currency> {
     const user = await this.usersService.findOne(userId);
-    const isDuplicateName = await this.findByName(currency.name);
-
-    if (isDuplicateName) {
-      throw new HttpException(
-        "The currency name already exists.",
-        HttpStatus.BAD_REQUEST
-      );
-    }
 
     const currencies = { ...currency, user };
-    return this.currencyRepository.save(currencies);
+    try {
+      return this.currencyRepository.save(currencies);
+    } catch (error) {
+      if (error.code === '23505') { // check if the error is a duplicate key error
+        const columnName = error.detail.match(/\((.*?)\)/)[1]; // extract the column name from the error detail
+        throw new ConflictException(`Currency with this ${columnName} already exists`);
+      }
+      throw error;
+    }
   }
 
   async find(): Promise<Currency[]> {
@@ -92,27 +92,25 @@ export class CurrencyService {
   }
 
   async update(id: number, currency: UpdateCurrencyDto): Promise<Currency> {
-    // Input validation
-    if (!currency || Object.keys(currency).length === 0) {
-      throw new HttpException("Invalid customer data", HttpStatus.BAD_REQUEST);
-    }
+
     const existingCurrency = await this.findOne(id);
     if (!existingCurrency) {
       throw new HttpException("Customer not found", HttpStatus.NOT_FOUND);
-    }
-    const isDuplicateName = await this.findByName(currency.name);
-    if (isDuplicateName && isDuplicateName.id !== id) {
-      throw new HttpException(
-        "The Currency is presently available.",
-        HttpStatus.BAD_REQUEST
-      );
     }
 
     // Merge the existing customer with the new data
     Object.assign(existingCurrency, currency);
 
-    // Save the updated customer to the database
-    return this.currencyRepository.save(existingCurrency);
+    try {
+      // Save the updated customer to the database
+      return this.currencyRepository.save(existingCurrency);
+    } catch (error) {
+      if (error.code === '23505') { // check if the error is a duplicate key error
+        const columnName = error.detail.match(/\((.*?)\)/)[1]; // extract the column name from the error detail
+        throw new ConflictException(`Currency with this ${columnName} already exists`);
+      }
+      throw error;
+    }
   }
 
   remove(id: number) {

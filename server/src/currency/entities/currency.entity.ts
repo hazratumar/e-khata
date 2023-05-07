@@ -15,11 +15,11 @@ export class Currency {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @Column()
-  rate: string;
+  @Column({ unique: true })
+  abbreviation: string;
 
   @OneToMany(() => Transaction, (transaction) => transaction.currency)
   transactions: Transaction[];

@@ -1,9 +1,7 @@
 import {
   IsNotEmpty,
-  IsNumberString,
   IsOptional,
   MaxLength,
-  ValidateIf,
 } from "class-validator";
 
 export class CreateCurrencyDto {
@@ -13,11 +11,10 @@ export class CreateCurrencyDto {
   })
   name: string;
 
-  @ValidateIf((o) => o.rate !== "")
-  @IsNumberString({}, { message: "Currency rate must be a number." })
-  @MaxLength(10, {
-    message: "Currency rate must be less than or equal to 10 digits.",
+  @IsNotEmpty({ message: "Abbreviation name is required" })
+  @MaxLength(20, {
+    message: "Currency Abbreviation must be less than or equal to 20 characters",
   })
   @IsOptional()
-  rate: string;
+  abbreviation: string;
 }

@@ -13,11 +13,11 @@ export class WalletService {
     private readonly usersService: UsersService
   ) { }
 
-  async create(userId: number, transactionItem: any): Promise<Wallet> {
+  async create(userId: number, wallet: any): Promise<Wallet> {
     const user = await this.usersService.findOne(userId);
 
-    const transactionItems = { ...transactionItem, user };
-    return this.walletRepository.save(transactionItems);
+    const wallets = { ...wallet, user };
+    return this.walletRepository.save(wallets);
   }
 
   async findAll(): Promise<Wallet[]> {
@@ -29,7 +29,7 @@ export class WalletService {
     limit: number,
     search?: string
   ): Promise<{
-    transactionItems: Wallet[];
+    wallets: Wallet[];
     total: number;
     page: number;
     totalPages: number;
@@ -41,15 +41,15 @@ export class WalletService {
     const skip = page * limit;
 
     const queryBuilder =
-      this.walletRepository.createQueryBuilder("transactionItem");
+      this.walletRepository.createQueryBuilder("wallet");
 
     // Apply search filter if search term is provided
     if (search?.trim()) {
       queryBuilder.where(
         new Brackets((qb) => {
-          qb.where("transactionItem.name ILIKE :search", {
+          qb.where("wallet.name ILIKE :search", {
             search: `%${search}%`,
-          }).orWhere("transactionItem.detail ILIKE :search", {
+          }).orWhere("wallet.detail ILIKE :search", {
             search: `%${search}%`,
           });
         })
@@ -67,13 +67,13 @@ export class WalletService {
       );
     }
 
-    const transactionItems = await queryBuilder
-      .orderBy("transactionItem.updatedAt", "DESC")
+    const wallets = await queryBuilder
+      .orderBy("wallet.updatedAt", "DESC")
       .skip(skip)
       .take(limit)
       .getMany();
 
-    return { transactionItems, total: length, page, totalPages };
+    return { wallets, total: length, page, totalPages };
   }
 
   async getByTransaction(id: number): Promise<Wallet[]> {
@@ -88,12 +88,12 @@ export class WalletService {
 
   async update(
     id: number,
-    transactionItem: UpdateWalletDto
+    wallet: UpdateWalletDto
   ): Promise<Wallet> {
     const existingWallet = await this.findOne(id);
 
     // Merge the existing customer with the new data
-    Object.assign(existingWallet, transactionItem);
+    Object.assign(existingWallet, wallet);
 
     // Save the updated customer to the database
     return this.walletRepository.save(existingWallet);

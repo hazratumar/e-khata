@@ -34,7 +34,7 @@ export const AddCurrency = () => {
 
   const [formValues, setFormValues] = useState({
     name: "",
-    rate: "",
+    abbreviation: "",
   });
 
   const [AddCurrency, { isSuccess, isLoading, error }] = useAddCurrencyMutation();
@@ -113,7 +113,13 @@ export const AddCurrency = () => {
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <TextField fullWidth label="Rate" name="rate" onChange={handleChange} />
+                    <TextField
+                      fullWidth
+                      required
+                      label="Abbreviation"
+                      name="abbreviation"
+                      onChange={handleChange}
+                    />
                   </Grid>
                 </Grid>
               </Box>

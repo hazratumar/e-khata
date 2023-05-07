@@ -18,7 +18,7 @@ import { toast } from "react-hot-toast";
 export const AccountProfile = () => {
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.authReducer.user);
+  const user = useSelector((state) => state.auth.user);
   const [state, setState] = useState({
     name: user?.name,
     email: user?.email,

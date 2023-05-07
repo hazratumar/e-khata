@@ -103,19 +103,19 @@ export class CustomersService {
   }
 
   async update(id: number, customer: UpdateCustomerDto): Promise<Customer> {
+    // Check if customer with given ID exists
+    const existingCustomer = await this.findOne(id);
+    if (!existingCustomer) {
+      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Merge the existing customer with the new data
+    const updatedCustomer = this.customerRepository.merge(
+      existingCustomer,
+      customer,
+    );
+
     try {
-      // Check if customer with given ID exists
-      const existingCustomer = await this.findOne(id);
-      if (!existingCustomer) {
-        throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
-      }
-
-      // Merge the existing customer with the new data
-      const updatedCustomer = this.customerRepository.merge(
-        existingCustomer,
-        customer,
-      );
-
       // Save the updated customer to the database
       return await this.customerRepository.save(updatedCustomer);
     } catch (error) {

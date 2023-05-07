@@ -16,7 +16,7 @@ import { UpdateWalletDto } from "./dto/update-wallet.dto";
 @Controller("transaction-items")
 export class WalletController {
   constructor(
-    private readonly transactionItemService: WalletService
+    private readonly walletService: WalletService
   ) { }
 
   @Post()
@@ -24,7 +24,7 @@ export class WalletController {
     @GetCurrentUserId() userId: string,
     @Body() createWalletDto: CreateWalletDto
   ) {
-    return this.transactionItemService.create(
+    return this.walletService.create(
       +userId,
       createWalletDto
     );
@@ -36,7 +36,7 @@ export class WalletController {
     @Param("limit", ParseIntPipe) limit: number,
     @Param("searchTerm") searchTerm: string
   ) {
-    return this.transactionItemService.find(page, limit, searchTerm);
+    return this.walletService.find(page, limit, searchTerm);
   }
 
   @Get(":id")
@@ -44,13 +44,13 @@ export class WalletController {
     if (id === null || isNaN(+id)) {
       return [];
     } else {
-      return this.transactionItemService.getByTransaction(+id);
+      return this.walletService.getByTransaction(+id);
     }
   }
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    return this.transactionItemService.findOne(+id);
+    return this.walletService.findOne(+id);
   }
 
   @Put()
@@ -58,11 +58,11 @@ export class WalletController {
     @Body("id") id: string,
     @Body() updateWalletDto: UpdateWalletDto
   ) {
-    return this.transactionItemService.update(+id, updateWalletDto);
+    return this.walletService.update(+id, updateWalletDto);
   }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    return this.transactionItemService.remove(+id);
+    return this.walletService.remove(+id);
   }
 }

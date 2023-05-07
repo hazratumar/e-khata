@@ -12,7 +12,7 @@ export class TransactionsService {
     @InjectRepository(Transaction)
     private readonly transactionRepository: Repository<Transaction>,
     private readonly usersService: UsersService
-  ) {}
+  ) { }
 
   async create(
     userId: number,
@@ -61,7 +61,7 @@ export class TransactionsService {
         },
         take: limit,
         skip: skip,
-        relations: ["user", "transactionItem"],
+        relations: ["user", "wallet"],
       }
     );
 

@@ -16,13 +16,9 @@ import { Scrollbar } from "src/components/scrollbar";
 import { useState } from "react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { ViewTransaction } from "./view";
-import { AddBuying } from "./buying/stepper";
-import { AddSelling } from "./selling/stepper";
 import { useDispatch } from "react-redux";
-import { storeTransaction, removeTransaction } from "src/store/reducers/transactionSlice";
 
-export const TransactionsTable = (props) => {
-  const dispatch = useDispatch();
+export const TransactionsTable = () => {
 
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
   const options = [5, 10, 25, 50, 100];
@@ -47,7 +43,7 @@ export const TransactionsTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((transaction) => {
+              {/* {items.map((transaction) => {
                 const singleItem = transaction.transactionItem.find(
                   (item) => item.type === (transaction.type === "Sale" ? "Credit" : "Debit")
                 );
@@ -107,7 +103,7 @@ export const TransactionsTable = (props) => {
                     </TableCell>
                   </TableRow>
                 );
-              })}
+              })} */}
             </TableBody>
           </Table>
         </Box>

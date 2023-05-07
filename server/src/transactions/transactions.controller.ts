@@ -17,7 +17,7 @@ import { CreateWalletDto } from "src/wallets/dto/create-wallet.dto";
 export class TransactionsController {
   constructor(
     private readonly transactionsService: TransactionsService,
-    private readonly transactionItemService: WalletService
+    private readonly walletService: WalletService
   ) { }
 
   @Post()
@@ -31,7 +31,7 @@ export class TransactionsController {
       ? await this.transactionsService.update(transaction)
       : await this.transactionsService.create(+userId, transaction);
 
-    await this.transactionItemService.create(+userId, {
+    await this.walletService.create(+userId, {
       ...item,
       transaction: tx?.id,
     });

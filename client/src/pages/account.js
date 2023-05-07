@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 const Page = () => {
-  const { user } = useSelector((state) => state.authReducer);
+  const { user } = useSelector((state) => state.auth);
   const [state, setState] = useState({
     name: user?.name,
     email: user?.email,

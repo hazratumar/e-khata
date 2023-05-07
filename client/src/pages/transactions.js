@@ -5,9 +5,8 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/materia
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
-import { AddBuying } from "src/sections/transactions/buying/stepper";
-import { AddSelling } from "src/sections/transactions/selling/stepper";
 import { useGetTransactionsQuery } from "src/store/services/transactionService";
+import { TransactionModal } from "../sections/transactions/modal";
 
 const Page = () => {
   const [state, setState] = useState({
@@ -18,7 +17,7 @@ const Page = () => {
     searchTerm: "",
   });
 
-  const { isSuccess, data, refetch } = useGetTransactionsQuery(state);
+  // const { isSuccess, data, refetch } = useGetTransactionsQuery(state);
 
   const onRowsPerPageChange = useCallback((event) => {
     setState((prevState) => ({ ...prevState, rowsPerPage: event.target.value }));
@@ -32,17 +31,16 @@ const Page = () => {
     setState((prevState) => ({ ...prevState, searchTerm: search }));
   }, []);
 
-  useEffect(() => {
-    refetch();
-    if (isSuccess) {
-      setState((prevState) => ({
-        ...prevState,
-        count: data.total,
-        transactions: data.transactions,
-      }));
-    }
-  }, [data]);
-
+  // useEffect(() => {
+  //   refetch();
+  //   if (isSuccess) {
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       count: data.total,
+  //       transactions: data.transactions,
+  //     }));
+  //   }
+  // }, [data]);
   return (
     <>
       <Head>
@@ -77,18 +75,16 @@ const Page = () => {
                   </Button>
                 </Stack>
               </Stack>
-              <AddBuying />
-              <AddSelling />
+              <TransactionModal />
             </Stack>
-            <Search onSearch={onSearch} item="transactions" />
+            {/* <Search onSearch={onSearch} item="transactions" />
             <TransactionsTable
               page={state.page}
               rowsPerPage={state.rowsPerPage}
               onRowsPerPageChange={onRowsPerPageChange}
               count={state.count}
               onPageChange={onPageChange}
-              items={state.transactions}
-            />
+              items={state.transactions} />*/}
           </Stack>
         </Container>
       </Box>
