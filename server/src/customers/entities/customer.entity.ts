@@ -15,10 +15,10 @@ export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   nickname: string;
 
   @Column()
@@ -29,6 +29,9 @@ export class Customer {
 
   @Column()
   other: string;
+
+  @Column({ default: false })
+  isSelf: Boolean;
 
   @OneToMany(() => TransactionItem, (transactionItem) => transactionItem.from)
   from: TransactionItem[];

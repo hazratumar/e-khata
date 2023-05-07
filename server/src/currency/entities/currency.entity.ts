@@ -8,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Transaction } from "src/transactions/entities/transaction.entity";
 import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 
 @Entity()

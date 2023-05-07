@@ -1,6 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ConflictException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Brackets, Like, Repository } from "typeorm";
+import { Brackets, Repository, QueryFailedError } from "typeorm";
 import { Customer } from "./entities/customer.entity";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer";
@@ -12,24 +12,27 @@ export class CustomersService {
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
     private readonly usersService: UsersService
-  ) {}
+  ) { }
 
-  async create(
-    userId: number,
-    createCustomerDto: CreateCustomerDto
-  ): Promise<Customer> {
+  async create(userId: number, createCustomerDto: CreateCustomerDto): Promise<Customer> {
     const user = await this.usersService.findOne(userId);
 
-    const isDuplicateName = await this.findByName(createCustomerDto.name);
-    if (isDuplicateName) {
-      throw new HttpException(
-        "The customer name already exists",
-        HttpStatus.BAD_REQUEST
-      );
+    const customer = new Customer({
+      ...createCustomerDto,
+      user,
+    });
+
+    try {
+      return await this.customerRepository.save(customer);
+    } catch (error) {
+      if (error.code === '23505') { // check if the error is a duplicate key error
+        const columnName = error.detail.match(/\((.*?)\)/)[1]; // extract the column name from the error detail
+        throw new ConflictException(`Customer with this ${columnName} already exists`);
+      }
+      throw error;
     }
-    const customer = { ...createCustomerDto, user };
-    return this.customerRepository.save(customer);
   }
+
   async find(): Promise<Customer[]> {
     return this.customerRepository.find();
   }
@@ -95,29 +98,35 @@ export class CustomersService {
   async findByName(name: string): Promise<Customer> {
     return this.customerRepository.findOne({ where: { name } });
   }
-  async update(id: number, customer: UpdateCustomerDto): Promise<Customer> {
-    // Input validation
-    if (!customer || Object.keys(customer).length === 0) {
-      throw new HttpException("Invalid customer data", HttpStatus.BAD_REQUEST);
-    }
-    const existingCustomer = await this.findOne(id);
-    if (!existingCustomer) {
-      throw new HttpException("Customer not found", HttpStatus.NOT_FOUND);
-    }
-    const isDuplicateName = await this.findByName(customer.name);
-    if (isDuplicateName && isDuplicateName.id !== id) {
-      throw new HttpException(
-        "The customer name already exists",
-        HttpStatus.BAD_REQUEST
-      );
-    }
-
-    // Merge the existing customer with the new data
-    Object.assign(existingCustomer, customer);
-
-    // Save the updated customer to the database
-    return this.customerRepository.save(existingCustomer);
+  async findByNickname(nickname: string): Promise<Customer> {
+    return this.customerRepository.findOne({ where: { nickname } });
   }
+
+  async update(id: number, customer: UpdateCustomerDto): Promise<Customer> {
+    try {
+      // Check if customer with given ID exists
+      const existingCustomer = await this.findOne(id);
+      if (!existingCustomer) {
+        throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+      }
+
+      // Merge the existing customer with the new data
+      const updatedCustomer = this.customerRepository.merge(
+        existingCustomer,
+        customer,
+      );
+
+      // Save the updated customer to the database
+      return await this.customerRepository.save(updatedCustomer);
+    } catch (error) {
+      if (error.code === '23505') { // check if the error is a duplicate key error
+        const columnName = error.detail.match(/\((.*?)\)/)[1]; // extract the column name from the error detail
+        throw new ConflictException(`Customer with this ${columnName} already exists`);
+      }
+      throw error;
+    }
+  }
+
 
   async remove(id: number): Promise<void> {
     // Delete the costumer from the database

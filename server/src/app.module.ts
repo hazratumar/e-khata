@@ -25,7 +25,7 @@ import { TransactionItemModule } from "./transaction-items/transaction-item.modu
       host: "localhost",
       port: 5432,
       username: "postgres",
-      password: "1234",
+      password: "admin1234",
       database: "e-khata",
       entities: [
         User,

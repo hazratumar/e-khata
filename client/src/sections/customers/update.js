@@ -7,6 +7,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Checkbox,
   Grid,
   IconButton,
   MenuItem,
@@ -43,6 +44,7 @@ export const UpdateCustomer = (props) => {
       phone: customer.phone,
       address: customer.address,
       other: customer.other,
+      isSelf: customer.isSelf,
     }));
   };
 
@@ -53,24 +55,32 @@ export const UpdateCustomer = (props) => {
     phone: customer.phone,
     address: customer.address,
     other: customer.other,
+    isSelf: customer.isSelf,
   });
-  const [UpdateCustomer, { isSuccess, isLoading, error }] = useUpdateCustomerMutation();
+  const [updateCustomer, { isSuccess, isLoading, error }] = useUpdateCustomerMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setState((prevValues) => ({ ...prevValues, [name]: value }));
   };
+  const handleChangeCheckbox = (event) => {
+    setState((prevValues) => ({ ...prevValues, isSelf: event.target.checked }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await UpdateCustomer(state);
+    await updateCustomer(state);
   };
 
   useEffect(() => {
     if (isSuccess) {
-      handleOpen();
+      setOpen(false);
       console.log("Update data", state);
     }
+
+  }, [isSuccess]);
+  useEffect(() => {
+
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
         ? error.data.message[0]
@@ -78,7 +88,7 @@ export const UpdateCustomer = (props) => {
       toast.error(errorMessage);
       console.log("Error Message", error);
     }
-  }, [isSuccess, error]);
+  }, [error]);
   return (
     <div>
       <MenuItem
@@ -163,6 +173,14 @@ export const UpdateCustomer = (props) => {
                       value={state.other}
                       onChange={handleChange}
                     />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Checkbox
+                      checked={state.isSelf}
+                      onChange={handleChangeCheckbox}
+                      inputProps={{ 'aria-label': 'controlled' }}
+                    />
+                    <span>Self-customer</span>
                   </Grid>
                 </Grid>
               </Box>
