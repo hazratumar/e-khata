@@ -27,7 +27,7 @@ export class ExpenseItem {
   @OneToMany(() => Expense, (expense) => expense.expenseItem)
   expense: Expense[];
 
-  @ManyToOne(() => User, (user) => user.expenseItem, {
+  @ManyToOne(() => User, (user) => user.expenseItems, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",

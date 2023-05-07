@@ -2,27 +2,26 @@ import { Injectable } from "@nestjs/common";
 import { Brackets, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
-import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
-import { CreateTransactionItemDto } from "./dto/create-transaction-item.dto";
-import { UpdateTransactionItemDto } from "./dto/update-transaction-item.dto";
+import { Wallet } from "./entities/wallet.entity";
+import { UpdateWalletDto } from "./dto/update-wallet.dto";
 
 @Injectable()
-export class TransactionItemService {
+export class WalletService {
   constructor(
-    @InjectRepository(TransactionItem)
-    private readonly transactionItemRepository: Repository<TransactionItem>,
+    @InjectRepository(Wallet)
+    private readonly walletRepository: Repository<Wallet>,
     private readonly usersService: UsersService
-  ) {}
+  ) { }
 
-  async create(userId: number, transactionItem: any): Promise<TransactionItem> {
+  async create(userId: number, transactionItem: any): Promise<Wallet> {
     const user = await this.usersService.findOne(userId);
 
     const transactionItems = { ...transactionItem, user };
-    return this.transactionItemRepository.save(transactionItems);
+    return this.walletRepository.save(transactionItems);
   }
 
-  async findAll(): Promise<TransactionItem[]> {
-    return this.transactionItemRepository.find();
+  async findAll(): Promise<Wallet[]> {
+    return this.walletRepository.find();
   }
 
   async find(
@@ -30,7 +29,7 @@ export class TransactionItemService {
     limit: number,
     search?: string
   ): Promise<{
-    transactionItems: TransactionItem[];
+    transactionItems: Wallet[];
     total: number;
     page: number;
     totalPages: number;
@@ -42,7 +41,7 @@ export class TransactionItemService {
     const skip = page * limit;
 
     const queryBuilder =
-      this.transactionItemRepository.createQueryBuilder("transactionItem");
+      this.walletRepository.createQueryBuilder("transactionItem");
 
     // Apply search filter if search term is provided
     if (search?.trim()) {
@@ -77,30 +76,30 @@ export class TransactionItemService {
     return { transactionItems, total: length, page, totalPages };
   }
 
-  async getByTransaction(id: number): Promise<TransactionItem[]> {
-    return this.transactionItemRepository.find({
+  async getByTransaction(id: number): Promise<Wallet[]> {
+    return this.walletRepository.find({
       where: { transaction: { id } },
     });
   }
 
-  async findOne(id: number): Promise<TransactionItem> {
-    return this.transactionItemRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<Wallet> {
+    return this.walletRepository.findOne({ where: { id } });
   }
 
   async update(
     id: number,
-    transactionItem: UpdateTransactionItemDto
-  ): Promise<TransactionItem> {
-    const existingTransactionItem = await this.findOne(id);
+    transactionItem: UpdateWalletDto
+  ): Promise<Wallet> {
+    const existingWallet = await this.findOne(id);
 
     // Merge the existing customer with the new data
-    Object.assign(existingTransactionItem, transactionItem);
+    Object.assign(existingWallet, transactionItem);
 
     // Save the updated customer to the database
-    return this.transactionItemRepository.save(existingTransactionItem);
+    return this.walletRepository.save(existingWallet);
   }
 
   remove(id: number) {
-    return this.transactionItemRepository.delete({ id });
+    return this.walletRepository.delete({ id });
   }
 }

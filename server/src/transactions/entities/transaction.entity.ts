@@ -9,26 +9,40 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
+import { Wallet } from "src/wallets/entities/wallet.entity";
 
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  type: string;
+  @OneToMany(() => Wallet, (wallet) => wallet.transaction)
+  wallets: Wallet[];
+
+  @ManyToOne(() => Currency, (currency) => currency.transactions, {
+    eager: true,
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  currency: Currency;
 
   @Column()
-  status: string;
+  amount: number;
 
-  @OneToMany(
-    () => TransactionItem,
-    (transactionItem) => transactionItem.transaction
-  )
-  transactionItem: TransactionItem[];
+  @ManyToOne(() => Currency, (currency) => currency.transactions, {
+    eager: true,
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  exchangeCurrency: Currency;
 
-  @ManyToOne(() => User, (user) => user.transaction, {
+  @Column()
+  exchangeRate: number;
+
+  @Column()
+  description: string;
+
+  @ManyToOne(() => User, (user) => user.transactions, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",

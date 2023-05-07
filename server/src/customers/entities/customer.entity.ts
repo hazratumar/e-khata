@@ -1,5 +1,5 @@
-import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 import { User } from "src/users/entities/user.entity";
+import { Wallet } from "src/wallets/entities/wallet.entity";
 import {
   Column,
   CreateDateColumn,
@@ -33,13 +33,10 @@ export class Customer {
   @Column({ default: false })
   isSelf: Boolean;
 
-  @OneToMany(() => TransactionItem, (transactionItem) => transactionItem.from)
-  from: TransactionItem[];
+  @OneToMany(() => Wallet, (wallet) => wallet.customer)
+  wallets: Wallet[];
 
-  @OneToMany(() => TransactionItem, (transactionItem) => transactionItem.to)
-  to: TransactionItem[];
-
-  @ManyToOne(() => User, (user) => user.customer, {
+  @ManyToOne(() => User, (user) => user.customers, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",

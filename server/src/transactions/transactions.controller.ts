@@ -10,21 +10,21 @@ import {
 import { TransactionsService } from "./transactions.service";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { GetCurrentUserId } from "src/common/decorators";
-import { CreateTransactionItemDto } from "src/transaction-items/dto/create-transaction-item.dto";
-import { TransactionItemService } from "src/transaction-items/transaction-item.service";
+import { WalletService } from "src/wallets/wallet.service";
+import { CreateWalletDto } from "src/wallets/dto/create-wallet.dto";
 
 @Controller("transactions")
 export class TransactionsController {
   constructor(
     private readonly transactionsService: TransactionsService,
-    private readonly transactionItemService: TransactionItemService
-  ) {}
+    private readonly transactionItemService: WalletService
+  ) { }
 
   @Post()
   async create(
     @GetCurrentUserId() userId: string,
     @Body("transaction") transaction: CreateTransactionDto,
-    @Body("item") item: CreateTransactionItemDto,
+    @Body("item") item: CreateWalletDto,
     @Body("isCreated") isCreated: boolean
   ) {
     const tx = isCreated

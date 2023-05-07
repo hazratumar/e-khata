@@ -9,24 +9,24 @@ import {
   Put,
 } from "@nestjs/common";
 import { GetCurrentUserId } from "../common/decorators/get-current-user-id.decorator";
-import { TransactionItemService } from "src/transaction-items/transaction-item.service";
-import { CreateTransactionItemDto } from "src/transaction-items/dto/create-transaction-item.dto";
-import { UpdateTransactionItemDto } from "src/transaction-items/dto/update-transaction-item.dto";
+import { WalletService } from "./wallet.service";
+import { CreateWalletDto } from "./dto/create-wallet.dto";
+import { UpdateWalletDto } from "./dto/update-wallet.dto";
 
 @Controller("transaction-items")
-export class TransactionItemController {
+export class WalletController {
   constructor(
-    private readonly transactionItemService: TransactionItemService
-  ) {}
+    private readonly transactionItemService: WalletService
+  ) { }
 
   @Post()
   create(
     @GetCurrentUserId() userId: string,
-    @Body() createTransactionItemDto: CreateTransactionItemDto
+    @Body() createWalletDto: CreateWalletDto
   ) {
     return this.transactionItemService.create(
       +userId,
-      createTransactionItemDto
+      createWalletDto
     );
   }
 
@@ -56,9 +56,9 @@ export class TransactionItemController {
   @Put()
   update(
     @Body("id") id: string,
-    @Body() updateTransactionItemDto: UpdateTransactionItemDto
+    @Body() updateWalletDto: UpdateWalletDto
   ) {
-    return this.transactionItemService.update(+id, updateTransactionItemDto);
+    return this.transactionItemService.update(+id, updateWalletDto);
   }
 
   @Delete(":id")
