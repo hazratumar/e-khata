@@ -8,7 +8,8 @@
 		"build": "concurrently \"cd server && pnpm build\" \"cd client && pnpm build\" ",
 		"start": "concurrently \"cd server && pnpm start\" \"cd client &&  pnpm start\" ",
 		"lint": "concurrently \"cd server && pnpm lint\" \"cd client && pnpm lint\" ",
-		"installp": "concurrently \"pnpm i\" \"cd client && pnpm i\" \"cd server && pnpm i\""
+		"install": "concurrently \"cd server && pnpm install\" \"cd client && pnpm install\" ",
+		"i": "concurrently \"cd server && pnpm install\" \"cd client && pnpm install\" "
 	},
 	"author": "",
 	"license": "ISC",
