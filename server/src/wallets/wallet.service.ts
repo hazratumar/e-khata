@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
 import { Wallet } from "./entities/wallet.entity";
 import { UpdateWalletDto } from "./dto/update-wallet.dto";
+import { CreateWalletDto } from "./dto/create-wallet.dto";
 
 @Injectable()
 export class WalletService {
@@ -13,12 +14,17 @@ export class WalletService {
     private readonly usersService: UsersService
   ) { }
 
-  async create(userId: number, wallet: any): Promise<Wallet> {
-    const user = await this.usersService.findOne(userId);
+  async create(userId: number, customer: number, type: string, transaction: number): Promise<Wallet> {
+    try {
+      const user = await this.usersService.findOne(userId);
 
-    const wallets = { ...wallet, user };
-    return this.walletRepository.save(wallets);
+      const wallets = { customer, type, transaction, user };
+      return this.walletRepository.save(wallets);
+    } catch (error) {
+      throw new Error(`Unable to create wallet: ${error.message}`);
+    }
   }
+
 
   async findAll(): Promise<Wallet[]> {
     return this.walletRepository.find();

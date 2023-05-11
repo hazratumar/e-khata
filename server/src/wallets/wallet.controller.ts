@@ -19,17 +19,6 @@ export class WalletController {
     private readonly walletService: WalletService
   ) { }
 
-  @Post()
-  create(
-    @GetCurrentUserId() userId: string,
-    @Body() createWalletDto: CreateWalletDto
-  ) {
-    return this.walletService.create(
-      +userId,
-      createWalletDto
-    );
-  }
-
   @Get(":page/:limit/:searchTerm?")
   find(
     @Param("page", ParseIntPipe) page: number,

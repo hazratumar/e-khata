@@ -27,7 +27,8 @@ export class TransactionsController {
   ) {
 
     const savedTransaction = await this.transactionsService.create(+userId, transaction)
-    await this.walletService.create(+userId, transaction)
+    await this.walletService.create(+userId, { customer: transaction.creditCustomer }, { type: "Credit" }, { transaction: savedTransaction.id })
+    await this.walletService.create(+userId, { customer: transaction.debitCustomer }, { type: "Debit" }, { transaction: savedTransaction.id })
 
   }
 
