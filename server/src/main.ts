@@ -1,9 +1,9 @@
 import { NestFactory } from "@nestjs/core";
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from "@nestjs/common";
 import { Logger } from "@nestjs/common";
 import { AppModule } from "./app.module";
 import * as dotenv from "dotenv";
-const cors = require('cors');
+const cors = require("cors");
 
 async function bootstrap() {
   dotenv.config();

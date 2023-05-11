@@ -1,23 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
-import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
-import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
-import { useGetTransactionsQuery } from "src/store/services/transactionService";
-import { TransactionModal } from "../sections/transactions/modal";
+import { useGetWalletsQuery } from "src/store/services/walletsService";
+import { TransactionModal } from "src/sections/transactions/modal";
 
 const Page = () => {
   const [state, setState] = useState({
     page: 0,
     rowsPerPage: 10,
     count: 0,
-    transactions: [],
+    wallets: [],
     searchTerm: "",
   });
 
-  // const { isSuccess, data, refetch } = useGetTransactionsQuery(state);
+  const { isSuccess, data } = useGetWalletsQuery(state);
 
   const onRowsPerPageChange = useCallback((event) => {
     setState((prevState) => ({ ...prevState, rowsPerPage: event.target.value }));
@@ -31,16 +30,15 @@ const Page = () => {
     setState((prevState) => ({ ...prevState, searchTerm: search }));
   }, []);
 
-  // useEffect(() => {
-  //   refetch();
-  //   if (isSuccess) {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       count: data.total,
-  //       transactions: data.transactions,
-  //     }));
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (isSuccess) {
+      setState((prevState) => ({
+        ...prevState,
+        count: data.total,
+        wallets: data.wallets,
+      }));
+    }
+  }, [data]);
   return (
     <>
       <Head>
@@ -55,14 +53,15 @@ const Page = () => {
               </Stack>
               <TransactionModal />
             </Stack>
-            {/* <Search onSearch={onSearch} item="transactions" />
+            <Search onSearch={onSearch} item="transactions" />
             <TransactionsTable
               page={state.page}
               rowsPerPage={state.rowsPerPage}
               onRowsPerPageChange={onRowsPerPageChange}
               count={state.count}
               onPageChange={onPageChange}
-              items={state.transactions} />*/}
+              items={state.wallets}
+            />
           </Stack>
         </Container>
       </Box>

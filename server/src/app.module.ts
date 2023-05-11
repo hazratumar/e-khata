@@ -25,7 +25,7 @@ import { WalletModule } from "./wallets/wallet.module";
       host: "localhost",
       port: 5432,
       username: "postgres",
-      password: "admin1234",
+      password: "1234",
       database: "e-khata",
       entities: [
         User,
@@ -62,4 +62,4 @@ import { WalletModule } from "./wallets/wallet.module";
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

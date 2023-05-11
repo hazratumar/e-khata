@@ -116,7 +116,7 @@ const Page = () => {
                 />
               </Stack>
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
-                Login
+                {isLoading ? "Please wait..." : "Login"}
               </Button>
               <Link component={NextLink} href="/auth/forget" underline="none">
                 <Button fullWidth size="large" sx={{ mt: 3 }}>

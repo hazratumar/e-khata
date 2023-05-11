@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 import { Transaction } from "./entities/transaction.entity";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { UsersService } from "src/users/users.service";
-import { CreateTransactionDto } from "./dto/create-Transaction.dto copy";
+import { CreateTransactionDto } from "./dto/create-Transaction.dto";
 
 @Injectable()
 export class TransactionsService {
@@ -12,18 +12,18 @@ export class TransactionsService {
     @InjectRepository(Transaction)
     private readonly transactionRepository: Repository<Transaction>,
     private readonly usersService: UsersService
-  ) { }
+  ) {}
 
   async create(
     userId: number,
-    createTransactionDto: CreateTransactionDto
+    transaction: CreateTransactionDto
   ): Promise<Transaction> {
     const user = await this.usersService.findOne(userId);
-    const transaction = await this.transactionRepository.create({
-      ...createTransactionDto,
+    const transactions = new Transaction({
+      ...transaction,
       user,
     });
-    return this.transactionRepository.save(transaction);
+    return this.transactionRepository.save(transactions);
   }
 
   async update(
@@ -61,7 +61,7 @@ export class TransactionsService {
         },
         take: limit,
         skip: skip,
-        relations: ["user", "wallet"],
+        relations: ["user", "wallets"],
       }
     );
 

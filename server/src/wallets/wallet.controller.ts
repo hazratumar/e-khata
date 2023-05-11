@@ -1,23 +1,18 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Param,
   Delete,
   ParseIntPipe,
   Put,
 } from "@nestjs/common";
-import { GetCurrentUserId } from "../common/decorators/get-current-user-id.decorator";
 import { WalletService } from "./wallet.service";
-import { CreateWalletDto } from "./dto/create-wallet.dto";
 import { UpdateWalletDto } from "./dto/update-wallet.dto";
 
-@Controller("transaction-items")
+@Controller("wallets")
 export class WalletController {
-  constructor(
-    private readonly walletService: WalletService
-  ) { }
+  constructor(private readonly walletService: WalletService) {}
 
   @Get(":page/:limit/:searchTerm?")
   find(
@@ -43,10 +38,7 @@ export class WalletController {
   }
 
   @Put()
-  update(
-    @Body("id") id: string,
-    @Body() updateWalletDto: UpdateWalletDto
-  ) {
+  update(@Body("id") id: string, @Body() updateWalletDto: UpdateWalletDto) {
     return this.walletService.update(+id, updateWalletDto);
   }
 

@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { api } from "./api";
 
-export const TransactionsService = createApi({
+export const TransactionService = createApi({
   reducerPath: "transactionService",
   tagTypes: ["transactions"],
   baseQuery: api,
@@ -39,4 +39,4 @@ export const TransactionsService = createApi({
 });
 
 export const { useAddTransactionMutation, useGetTransactionsQuery, useUpdateTransactionMutation } =
-  TransactionsService;
+  TransactionService;
