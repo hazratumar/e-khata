@@ -12,51 +12,28 @@ import {
 } from "typeorm";
 
 @Entity()
-export class TransactionItem {
+export class Wallet {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ManyToOne(() => Customer, (customer) => customer.wallets, {
+    eager: true,
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  customer: Customer;
 
   @Column()
   type: string;
 
-  @ManyToOne(() => Customer, (customer) => customer.from, {
-    eager: true,
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  from: Customer;
-
-  @ManyToOne(() => Customer, (customer) => customer.to, {
-    eager: true,
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  to: Customer;
-
-  @ManyToOne(() => Currency, (currency) => currency.transactionItem, {
-    eager: true,
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  currency: Currency;
-
-  @Column()
-  amount: string;
-
-  @Column()
-  rate: string;
-
-  @Column()
-  profit: string;
-
-  @ManyToOne(() => Transaction, (transaction) => transaction.transactionItem, {
+  @ManyToOne(() => Transaction, (transaction) => transaction.wallets, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
   })
   transaction: Transaction;
 
-  @ManyToOne(() => User, (user) => user.transactionItem, {
+  @ManyToOne(() => User, (user) => user.wallets, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",
@@ -75,7 +52,7 @@ export class TransactionItem {
   })
   updatedAt: Date;
 
-  constructor(partial: Partial<TransactionItem>) {
+  constructor(partial: Partial<Wallet>) {
     Object.assign(this, partial);
   }
 }

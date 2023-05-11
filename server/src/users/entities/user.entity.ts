@@ -4,7 +4,6 @@ import { Customer } from "src/customers/entities/customer.entity";
 import { Expense } from "src/expenses/entities/expense.entity";
 import { ExpenseItem } from "src/expense-items/entities/expense-item.entity";
 import { Transaction } from "src/transactions/entities/transaction.entity";
-import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 
 import {
   Column,
@@ -14,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Wallet } from "src/wallets/entities/wallet.entity";
 
 @Entity()
 export class User {
@@ -46,22 +46,22 @@ export class User {
   otp: string;
 
   @OneToMany(() => Customer, (customer) => customer.user)
-  customer: Customer[];
+  customers: Customer[];
 
   @OneToMany(() => Currency, (currency) => currency.user)
-  currency: Currency[];
+  currencies: Currency[];
+
+  @OneToMany(() => Wallet, (wallet) => wallet.user)
+  wallets: Wallet[];
 
   @OneToMany(() => Transaction, (transaction) => transaction.user)
-  transaction: Transaction[];
-
-  @OneToMany(() => TransactionItem, (transactionItem) => transactionItem.user)
-  transactionItem: TransactionItem[];
+  transactions: Transaction[];
 
   @OneToMany(() => Expense, (expense) => expense.user)
-  expense: Expense[];
+  expenses: Expense[];
 
   @OneToMany(() => ExpenseItem, (expenseItem) => expenseItem.user)
-  expenseItem: ExpenseItem[];
+  expenseItems: ExpenseItem[];
 
   @CreateDateColumn({
     type: "timestamp with time zone",

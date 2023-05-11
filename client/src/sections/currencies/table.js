@@ -1,10 +1,9 @@
 import {
   Box,
   Card,
-  Fade,
   IconButton,
-  Menu,
   MenuItem,
+  Popover,
   SvgIcon,
   Table,
   TableBody,
@@ -12,7 +11,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { useState } from "react";
@@ -23,6 +21,19 @@ export const CurrenciesTable = (props) => {
   const options = [5, 10, 25, 50, 100];
   const rowsPerPageOptions = options.filter((option) => option <= count);
 
+  const [anchorElArr, setAnchorElArr] = useState(items.map(() => null));
+
+  const handleClick = (event, index) => {
+    const newAnchorElArr = [...anchorElArr];
+    newAnchorElArr[index] = event.currentTarget;
+    setAnchorElArr(newAnchorElArr);
+  };
+
+  const handleClose = (index) => {
+    const newAnchorElArr = [...anchorElArr];
+    newAnchorElArr[index] = null;
+    setAnchorElArr(newAnchorElArr);
+  };
   return (
     <Card>
       <Scrollbar>
@@ -30,51 +41,46 @@ export const CurrenciesTable = (props) => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>ID</TableCell>
                 <TableCell>Currency</TableCell>
-                <TableCell>Rate</TableCell>
+                <TableCell>Abbreviation</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((currency) => {
-                const [anchorEl, setAnchorEl] = useState(null);
-                const open = Boolean(anchorEl);
-                const handleClick = (event) => {
-                  setAnchorEl(event.currentTarget);
-                };
-                const handleClose = () => {
-                  setAnchorEl(null);
-                };
-                return (
-                  <TableRow hover key={currency.id}>
-                    <TableCell>
-                      <Typography variant="subtitle2">{currency.name}</Typography>
-                    </TableCell>
-                    <TableCell>{currency.rate}</TableCell>
-                    <TableCell>
-                      <div>
-                        <IconButton onClick={handleClick}>
-                          <SvgIcon>
-                            <Cog6ToothIcon />
-                          </SvgIcon>
-                        </IconButton>
-                        <Menu
-                          id="fade-menu"
-                          MenuListProps={{ "aria-labelledby": "fade-button" }}
-                          anchorEl={anchorEl}
-                          open={open}
-                          onClose={handleClose}
-                          TransitionComponent={Fade}
-                        >
-                          <UpdateCurrency currency={currency} />
-                          <MenuItem onClick={handleClose}>Transition</MenuItem>
-                          <MenuItem onClick={handleClose}>Delete "disable"</MenuItem>
-                        </Menu>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {items.map((currency, index) => (
+                <TableRow hover key={currency.id}>
+                  <TableCell>{currency.id}</TableCell>
+                  <TableCell>{currency.name}</TableCell>
+                  <TableCell>{currency.abbreviation}</TableCell>
+                  <TableCell>
+                    <div>
+                      <IconButton onClick={(event) => handleClick(event, index)}>
+                        <SvgIcon>
+                          <Cog6ToothIcon />
+                        </SvgIcon>
+                      </IconButton>
+                      <Popover
+                        open={Boolean(anchorElArr[index])}
+                        anchorEl={anchorElArr[index]}
+                        onClose={() => handleClose(index)}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "center",
+                        }}
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "center",
+                        }}
+                      >
+                        <UpdateCurrency currency={currency} />
+                        {/* <MenuItem onClick={handleClose}>Transition</MenuItem>
+                        <MenuItem onClick={handleClose}>Delete "disable"</MenuItem> */}
+                      </Popover>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </Box>

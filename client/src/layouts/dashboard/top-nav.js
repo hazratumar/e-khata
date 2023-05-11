@@ -25,7 +25,7 @@ export const TopNav = (props) => {
   const { onNavOpen } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const accountPopover = usePopover();
-  const { user } = useSelector((state) => state.authReducer);
+  const { user } = useSelector((state) => state.auth);
   return (
     <>
       <Box
