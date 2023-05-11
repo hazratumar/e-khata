@@ -39,7 +39,7 @@ export const AuthProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
-  const userState = useSelector((state) => state.authReducer);
+  const userState = useSelector((state) => state.auth);
 
   const initialize = async () => {
     // Prevent from calling twice in development mode with React.StrictMode enabled
@@ -76,4 +76,4 @@ AuthProvider.propTypes = {
 
 export const AuthConsumer = AuthContext.Consumer;
 
-export const useAuthContext = () => useSelector((state) => state.authReducer.isLogin);
+export const useAuthContext = () => useSelector((state) => state.auth.isLogin);

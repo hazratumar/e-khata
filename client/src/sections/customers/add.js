@@ -7,6 +7,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Checkbox,
   Divider,
   Grid,
   IconButton,
@@ -34,30 +35,34 @@ export const AddCustomer = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
-  const [formValues, setFormValues] = useState({
+  const [addCustomer, { isSuccess, isLoading, error }] = useAddCustomerMutation();
+
+  const [state, setState] = useState({
     name: "",
     nickname: "",
     phone: "",
     address: "",
     other: "",
+    isSelf: false,
   });
-
-  const [addCustomer, { isSuccess, isLoading, error }] = useAddCustomerMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+    setState((prevValues) => ({ ...prevValues, [name]: value }));
+  };
+  const handleChangeCheckbox = (event) => {
+    setState((prevValues) => ({ ...prevValues, isSelf: event.target.checked }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addCustomer(formValues);
+    await addCustomer(state);
   };
 
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
-      console.log("Add data", formValues);
+      console.log("Add data", state);
     }
   }, [isSuccess]);
 
@@ -82,7 +87,7 @@ export const AddCustomer = () => {
         onClick={handleOpen}
       >
         Add Customer
-      </Button>{" "}
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -139,6 +144,14 @@ export const AddCustomer = () => {
                       name="other"
                       onChange={handleChange}
                     />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Checkbox
+                      checked={state.isSelf}
+                      onChange={handleChangeCheckbox}
+                      inputProps={{ 'aria-label': 'controlled' }}
+                    />
+                    <span>Self-customer</span>
                   </Grid>
                 </Grid>
               </Box>

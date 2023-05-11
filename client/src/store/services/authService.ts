@@ -3,7 +3,7 @@ import { api } from "./api";
 
 export const AuthService = createApi({
   reducerPath: "authService",
-  tagTypes: ["auth"],
+  tagTypes: ["authentication"],
   baseQuery: api,
   endpoints: (builder) => ({
     signUp: builder.mutation({
@@ -12,7 +12,7 @@ export const AuthService = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["auth"],
+      invalidatesTags: ["authentication"],
     }),
     logIn: builder.mutation({
       query: (payload) => ({
@@ -20,7 +20,7 @@ export const AuthService = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["auth"],
+      invalidatesTags: ["authentication"],
     }),
     logOut: builder.mutation({
       query: (payload) => ({
@@ -28,7 +28,7 @@ export const AuthService = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["auth"],
+      invalidatesTags: ["authentication"],
     }),
     refreshAccessToken: builder.mutation({
       query: (refresh_token) => ({
@@ -36,7 +36,7 @@ export const AuthService = createApi({
         method: "POST",
         body: { refresh_token },
       }),
-      invalidatesTags: ["auth"],
+      invalidatesTags: ["authentication"],
     }),
   }),
 });

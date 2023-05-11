@@ -8,35 +8,28 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 import { TransactionsService } from "./transactions.service";
-import { CreateTransactionDto } from "./dto/create-transaction.dto";
+import { CreateAllTransactionDto } from "./dto/create-all-transaction.dto";
 import { GetCurrentUserId } from "src/common/decorators";
-import { CreateTransactionItemDto } from "src/transaction-items/dto/create-transaction-item.dto";
-import { TransactionItemService } from "src/transaction-items/transaction-item.service";
+import { WalletService } from "src/wallets/wallet.service";
+import { CreateWalletDto } from "src/wallets/dto/create-wallet.dto";
 
 @Controller("transactions")
 export class TransactionsController {
   constructor(
     private readonly transactionsService: TransactionsService,
-    private readonly transactionItemService: TransactionItemService
-  ) {}
+    private readonly walletService: WalletService
+  ) { }
 
   @Post()
   async create(
     @GetCurrentUserId() userId: string,
-    @Body("transaction") transaction: CreateTransactionDto,
-    @Body("item") item: CreateTransactionItemDto,
-    @Body("isCreated") isCreated: boolean
+    @Body() transaction: CreateAllTransactionDto,
   ) {
-    const tx = isCreated
-      ? await this.transactionsService.update(transaction)
-      : await this.transactionsService.create(+userId, transaction);
 
-    await this.transactionItemService.create(+userId, {
-      ...item,
-      transaction: tx?.id,
-    });
+    const savedTransaction = await this.transactionsService.create(+userId, transaction)
+    await this.walletService.create(+userId, { customer: transaction.creditCustomer }, { type: "Credit" }, { transaction: savedTransaction.id })
+    await this.walletService.create(+userId, { customer: transaction.debitCustomer }, { type: "Debit" }, { transaction: savedTransaction.id })
 
-    return tx;
   }
 
   @Get()

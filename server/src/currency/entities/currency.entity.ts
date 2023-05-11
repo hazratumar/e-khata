@@ -9,26 +9,22 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Transaction } from "src/transactions/entities/transaction.entity";
-import { TransactionItem } from "src/transaction-items/entities/transaction-item.entity";
 
 @Entity()
 export class Currency {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @Column()
-  rate: string;
+  @Column({ unique: true })
+  abbreviation: string;
 
-  @OneToMany(
-    () => TransactionItem,
-    (transactionItem) => transactionItem.currency
-  )
-  transactionItem: TransactionItem[];
+  @OneToMany(() => Transaction, (transaction) => transaction.currency)
+  transactions: Transaction[];
 
-  @ManyToOne(() => User, (user) => user.currency, {
+  @ManyToOne(() => User, (user) => user.currencies, {
     eager: true,
     cascade: true,
     onDelete: "CASCADE",

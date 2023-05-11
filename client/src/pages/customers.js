@@ -19,24 +19,23 @@ const Page = () => {
 
   const { isSuccess, data, refetch } = useGetCustomersQuery(state);
 
-  const onRowsPerPageChange = useCallback((event) => {
+  const handleRowsPerPageChange = useCallback((event) => {
     setState((prevState) => ({ ...prevState, rowsPerPage: event.target.value }));
   }, []);
 
-  const onPageChange = useCallback((event, value) => {
+  const handlePageChange = useCallback((event, value) => {
     setState((prevState) => ({ ...prevState, page: value }));
   }, []);
 
-  const onSearch = useCallback((search) => {
+  const handleSearch = useCallback((search) => {
     setState((prevState) => ({ ...prevState, searchTerm: search }));
   }, []);
 
   useEffect(() => {
-    refetch();
     if (isSuccess) {
       setState((prevState) => ({ ...prevState, count: data.total, customers: data.customers }));
     }
-  }, [data, refetch]);
+  }, [isSuccess, data]);
 
   return (
     <>
@@ -49,40 +48,16 @@ const Page = () => {
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="h4">Customers</Typography>
-                <Stack alignItems="center" direction="row" spacing={1}>
-                  <Button
-                    color="inherit"
-                    starticon={
-                      <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Import
-                  </Button>
-                  <Button
-                    color="inherit"
-                    starticon={
-                      <SvgIcon fontSize="small">
-                        <ArrowDownOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Export
-                  </Button>
-                </Stack>
               </Stack>
-              <div>
-                <AddCustomer />
-              </div>
+              <AddCustomer />
             </Stack>
-            <Search onSearch={onSearch} item="customers" />
+            <Search onSearch={handleSearch} item="customers" />
             <CustomersTable
               page={state.page}
               rowsPerPage={state.rowsPerPage}
-              onRowsPerPageChange={onRowsPerPageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
               count={state.count}
-              onPageChange={onPageChange}
+              onPageChange={handlePageChange}
               items={state.customers}
             />
           </Stack>

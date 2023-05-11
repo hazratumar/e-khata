@@ -1,41 +1,43 @@
 import {
+  IsBoolean,
   IsNotEmpty,
   IsOptional,
   MaxLength,
-  IsNumberString,
-  ValidateIf,
-} from "class-validator";
+} from 'class-validator';
 
 export class CreateCustomerDto {
-  @IsNotEmpty({ message: "Customer Name is required" })
+  @IsNotEmpty({ message: 'Customer Name is required' })
   @MaxLength(50, {
-    message: "Customer Name must be less than or equal to 50 characters",
+    message: 'Customer Name must be less than or equal to 50 characters',
   })
   name: string;
 
   @IsOptional()
   @MaxLength(50, {
-    message: "Nickname must be less than or equal to 50 characters",
+    message: 'Nickname must be less than or equal to 50 characters',
   })
   nickname?: string;
 
-  @ValidateIf((o) => o.phone !== "")
-  @IsNumberString({}, { message: "Phone number must be a number." })
-  @MaxLength(15, {
-    message: "Phone number must be less than or equal to 15 characters",
-  })
   @IsOptional()
-  phone: string;
+  @MaxLength(15, {
+    message: 'Phone Number must be less than or equal to 15 characters',
+  })
+  phone?: string;
 
   @IsOptional()
   @MaxLength(150, {
-    message: "Address must be less than or equal to 150 characters",
+    message: 'Address must be less than or equal to 150 characters',
   })
   address?: string;
 
   @IsOptional()
   @MaxLength(150, {
-    message: "Other field must be less than or equal to 150 characters",
+    message: 'Other field must be less than or equal to 150 characters',
   })
   other?: string;
+
+  @IsBoolean({
+    message: 'Customer Type must be a boolean',
+  })
+  isSelf: boolean;
 }

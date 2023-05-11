@@ -15,8 +15,8 @@ import { Expense } from "./expenses/entities/expense.entity";
 import { ExpenseModule } from "./expenses/expense.module";
 import { ExpenseItemModule } from "./expense-items/expense-item.module";
 import { ExpenseItem } from "./expense-items/entities/expense-item.entity";
-import { TransactionItem } from "./transaction-items/entities/transaction-item.entity";
-import { TransactionItemModule } from "./transaction-items/transaction-item.module";
+import { Wallet } from "./wallets/entities/wallet.entity";
+import { WalletModule } from "./wallets/wallet.module";
 
 @Module({
   imports: [
@@ -25,14 +25,14 @@ import { TransactionItemModule } from "./transaction-items/transaction-item.modu
       host: "localhost",
       port: 5432,
       username: "postgres",
-      password: "1234",
+      password: "admin1234",
       database: "e-khata",
       entities: [
         User,
         Customer,
         Currency,
+        Wallet,
         Transaction,
-        TransactionItem,
         ExpenseItem,
         Expense,
       ],
@@ -51,7 +51,7 @@ import { TransactionItemModule } from "./transaction-items/transaction-item.modu
     CustomersModule,
     CurrencyModule,
     TransactionModule,
-    TransactionItemModule,
+    WalletModule,
     ExpenseItemModule,
     ExpenseModule,
   ],
@@ -62,4 +62,4 @@ import { TransactionItemModule } from "./transaction-items/transaction-item.modu
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

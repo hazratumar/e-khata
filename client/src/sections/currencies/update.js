@@ -42,14 +42,14 @@ export const UpdateCurrency = (props) => {
       ...prevValues,
       id: currency.id,
       name: currency.name,
-      rate: currency.rate,
+      abbreviation: currency.abbreviation,
     }));
   };
 
   const [state, setState] = useState({
     id: currency.id,
     name: currency.name,
-    rate: currency.rate,
+    abbreviation: currency.abbreviation,
   });
   const [UpdateCurrency, { isSuccess, isLoading, error }] = useUpdateCurrencyMutation();
 
@@ -126,9 +126,9 @@ export const UpdateCurrency = (props) => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      label="Rate"
-                      name="rate"
-                      value={state.rate}
+                      label="Abbreviation"
+                      name="abbreviation"
+                      value={state.abbreviation}
                       onChange={handleChange}
                     />
                   </Grid>
