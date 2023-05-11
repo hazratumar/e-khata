@@ -4,16 +4,16 @@ import {
   Fade,
   Box,
   CardHeader,
-  Grid,
   IconButton,
   SvgIcon,
-  MenuItem,
   Modal,
   CardActions,
+  MenuItem,
 } from "@mui/material";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useRef, useState } from "react";
 import { AddTransaction } from "./add";
+import { UpdateTransaction } from "./update";
 
 const style = {
   position: "absolute",
@@ -28,28 +28,34 @@ const style = {
   padding: "20px",
 };
 
-export const TransactionModal = () => {
+export const TransactionModal = ({ transactionId }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const addTransactionRef = useRef(null);
 
   const handleSubmit = () => {
-    addTransactionRef.current.saveTransaction()
+    addTransactionRef.current.saveTransaction();
+    handleOpen();
   };
 
   return (
     <div>
-      <Button
-        startIcon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={handleOpen}
-      >
-        Add Customer
-      </Button>
+      {transactionId ? (
+        <MenuItem onClick={handleOpen}>Update</MenuItem>
+      ) : (
+        <Button
+          startIcon={
+            <SvgIcon fontSize="small">
+              <PlusIcon />
+            </SvgIcon>
+          }
+          variant="contained"
+          onClick={handleOpen}
+        >
+          Add Customer
+        </Button>
+      )}
+
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -73,18 +79,16 @@ export const TransactionModal = () => {
             />
             <CardContent sx={{ pt: 0 }}>
               <Box sx={{ m: -1.5 }}>
-                <AddTransaction ref={addTransactionRef} />
+                {transactionId ? (
+                  <UpdateTransaction ref={addTransactionRef} />
+                ) : (
+                  <AddTransaction ref={addTransactionRef} />
+                )}
               </Box>
             </CardContent>
-            <CardActions
-              style={{ justifyContent: "space-between", alignItems: "center" }}
-            >
+            <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-              >
+              <Button onClick={handleSubmit} variant="contained" color="primary">
                 Add Transaction
               </Button>
             </CardActions>

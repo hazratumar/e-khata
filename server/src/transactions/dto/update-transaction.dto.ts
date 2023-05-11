@@ -1,8 +1,8 @@
 import { PartialType } from "@nestjs/mapped-types";
 import { IsNumber } from "class-validator";
-import { CreateTransactionDto } from "./create-Transaction.dto copy";
+import { CreateTransactionDto } from "./create-Transaction.dto";
 
 export class UpdateTransactionDto extends PartialType(CreateTransactionDto) {
-    @IsNumber()
-    id: number;
+  @IsNumber()
+  id: number;
 }

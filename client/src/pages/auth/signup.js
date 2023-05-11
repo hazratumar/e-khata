@@ -51,7 +51,7 @@ const Page = () => {
       console.log("SignUp data", data);
     }
     if (error) {
-      const errorMessage = Array.isArray(error.data.message)
+      const errorMessage = Array.isArray(error?.data?.message)
         ? error.data.message[0]
         : error.data.message;
       toast.error(errorMessage);
@@ -143,7 +143,7 @@ const Page = () => {
                 />
               </Stack>
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
-                {isLoading ? "Loading..." : "SignUp"}
+                {isLoading ? "Please wait..." : "SignUp"}
               </Button>
             </form>
           </div>

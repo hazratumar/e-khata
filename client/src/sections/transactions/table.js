@@ -1,9 +1,10 @@
+import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import {
   Box,
   Card,
-  Fade,
   IconButton,
-  Menu,
+  MenuItem,
+  Popover,
   SvgIcon,
   Table,
   TableBody,
@@ -12,17 +13,29 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
-import { Scrollbar } from "src/components/scrollbar";
 import { useState } from "react";
-import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { ViewTransaction } from "./view";
-import { useDispatch } from "react-redux";
+import { Scrollbar } from "src/components/scrollbar";
+import { TransactionModal } from "./modal";
 
-export const TransactionsTable = () => {
-
+export const TransactionsTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
+  console.log(items);
   const options = [5, 10, 25, 50, 100];
   const rowsPerPageOptions = options.filter((option) => option <= count);
+
+  const [anchorElArr, setAnchorElArr] = useState(items.map(() => null));
+
+  const handleClick = (event, index) => {
+    const newAnchorElArr = [...anchorElArr];
+    newAnchorElArr[index] = event.currentTarget;
+    setAnchorElArr(newAnchorElArr);
+  };
+
+  const handleClose = (index) => {
+    const newAnchorElArr = [...anchorElArr];
+    newAnchorElArr[index] = null;
+    setAnchorElArr(newAnchorElArr);
+  };
   return (
     <Card>
       <Scrollbar>
@@ -31,79 +44,50 @@ export const TransactionsTable = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Id</TableCell>
+                <TableCell>Customer</TableCell>
                 <TableCell>Type</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Description</TableCell>
                 <TableCell>Currency</TableCell>
-                <TableCell>Rate</TableCell>
-                <TableCell>Profit</TableCell>
                 <TableCell>Credit Amount</TableCell>
                 <TableCell>Debit Amount</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {items.map((transaction) => {
-                const singleItem = transaction.transactionItem.find(
-                  (item) => item.type === (transaction.type === "Sale" ? "Credit" : "Debit")
-                );
-                const [anchorEl, setAnchorEl] = useState(null);
-                const open = Boolean(anchorEl);
-                const handleClick = (event) => setAnchorEl(event.currentTarget);
-                const handleClose = () => setAnchorEl(null);
-
-                return (
-                  <TableRow hover key={transaction.id}>
-                    <TableCell>{transaction.id}</TableCell>
-                    <TableCell>{transaction.type}</TableCell>
-                    <TableCell>{transaction?.status}</TableCell>
-                    <TableCell>
-                      {singleItem?.type &&
-                        `${singleItem.type} from ${singleItem.from?.name} to ${singleItem.to?.name}`}
-                    </TableCell>
-                    <TableCell>{singleItem?.currency?.name}</TableCell>
-                    <TableCell>{singleItem?.rate}</TableCell>
-                    <TableCell>{singleItem?.profit}</TableCell>
-                    <TableCell>{singleItem?.type === "Debit" ? singleItem?.amount : 0}</TableCell>
-                    <TableCell>{singleItem?.type === "Credit" ? singleItem?.amount : 0}</TableCell>
-                    <TableCell>
-                      <div>
-                        <IconButton onClick={handleClick}>
-                          <SvgIcon>
-                            <Cog6ToothIcon />
-                          </SvgIcon>
-                        </IconButton>
-                        <Menu
-                          id="fade-menu"
-                          MenuListProps={{ "aria-labelledby": "fade-button" }}
-                          anchorEl={anchorEl}
-                          open={open}
-                          onClose={handleClose}
-                          TransitionComponent={Fade}
-                        >
-                          {transaction.type === "Sale" && (
-                            <AddSelling
-                              update={true}
-                              id={transaction.id}
-                              type={transaction.type}
-                              status={transaction.status}
-                            />
-                          )}
-                          {transaction.type === "Buy" && (
-                            <AddBuying
-                              update={true}
-                              id={transaction.id}
-                              type={transaction.type}
-                              status={transaction.status}
-                            />
-                          )}
-                          <ViewTransaction transaction={transaction} />
-                        </Menu>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })} */}
+              {items.map((item, index) => (
+                <TableRow hover key={item.id}>
+                  <TableCell>{item?.id}</TableCell>
+                  <TableCell>{item?.customer?.name}</TableCell>
+                  <TableCell>{item?.type}</TableCell>
+                  <TableCell>{item?.transaction?.currency?.abbreviation}</TableCell>
+                  <TableCell>{item?.type === "Credit" ? item?.transaction?.amount : "0"}</TableCell>
+                  <TableCell>{item?.type === "Debit" ? item?.transaction?.amount : "0"}</TableCell>
+                  <TableCell>
+                    <div>
+                      <IconButton onClick={(event) => handleClick(event, index)}>
+                        <SvgIcon>
+                          <Cog6ToothIcon />
+                        </SvgIcon>
+                      </IconButton>
+                      <Popover
+                        open={Boolean(anchorElArr[index])}
+                        anchorEl={anchorElArr[index]}
+                        onClose={() => handleClose(index)}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "center",
+                        }}
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "center",
+                        }}
+                      >
+                        <TransactionModal transactionId={item?.transaction?.id} />
+                        <MenuItem onClick={() => handleClose(index)}>Transaction</MenuItem>
+                      </Popover>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </Box>

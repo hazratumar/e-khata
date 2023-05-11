@@ -5,7 +5,7 @@ import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
 
-export const AddTransaction = forwardRef((props, ref) => {
+export const UpdateTransaction = forwardRef((props, ref) => {
   const [state, setState] = useState({
     creditCustomer: "",
     debitCustomer: "",

@@ -1,30 +1,36 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { Brackets, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
 import { Wallet } from "./entities/wallet.entity";
 import { UpdateWalletDto } from "./dto/update-wallet.dto";
 import { CreateWalletDto } from "./dto/create-wallet.dto";
+import { TransactionsService } from "src/transactions/transactions.service";
 
 @Injectable()
 export class WalletService {
   constructor(
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
+    private readonly transactionsService: TransactionsService,
     private readonly usersService: UsersService
-  ) { }
+  ) {}
 
-  async create(userId: number, customer: number, type: string, transaction: number): Promise<Wallet> {
+  async create(
+    userId: number,
+    wallet: CreateWalletDto,
+    transactionId: number
+  ): Promise<Wallet> {
     try {
       const user = await this.usersService.findOne(userId);
+      const transaction = await this.transactionsService.findOne(transactionId);
 
-      const wallets = { customer, type, transaction, user };
+      const wallets = new Wallet({ ...wallet, user, transaction });
       return this.walletRepository.save(wallets);
     } catch (error) {
       throw new Error(`Unable to create wallet: ${error.message}`);
     }
   }
-
 
   async findAll(): Promise<Wallet[]> {
     return this.walletRepository.find();
@@ -46,25 +52,16 @@ export class WalletService {
 
     const skip = page * limit;
 
-    const queryBuilder =
-      this.walletRepository.createQueryBuilder("wallet");
+    const [wallets, total] = await this.walletRepository.findAndCount({
+      where: {
+        // your search query
+      },
+      take: limit,
+      skip: skip,
+      relations: ["user", "transaction"],
+    });
 
-    // Apply search filter if search term is provided
-    if (search?.trim()) {
-      queryBuilder.where(
-        new Brackets((qb) => {
-          qb.where("wallet.name ILIKE :search", {
-            search: `%${search}%`,
-          }).orWhere("wallet.detail ILIKE :search", {
-            search: `%${search}%`,
-          });
-        })
-      );
-    }
-
-    const length = await queryBuilder.getCount();
-
-    const totalPages = Math.ceil(length / limit);
+    const totalPages = Math.ceil(total / limit);
 
     // Handle case when page number is greater than total pages
     if (totalPages > 0 && page > totalPages) {
@@ -73,13 +70,7 @@ export class WalletService {
       );
     }
 
-    const wallets = await queryBuilder
-      .orderBy("wallet.updatedAt", "DESC")
-      .skip(skip)
-      .take(limit)
-      .getMany();
-
-    return { wallets, total: length, page, totalPages };
+    return { wallets, total, page, totalPages };
   }
 
   async getByTransaction(id: number): Promise<Wallet[]> {
@@ -92,10 +83,7 @@ export class WalletService {
     return this.walletRepository.findOne({ where: { id } });
   }
 
-  async update(
-    id: number,
-    wallet: UpdateWalletDto
-  ): Promise<Wallet> {
+  async update(id: number, wallet: UpdateWalletDto): Promise<Wallet> {
     const existingWallet = await this.findOne(id);
 
     // Merge the existing customer with the new data
