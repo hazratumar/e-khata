@@ -56,7 +56,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
   };
 
   const saveTransaction = async () => {
-    await updateTransaction({
+    return updateTransaction({
       credit: {
         id: state.creditCustomerId,
         customer: state.creditCustomer,

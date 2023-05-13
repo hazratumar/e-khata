@@ -34,13 +34,12 @@ export const TransactionModal = ({ transactionId }) => {
   const addTransactionRef = useRef(null);
   const updateTransactionRef = useRef(null);
 
-  const handleSubmit = () => {
-    if (transactionId) {
-      updateTransactionRef.current.saveTransaction();
-    } else {
-      addTransactionRef.current.saveTransaction();
+  const handleSubmit = async () => {
+    const transactionRef = transactionId ? updateTransactionRef : addTransactionRef;
+    const { data } = await transactionRef.current.saveTransaction();
+    if (data) {
+      handleOpen();
     }
-    handleOpen();
   };
 
   return (

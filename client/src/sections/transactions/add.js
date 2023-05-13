@@ -28,7 +28,7 @@ export const AddTransaction = forwardRef((props, ref) => {
   };
 
   const saveTransaction = async () => {
-    await addTransaction({
+    return addTransaction({
       credit: {
         customer: state.creditCustomer,
         type: "Credit",
@@ -46,9 +46,11 @@ export const AddTransaction = forwardRef((props, ref) => {
       },
     });
   };
+
   useImperativeHandle(ref, () => ({
     saveTransaction,
   }));
+
   useEffect(() => {
     if (isSuccess) {
       toast.success("Transaction added successfully");
@@ -64,7 +66,6 @@ export const AddTransaction = forwardRef((props, ref) => {
       console.log("Error Message", error);
     }
   }, [error]);
-
   return (
     <>
       <Grid container spacing={2}>
