@@ -1,14 +1,20 @@
 import { Autocomplete, Grid, TextField, Typography } from "@mui/material";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { useAddTransactionMutation } from "src/store/services/transactionService";
+import { useGetOneTransactionQuery } from "src/store/services/transactionService";
+import { useUpdateTransactionMutation } from "src/store/services/transactionService";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
 
 export const UpdateTransaction = forwardRef((props, ref) => {
+  const { transactionId } = props;
+
   const [state, setState] = useState({
+    creditCustomerId: "",
     creditCustomer: "",
+    debitCustomerId: "",
     debitCustomer: "",
+    transactionId: "",
     currency: "",
     amount: "",
     exCurrency: "",
@@ -18,24 +24,51 @@ export const UpdateTransaction = forwardRef((props, ref) => {
 
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
-  const [addTransaction, { isSuccess, error }] = useAddTransactionMutation();
+
+  const { data } = useGetOneTransactionQuery({ transactionId });
+
+  const [updateTransaction, { isSuccess, error }] = useUpdateTransactionMutation();
+
+  const creditRecords = data?.wallets?.filter((record) => record.type === "Credit");
+  const debitRecords = data?.wallets?.filter((record) => record.type === "Debit");
+
+  useEffect(() => {
+    if (data) {
+      setState((prevState) => ({
+        ...prevState,
+        creditCustomerId: creditRecords[0]?.id,
+        creditCustomer: creditRecords[0]?.customer?.id,
+        debitCustomerId: debitRecords[0]?.id,
+        debitCustomer: debitRecords[0]?.customer?.id,
+        transactionId: prevState.transactionId || data?.id,
+        currency: data?.currency?.id,
+        amount: data?.amount,
+        exCurrency: data?.exCurrency?.id,
+        exRate: data?.exRate,
+        description: data?.description,
+      }));
+    }
+  }, [data]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setState((prevFormData) => ({ ...prevFormData, [name]: value }));
+    setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const saveTransaction = async () => {
-    await addTransaction({
+    await updateTransaction({
       credit: {
+        id: state.creditCustomerId,
         customer: state.creditCustomer,
         type: "Credit",
       },
       debit: {
+        id: state.debitCustomerId,
         customer: state.debitCustomer,
         type: "Debit",
       },
       transaction: {
+        id: state.transactionId,
         currency: state.currency,
         amount: state.amount,
         exCurrency: state.exCurrency,
@@ -44,12 +77,10 @@ export const UpdateTransaction = forwardRef((props, ref) => {
       },
     });
   };
-  useImperativeHandle(ref, () => ({
-    saveTransaction,
-  }));
+
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Transaction added successfully");
+      toast.success("Transaction updated successfully");
     }
   }, [isSuccess]);
 
@@ -62,6 +93,10 @@ export const UpdateTransaction = forwardRef((props, ref) => {
       console.log("Error Message", error);
     }
   }, [error]);
+
+  useImperativeHandle(ref, () => ({
+    saveTransaction,
+  }));
 
   return (
     <>

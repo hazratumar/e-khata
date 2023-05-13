@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Transaction } from "./entities/transaction.entity";
@@ -78,13 +82,18 @@ export class TransactionsService {
   }
 
   async findOne(id: number): Promise<Transaction> {
-    const transaction = await this.transactionRepository.findOne({
-      where: { id },
-    });
-    if (!transaction) {
-      throw new NotFoundException(`Transaction with id ${id} not found`);
+    try {
+      const transaction = await this.transactionRepository.findOne({
+        where: { id },
+        relations: ["wallets"],
+      });
+      if (!transaction) {
+        throw new NotFoundException(`Transaction with id ${id} not found`);
+      }
+      return transaction;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
     }
-    return transaction;
   }
 
   async remove(id: number): Promise<void> {

@@ -18,6 +18,8 @@ export const AddTransaction = forwardRef((props, ref) => {
 
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
+  const optionsNotAvailable = null;
+
   const [addTransaction, { isSuccess, error }] = useAddTransactionMutation();
 
   const handleChange = (event) => {
@@ -69,7 +71,7 @@ export const AddTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
-            options={customerOptions ?? ""}
+            options={customerOptions ?? optionsNotAvailable}
             onChange={(event, value) => setState({ ...state, creditCustomer: value.id })}
             renderInput={(params) => <TextField {...params} label="Credit Customer" />}
           />
@@ -77,7 +79,7 @@ export const AddTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
-            options={customerOptions ?? ""}
+            options={customerOptions ?? optionsNotAvailable}
             onChange={(event, value) => setState({ ...state, debitCustomer: value.id })}
             renderInput={(params) => <TextField {...params} label="Debit Customer" />}
           />
@@ -85,7 +87,7 @@ export const AddTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
-            options={currencyOptions ?? ""}
+            options={currencyOptions ?? optionsNotAvailable}
             onChange={(event, value) => setState({ ...state, currency: value.id })}
             renderInput={(params) => <TextField {...params} label="Currency" />}
           />
@@ -103,7 +105,7 @@ export const AddTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
-            options={currencyOptions ?? ""}
+            options={currencyOptions ?? optionsNotAvailable}
             onChange={(event, value) => setState({ ...state, exCurrency: value.id })}
             renderInput={(params) => <TextField {...params} label="Exchange Currency" />}
           />

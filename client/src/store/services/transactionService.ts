@@ -14,6 +14,15 @@ export const TransactionService = createApi({
       }),
       invalidatesTags: ["transactions"],
     }),
+    getOneTransaction: builder.query({
+      query: ({ transactionId }) => {
+        return {
+          url: `/transactions/${transactionId}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["transactions"],
+    }),
     getTransactions: builder.query({
       query: ({ page, rowsPerPage, searchTerm }) => {
         let url = `/transactions/${page}/${rowsPerPage}`;
@@ -38,5 +47,9 @@ export const TransactionService = createApi({
   }),
 });
 
-export const { useAddTransactionMutation, useGetTransactionsQuery, useUpdateTransactionMutation } =
-  TransactionService;
+export const {
+  useAddTransactionMutation,
+  useGetOneTransactionQuery,
+  useGetTransactionsQuery,
+  useUpdateTransactionMutation,
+} = TransactionService;

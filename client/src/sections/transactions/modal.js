@@ -32,9 +32,14 @@ export const TransactionModal = ({ transactionId }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const addTransactionRef = useRef(null);
+  const updateTransactionRef = useRef(null);
 
   const handleSubmit = () => {
-    addTransactionRef.current.saveTransaction();
+    if (transactionId) {
+      updateTransactionRef.current.saveTransaction();
+    } else {
+      addTransactionRef.current.saveTransaction();
+    }
     handleOpen();
   };
 
@@ -52,7 +57,7 @@ export const TransactionModal = ({ transactionId }) => {
           variant="contained"
           onClick={handleOpen}
         >
-          Add Customer
+          Add Transaction
         </Button>
       )}
 
@@ -66,8 +71,8 @@ export const TransactionModal = ({ transactionId }) => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader="Please enter customer information"
-              title="Add Customer"
+              subheader={`Please ${transactionId ? "Update" : "enter"} customer information`}
+              title={`${transactionId ? "Update" : "Add"} Customer`}
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -80,7 +85,7 @@ export const TransactionModal = ({ transactionId }) => {
             <CardContent sx={{ pt: 0 }}>
               <Box sx={{ m: -1.5 }}>
                 {transactionId ? (
-                  <UpdateTransaction ref={addTransactionRef} />
+                  <UpdateTransaction ref={updateTransactionRef} transactionId={transactionId} />
                 ) : (
                   <AddTransaction ref={addTransactionRef} />
                 )}
@@ -89,7 +94,7 @@ export const TransactionModal = ({ transactionId }) => {
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
               <Button onClick={handleSubmit} variant="contained" color="primary">
-                Add Transaction
+                {transactionId ? "Update Transaction" : "Add Transaction"}
               </Button>
             </CardActions>
           </Box>
