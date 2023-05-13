@@ -1,4 +1,9 @@
-import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from "@nestjs/common";
 import { Brackets, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
@@ -21,15 +26,24 @@ export class WalletService {
     wallet: CreateWalletDto,
     transactionId: number
   ): Promise<Wallet> {
-    try {
-      const user = await this.usersService.findOne(userId);
-      const transaction = await this.transactionsService.findOne(transactionId);
+    const user = await this.usersService.findOne(userId);
+    const transaction = await this.transactionsService.findOne(transactionId);
 
-      const wallets = new Wallet({ ...wallet, user, transaction });
-      return this.walletRepository.save(wallets);
-    } catch (error) {
-      throw new Error(`Unable to create wallet: ${error.message}`);
+    const wallets = new Wallet({ ...wallet, user, transaction });
+    return this.walletRepository.save(wallets);
+  }
+
+  async update(userId: number, wallet: UpdateWalletDto): Promise<Wallet> {
+    const user = await this.usersService.findOne(userId);
+    const existingWallet = await this.findOne(wallet?.id);
+
+    if (!existingWallet) {
+      throw new NotFoundException(`Wallet with ID ${wallet?.id} not found`);
     }
+
+    Object.assign(existingWallet, wallet, user);
+
+    return this.walletRepository.save(existingWallet);
   }
 
   async findAll(): Promise<Wallet[]> {
@@ -81,16 +95,6 @@ export class WalletService {
 
   async findOne(id: number): Promise<Wallet> {
     return this.walletRepository.findOne({ where: { id } });
-  }
-
-  async update(id: number, wallet: UpdateWalletDto): Promise<Wallet> {
-    const existingWallet = await this.findOne(id);
-
-    // Merge the existing customer with the new data
-    Object.assign(existingWallet, wallet);
-
-    // Save the updated customer to the database
-    return this.walletRepository.save(existingWallet);
   }
 
   remove(id: number) {

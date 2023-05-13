@@ -20,23 +20,31 @@ export class TransactionsService {
 
   async create(
     userId: number,
-    transaction: CreateTransactionDto
+    createTransactionDto: CreateTransactionDto
   ): Promise<Transaction> {
     const user = await this.usersService.findOne(userId);
     const transactions = new Transaction({
-      ...transaction,
+      ...createTransactionDto,
       user,
     });
     return this.transactionRepository.save(transactions);
   }
 
   async update(
+    userId: number,
     updateTransactionDto: UpdateTransactionDto
   ): Promise<Transaction> {
-    const transaction = await this.findOne(updateTransactionDto.id);
-    Object.assign(transaction, updateTransactionDto);
-    await this.transactionRepository.save(transaction);
-    return await this.findOne(updateTransactionDto.id);
+    try {
+      const { id } = updateTransactionDto;
+      const user = await this.usersService.findOne(userId);
+      const transaction = await this.findOne(id);
+      Object.assign(transaction, updateTransactionDto, { user });
+      await this.transactionRepository.save(transaction);
+      return transaction;
+    } catch (error) {
+      // handle error
+      throw new Error(`Failed to update transaction: ${error.message}`);
+    }
   }
 
   async find(): Promise<Transaction[]> {

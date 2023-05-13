@@ -1,4 +1,9 @@
-import { ConflictException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Brackets, Repository, QueryFailedError } from "typeorm";
 import { Customer } from "./entities/customer.entity";
@@ -12,9 +17,12 @@ export class CustomersService {
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
     private readonly usersService: UsersService
-  ) { }
+  ) {}
 
-  async create(userId: number, createCustomerDto: CreateCustomerDto): Promise<Customer> {
+  async create(
+    userId: number,
+    createCustomerDto: CreateCustomerDto
+  ): Promise<Customer> {
     const user = await this.usersService.findOne(userId);
 
     const customer = new Customer({
@@ -25,16 +33,24 @@ export class CustomersService {
     try {
       return await this.customerRepository.save(customer);
     } catch (error) {
-      if (error.code === '23505') { // check if the error is a duplicate key error
+      if (error.code === "23505") {
+        // check if the error is a duplicate key error
         const columnName = error.detail.match(/\((.*?)\)/)[1]; // extract the column name from the error detail
-        throw new ConflictException(`Customer with this ${columnName} already exists`);
+        throw new ConflictException(
+          `Customer with this ${columnName} already exists`
+        );
       }
       throw error;
     }
   }
 
-  async find(): Promise<Customer[]> {
-    return this.customerRepository.find();
+  async getOptions(): Promise<{ id: number; name: string }[]> {
+    const query = await this.customerRepository
+      .createQueryBuilder("customer")
+      .select("customer.id", "id")
+      .addSelect("customer.name", "name");
+
+    return query.getRawMany();
   }
 
   async findAll(
@@ -106,27 +122,29 @@ export class CustomersService {
     // Check if customer with given ID exists
     const existingCustomer = await this.findOne(id);
     if (!existingCustomer) {
-      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+      throw new HttpException("Customer not found", HttpStatus.NOT_FOUND);
     }
 
     // Merge the existing customer with the new data
     const updatedCustomer = this.customerRepository.merge(
       existingCustomer,
-      customer,
+      customer
     );
 
     try {
       // Save the updated customer to the database
       return await this.customerRepository.save(updatedCustomer);
     } catch (error) {
-      if (error.code === '23505') { // check if the error is a duplicate key error
+      if (error.code === "23505") {
+        // check if the error is a duplicate key error
         const columnName = error.detail.match(/\((.*?)\)/)[1]; // extract the column name from the error detail
-        throw new ConflictException(`Customer with this ${columnName} already exists`);
+        throw new ConflictException(
+          `Customer with this ${columnName} already exists`
+        );
       }
       throw error;
     }
   }
-
 
   async remove(id: number): Promise<void> {
     // Delete the costumer from the database

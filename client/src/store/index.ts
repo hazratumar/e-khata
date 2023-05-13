@@ -1,5 +1,6 @@
 import { configureStore, ThunkAction, Action, Middleware } from "@reduxjs/toolkit";
 import authReducer from "./reducers/authSlice";
+import optionReducer from "./reducers/optionsSlice";
 import { AuthService } from "./services/authService";
 import { UserService } from "./services/userService";
 import { CustomerService } from "./services/customerService";
@@ -32,6 +33,7 @@ export function makeStore() {
       [ExpenseService.reducerPath]: ExpenseService.reducer,
       [ExpenseItemService.reducerPath]: ExpenseItemService.reducer,
       auth: authReducer,
+      option: optionReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(combinedMiddleware),
   });

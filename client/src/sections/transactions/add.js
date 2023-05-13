@@ -15,6 +15,12 @@ export const AddTransaction = forwardRef((props, ref) => {
     exRate: "",
     description: "",
   });
+  const [option, setOption] = useState({
+    selectedCustomer: "",
+    customerOptions: [],
+    selectedCurrency: "",
+    currencyOptions: [],
+  });
 
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
@@ -50,6 +56,24 @@ export const AddTransaction = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     saveTransaction,
   }));
+
+  useEffect(() => {
+    if (customerOptions) {
+      setOption((prevState) => ({
+        ...prevState,
+        customerOptions,
+      }));
+    }
+  }, [customerOptions]);
+
+  useEffect(() => {
+    if (currencyOptions) {
+      setOption((prevState) => ({
+        ...prevState,
+        currencyOptions,
+      }));
+    }
+  }, [currencyOptions]);
 
   useEffect(() => {
     if (isSuccess) {

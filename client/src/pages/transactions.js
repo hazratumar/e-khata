@@ -6,8 +6,14 @@ import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
 import { useGetWalletsQuery } from "src/store/services/walletsService";
 import { TransactionModal } from "src/sections/transactions/modal";
+import { useAllCustomersQuery } from "src/store/services/customerService";
+import { useAllCurrenciesQuery } from "src/store/services/currencyService";
+import { setCustomerOptions, setCurrencyOptions } from "src/store/reducers/optionsSlice";
+import { useDispatch } from "react-redux";
 
 const Page = () => {
+  const dispatch = useDispatch();
+
   const [state, setState] = useState({
     page: 0,
     rowsPerPage: 10,
@@ -15,6 +21,9 @@ const Page = () => {
     wallets: [],
     searchTerm: "",
   });
+
+  const { data: customerOptions } = useAllCustomersQuery();
+  const { data: currencyOptions } = useAllCurrenciesQuery();
 
   const { isSuccess, data } = useGetWalletsQuery(state);
 
@@ -39,6 +48,17 @@ const Page = () => {
       }));
     }
   }, [data]);
+
+  useEffect(() => {
+    if (customerOptions) {
+      dispatch(setCustomerOptions(customerOptions));
+    }
+  }, [customerOptions]);
+  useEffect(() => {
+    if (currencyOptions) {
+      dispatch(setCurrencyOptions(currencyOptions));
+    }
+  }, [currencyOptions]);
   return (
     <>
       <Head>

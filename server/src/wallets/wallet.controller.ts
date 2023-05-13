@@ -37,11 +37,6 @@ export class WalletController {
     return this.walletService.findOne(+id);
   }
 
-  @Put()
-  update(@Body("id") id: string, @Body() updateWalletDto: UpdateWalletDto) {
-    return this.walletService.update(+id, updateWalletDto);
-  }
-
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.walletService.remove(+id);

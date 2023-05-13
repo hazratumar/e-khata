@@ -15,7 +15,7 @@ import { GetCurrentUserId } from "src/common/decorators";
 
 @Controller("customers")
 export class CustomersController {
-  constructor(private readonly customersService: CustomersService) { }
+  constructor(private readonly customersService: CustomersService) {}
 
   @Post()
   create(
@@ -25,8 +25,8 @@ export class CustomersController {
     return this.customersService.create(+userId, createCustomerDto);
   }
   @Get()
-  find() {
-    return this.customersService.find();
+  getOptions() {
+    return this.customersService.getOptions();
   }
 
   @Get(":page/:limit/:searchTerm?")

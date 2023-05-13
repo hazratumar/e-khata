@@ -6,12 +6,15 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Put,
 } from "@nestjs/common";
 import { TransactionsService } from "./transactions.service";
 import { GetCurrentUserId } from "src/common/decorators";
 import { WalletService } from "src/wallets/wallet.service";
-import { CreateWalletDto } from "src/wallets/dto/create-wallet.dto";
-import { CreateTransactionDto } from "./dto/create-Transaction.dto";
+import { CreateAllTransactionDto } from "./dto/create-all-transaction.dto";
+import { CreateCreditWalletDto } from "src/wallets/dto/create-credit-wallet.dto";
+import { CreateDebitWalletDto } from "src/wallets/dto/create-debit-wallet.dto";
+import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 
 @Controller("transactions")
 export class TransactionsController {
@@ -23,9 +26,9 @@ export class TransactionsController {
   @Post()
   async create(
     @GetCurrentUserId() userId: string,
-    @Body("transaction") transaction: CreateTransactionDto,
-    @Body("credit") credit: CreateWalletDto,
-    @Body("debit") debit: CreateWalletDto
+    @Body("transaction") transaction: CreateAllTransactionDto,
+    @Body("debit") debit: CreateDebitWalletDto,
+    @Body("credit") credit: CreateCreditWalletDto
   ) {
     const savedTransaction = await this.transactionsService.create(
       +userId,
@@ -33,6 +36,21 @@ export class TransactionsController {
     );
     await this.walletService.create(+userId, credit, savedTransaction?.id);
     await this.walletService.create(+userId, debit, savedTransaction?.id);
+    return savedTransaction;
+  }
+  @Put()
+  async update(
+    @GetCurrentUserId() userId: string,
+    @Body("transaction") transaction: UpdateTransactionDto,
+    @Body("debit") debit: CreateDebitWalletDto,
+    @Body("credit") credit: CreateCreditWalletDto
+  ) {
+    const savedTransaction = await this.transactionsService.update(
+      +userId,
+      transaction
+    );
+    await this.walletService.update(+userId, credit);
+    await this.walletService.update(+userId, debit);
     return savedTransaction;
   }
 
