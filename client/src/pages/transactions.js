@@ -12,8 +12,10 @@ import { setCustomerOptions, setCurrencyOptions } from "src/store/reducers/optio
 import { useDispatch } from "react-redux";
 
 const Page = () => {
+  // Get dispatch method from Redux
   const dispatch = useDispatch();
 
+  // Define initial state
   const [state, setState] = useState({
     page: 0,
     rowsPerPage: 10,
@@ -22,11 +24,14 @@ const Page = () => {
     searchTerm: "",
   });
 
+  // Get customer and currency options data
   const { data: customerOptions } = useAllCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
 
-  const { isSuccess, data } = useGetWalletsQuery(state);
+  // Get transaction data
+  const { data } = useGetWalletsQuery(state);
 
+  // Define functions to handle changes in rows per page, page number, and search term respectively
   const onRowsPerPageChange = useCallback((event) => {
     setState((prevState) => ({ ...prevState, rowsPerPage: event.target.value }));
   }, []);
@@ -39,8 +44,9 @@ const Page = () => {
     setState((prevState) => ({ ...prevState, searchTerm: search }));
   }, []);
 
+  // Update state with transaction data when the data is available
   useEffect(() => {
-    if (isSuccess) {
+    if (data) {
       setState((prevState) => ({
         ...prevState,
         count: data.total,
@@ -49,11 +55,14 @@ const Page = () => {
     }
   }, [data]);
 
+  // Update state with customer options when the options are available and dispatch an action to set customer options in Redux store
   useEffect(() => {
     if (customerOptions) {
       dispatch(setCustomerOptions(customerOptions));
     }
   }, [customerOptions]);
+
+  // Update state with currency options when the options are available and dispatch an action to set currency options in Redux store
   useEffect(() => {
     if (currencyOptions) {
       dispatch(setCurrencyOptions(currencyOptions));

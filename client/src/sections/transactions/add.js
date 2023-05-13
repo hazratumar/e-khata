@@ -1,13 +1,12 @@
 import { Autocomplete, Grid, TextField, Typography } from "@mui/material";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
-import { useAllCustomersQuery } from "src/store/services/customerService";
-import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 export const AddTransaction = forwardRef((props, ref) => {
   const [state, setState] = useState({
-    creditCustomer: "",
+    creditCustomer: 1,
     debitCustomer: "",
     currency: "",
     amount: "",
@@ -15,16 +14,7 @@ export const AddTransaction = forwardRef((props, ref) => {
     exRate: "",
     description: "",
   });
-  const [option, setOption] = useState({
-    selectedCustomer: "",
-    customerOptions: [],
-    selectedCurrency: "",
-    currencyOptions: [],
-  });
-
-  const { data: customerOptions } = useAllCustomersQuery();
-  const { data: currencyOptions } = useAllCurrenciesQuery();
-  const optionsNotAvailable = null;
+  const { customers, currencies } = useSelector((state) => state.option);
 
   const [addTransaction, { isSuccess, error }] = useAddTransactionMutation();
 
@@ -36,17 +26,17 @@ export const AddTransaction = forwardRef((props, ref) => {
   const saveTransaction = async () => {
     return addTransaction({
       credit: {
-        customer: state.creditCustomer,
+        customer: state.creditCustomer.id,
         type: "Credit",
       },
       debit: {
-        customer: state.debitCustomer,
+        customer: state.debitCustomer.id,
         type: "Debit",
       },
       transaction: {
-        currency: state.currency,
+        currency: state.currency.id,
         amount: state.amount,
-        exCurrency: state.exCurrency,
+        exCurrency: state.exCurrency.id,
         exRate: state.exRate,
         description: state.description,
       },
@@ -56,24 +46,6 @@ export const AddTransaction = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     saveTransaction,
   }));
-
-  useEffect(() => {
-    if (customerOptions) {
-      setOption((prevState) => ({
-        ...prevState,
-        customerOptions,
-      }));
-    }
-  }, [customerOptions]);
-
-  useEffect(() => {
-    if (currencyOptions) {
-      setOption((prevState) => ({
-        ...prevState,
-        currencyOptions,
-      }));
-    }
-  }, [currencyOptions]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -96,24 +68,24 @@ export const AddTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
-            options={customerOptions ?? optionsNotAvailable}
-            onChange={(event, value) => setState({ ...state, creditCustomer: value.id })}
+            options={customers}
+            onChange={(event, value) => setState({ ...state, creditCustomer: value })}
             renderInput={(params) => <TextField {...params} label="Credit Customer" />}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
-            options={customerOptions ?? optionsNotAvailable}
-            onChange={(event, value) => setState({ ...state, debitCustomer: value.id })}
+            options={customers}
+            onChange={(event, value) => setState({ ...state, debitCustomer: value })}
             renderInput={(params) => <TextField {...params} label="Debit Customer" />}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
-            options={currencyOptions ?? optionsNotAvailable}
-            onChange={(event, value) => setState({ ...state, currency: value.id })}
+            options={currencies}
+            onChange={(event, value) => setState({ ...state, currency: value })}
             renderInput={(params) => <TextField {...params} label="Currency" />}
           />
         </Grid>
@@ -130,8 +102,8 @@ export const AddTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
-            options={currencyOptions ?? optionsNotAvailable}
-            onChange={(event, value) => setState({ ...state, exCurrency: value.id })}
+            options={currencies}
+            onChange={(event, value) => setState({ ...state, exCurrency: value })}
             renderInput={(params) => <TextField {...params} label="Exchange Currency" />}
           />
         </Grid>
