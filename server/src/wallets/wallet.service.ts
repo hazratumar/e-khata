@@ -1,10 +1,5 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  forwardRef,
-} from "@nestjs/common";
-import { Brackets, Repository } from "typeorm";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
 import { Wallet } from "./entities/wallet.entity";
@@ -69,6 +64,9 @@ export class WalletService {
     const [wallets, total] = await this.walletRepository.findAndCount({
       where: {
         // your search query
+      },
+      order: {
+        updatedAt: "DESC",
       },
       take: limit,
       skip: skip,

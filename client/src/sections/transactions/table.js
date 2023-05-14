@@ -1,5 +1,6 @@
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Box,
   Card,
   IconButton,
@@ -16,6 +17,7 @@ import {
 import { useState } from "react";
 import { Scrollbar } from "src/components/scrollbar";
 import { TransactionModal } from "./modal";
+import moment from "moment";
 
 export const TransactionsTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
@@ -48,6 +50,7 @@ export const TransactionsTable = (props) => {
                 <TableCell>Currency</TableCell>
                 <TableCell>Credit Amount</TableCell>
                 <TableCell>Debit Amount</TableCell>
+                <TableCell>Updated</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -56,10 +59,16 @@ export const TransactionsTable = (props) => {
                 <TableRow hover key={item.id}>
                   <TableCell>{item?.id}</TableCell>
                   <TableCell>{item?.customer?.name}</TableCell>
-                  <TableCell>{item?.type}</TableCell>
+                  <TableCell>
+                    <Badge
+                      badgeContent={item?.type}
+                      color={item?.type === "Credit" ? "error" : "primary"}
+                    />
+                  </TableCell>
                   <TableCell>{item?.transaction?.currency?.abbreviation}</TableCell>
                   <TableCell>{item?.type === "Credit" ? item?.transaction?.amount : "0"}</TableCell>
                   <TableCell>{item?.type === "Debit" ? item?.transaction?.amount : "0"}</TableCell>
+                  <TableCell>{moment(item.updatedAt).fromNow()}</TableCell>
                   <TableCell>
                     <div>
                       <IconButton onClick={(event) => handleClick(event, index)}>

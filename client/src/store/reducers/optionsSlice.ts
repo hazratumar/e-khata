@@ -20,10 +20,10 @@ const optionReducer = createSlice({
   initialState,
   reducers: {
     setCustomerOptions(state, action: PayloadAction<Option[]>) {
-      state.customers.push(...action.payload);
+      state.customers = [...action.payload];
     },
     setCurrencyOptions(state, action: PayloadAction<Option[]>) {
-      state.currencies.push(...action.payload);
+      state.currencies = [...action.payload];
     },
   },
 });

@@ -2,17 +2,16 @@ import { Autocomplete, Grid, TextField, Typography } from "@mui/material";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useGetOneTransactionQuery } from "src/store/services/transactionService";
 import { useUpdateTransactionMutation } from "src/store/services/transactionService";
-import { useAllCustomersQuery } from "src/store/services/customerService";
-import { useAllCurrenciesQuery } from "src/store/services/currencyService";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
 export const UpdateTransaction = forwardRef((props, ref) => {
   const { transactionId } = props;
 
   const [state, setState] = useState({
-    creditCustomerId: "",
+    creditWalletId: "",
     creditCustomer: "",
-    debitCustomerId: "",
+    debitWalletId: "",
     debitCustomer: "",
     transactionId: "",
     currency: "",
@@ -21,9 +20,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
     exRate: "",
     description: "",
   });
-
-  const { data: customerOptions } = useAllCustomersQuery();
-  const { data: currencyOptions } = useAllCurrenciesQuery();
+  const { customers, currencies } = useSelector((state) => state.option);
 
   const { data } = useGetOneTransactionQuery({ transactionId });
 
@@ -36,14 +33,20 @@ export const UpdateTransaction = forwardRef((props, ref) => {
     if (data) {
       setState((prevState) => ({
         ...prevState,
-        creditCustomerId: creditRecords[0]?.id,
-        creditCustomer: creditRecords[0]?.customer?.id,
-        debitCustomerId: debitRecords[0]?.id,
-        debitCustomer: debitRecords[0]?.customer?.id,
+        creditWalletId: creditRecords[0]?.id,
+        creditCustomer: {
+          id: creditRecords[0]?.customer?.id,
+          name: creditRecords[0]?.customer?.name,
+        },
+        debitWalletId: debitRecords[0]?.id,
+        debitCustomer: {
+          id: debitRecords[0]?.customer?.id,
+          name: debitRecords[0]?.customer?.name,
+        },
         transactionId: prevState.transactionId || data?.id,
-        currency: data?.currency?.id,
+        currency: { id: data?.currency?.id, name: data?.currency?.name },
         amount: data?.amount,
-        exCurrency: data?.exCurrency?.id,
+        exCurrency: { id: data?.exCurrency?.id, name: data?.exCurrency?.name },
         exRate: data?.exRate,
         description: data?.description,
       }));
@@ -56,22 +59,33 @@ export const UpdateTransaction = forwardRef((props, ref) => {
   };
 
   const saveTransaction = async () => {
+    if (
+      state.creditCustomer.id === state.debitCustomer.id ||
+      state.currency.id === state.exCurrency.id
+    ) {
+      toast.error(
+        state.creditCustomer.id === state.debitCustomer.id
+          ? "Credit and Debit customer are same."
+          : "Currency and Exchange Currency are same."
+      );
+      return false;
+    }
     return updateTransaction({
       credit: {
-        id: state.creditCustomerId,
-        customer: state.creditCustomer,
+        id: state.creditWalletId,
+        customer: state.creditCustomer.id,
         type: "Credit",
       },
       debit: {
-        id: state.debitCustomerId,
-        customer: state.debitCustomer,
+        id: state.debitWalletId,
+        customer: state.debitCustomer.id,
         type: "Debit",
       },
       transaction: {
         id: state.transactionId,
-        currency: state.currency,
+        currency: state.currency.id,
         amount: state.amount,
-        exCurrency: state.exCurrency,
+        exCurrency: state.exCurrency.id,
         exRate: state.exRate,
         description: state.description,
       },
@@ -103,25 +117,28 @@ export const UpdateTransaction = forwardRef((props, ref) => {
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Autocomplete
+            value={state.creditCustomer}
             getOptionLabel={(option) => option.name}
-            options={customerOptions ?? ""}
-            onChange={(event, value) => setState({ ...state, creditCustomer: value.id })}
+            options={customers}
+            onChange={(event, value) => setState({ ...state, creditCustomer: value })}
             renderInput={(params) => <TextField {...params} label="Credit Customer" />}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <Autocomplete
+            value={state.debitCustomer}
             getOptionLabel={(option) => option.name}
-            options={customerOptions ?? ""}
-            onChange={(event, value) => setState({ ...state, debitCustomer: value.id })}
+            options={customers}
+            onChange={(event, value) => setState({ ...state, debitCustomer: value })}
             renderInput={(params) => <TextField {...params} label="Debit Customer" />}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <Autocomplete
+            value={state.currency}
             getOptionLabel={(option) => option.name}
-            options={currencyOptions ?? ""}
-            onChange={(event, value) => setState({ ...state, currency: value.id })}
+            options={currencies}
+            onChange={(event, value) => setState({ ...state, currency: value })}
             renderInput={(params) => <TextField {...params} label="Currency" />}
           />
         </Grid>
@@ -137,9 +154,10 @@ export const UpdateTransaction = forwardRef((props, ref) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Autocomplete
+            value={state.exCurrency}
             getOptionLabel={(option) => option.name}
-            options={currencyOptions ?? ""}
-            onChange={(event, value) => setState({ ...state, exCurrency: value.id })}
+            options={currencies}
+            onChange={(event, value) => setState({ ...state, exCurrency: value })}
             renderInput={(params) => <TextField {...params} label="Exchange Currency" />}
           />
         </Grid>

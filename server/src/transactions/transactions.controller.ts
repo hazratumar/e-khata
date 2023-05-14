@@ -49,9 +49,9 @@ export class TransactionsController {
       +userId,
       transaction
     );
-    await this.walletService.update(+userId, credit);
-    await this.walletService.update(+userId, debit);
-    return savedTransaction;
+    const savedCredit = await this.walletService.update(+userId, credit);
+    const savedDebit = await this.walletService.update(+userId, debit);
+    return { savedCredit, savedDebit, savedTransaction };
   }
 
   @Get()
