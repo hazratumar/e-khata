@@ -5,7 +5,7 @@ import { AtGuard } from "./common/guards";
 import { UserModule } from "./users/users.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users/entities/user.entity";
-import { CustomersModule } from "./customers/customers.module";
+import { CustomerModule } from "./customers/customers.module";
 import { Customer } from "./customers/entities/customer.entity";
 import { CurrencyModule } from "./currency/currency.module";
 import { TransactionModule } from "./transactions/transactions.module";
@@ -48,7 +48,7 @@ import { WalletModule } from "./wallets/wallet.module";
     ]),
     AuthModule,
     UserModule,
-    CustomersModule,
+    CustomerModule,
     CurrencyModule,
     TransactionModule,
     WalletModule,

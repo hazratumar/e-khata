@@ -45,13 +45,13 @@ export class TransactionsController {
     @Body("debit") debit: CreateDebitWalletDto,
     @Body("credit") credit: CreateCreditWalletDto
   ) {
-    const savedTransaction = await this.transactionsService.update(
+    const updatedTransaction = await this.transactionsService.update(
       +userId,
       transaction
     );
-    const savedCredit = await this.walletService.update(+userId, credit);
-    const savedDebit = await this.walletService.update(+userId, debit);
-    return { savedCredit, savedDebit, savedTransaction };
+    const updatedDebit = await this.walletService.update(+userId, debit);
+    const updatedCredit = await this.walletService.update(+userId, credit);
+    return updatedTransaction;
   }
 
   @Get()

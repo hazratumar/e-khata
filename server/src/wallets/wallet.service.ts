@@ -6,6 +6,7 @@ import { Wallet } from "./entities/wallet.entity";
 import { UpdateWalletDto } from "./dto/update-wallet.dto";
 import { CreateWalletDto } from "./dto/create-wallet.dto";
 import { TransactionsService } from "src/transactions/transactions.service";
+import { CustomersService } from "src/customers/customers.service";
 
 @Injectable()
 export class WalletService {
@@ -13,6 +14,7 @@ export class WalletService {
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
     private readonly transactionsService: TransactionsService,
+    private readonly customersService: CustomersService,
     private readonly usersService: UsersService
   ) {}
 
@@ -30,13 +32,14 @@ export class WalletService {
 
   async update(userId: number, wallet: UpdateWalletDto): Promise<Wallet> {
     const user = await this.usersService.findOne(userId);
+    const customer = await this.customersService.findOne(wallet?.customer);
     const existingWallet = await this.findOne(wallet?.id);
 
     if (!existingWallet) {
       throw new NotFoundException(`Wallet with ID ${wallet?.id} not found`);
     }
 
-    Object.assign(existingWallet, wallet, user);
+    Object.assign(existingWallet, wallet, customer, user);
 
     return this.walletRepository.save(existingWallet);
   }

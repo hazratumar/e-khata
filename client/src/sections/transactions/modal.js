@@ -70,8 +70,8 @@ export const TransactionModal = ({ transactionId }) => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader={`Please ${transactionId ? "Update" : "enter"} customer information`}
-              title={`${transactionId ? "Update" : "Add"} Customer`}
+              subheader={`Please ${transactionId ? "Update" : "enter"} transaction information`}
+              title={`${transactionId ? "Update" : "Add"} Transaction`}
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">

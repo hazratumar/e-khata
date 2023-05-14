@@ -1,4 +1,5 @@
 import {
+  ArrowsUpDownIcon,
   BanknotesIcon,
   CurrencyDollarIcon,
   DocumentChartBarIcon,
@@ -26,6 +27,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <DocumentChartBarIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Balance",
+    path: "/balance",
+    icon: (
+      <SvgIcon fontSize="small">
+        <ArrowsUpDownIcon />
       </SvgIcon>
     ),
   },

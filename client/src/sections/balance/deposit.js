@@ -4,64 +4,44 @@ import { useAddTransactionMutation } from "src/store/services/transactionService
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-export const AddTransaction = forwardRef((props, ref) => {
+export const DepositBalance = forwardRef((props, ref) => {
   const [state, setState] = useState({
-    creditCustomer: "",
-    debitCustomer: "",
+    customer: "",
     currency: "",
     amount: "",
-    exCurrency: "",
-    exRate: "",
     description: "",
   });
   const { customers, currencies } = useSelector((state) => state.option);
 
-  const [addTransaction, { isSuccess, error }] = useAddTransactionMutation();
+  const [addBalance, { isSuccess, error }] = useAddTransactionMutation();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setState((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  const saveTransaction = async () => {
-    if (
-      state.creditCustomer.id === state.debitCustomer.id ||
-      state.currency.id === state.exCurrency.id
-    ) {
-      toast.error(
-        state.creditCustomer.id === state.debitCustomer.id
-          ? "Credit and Debit customer are same."
-          : "Currency and Exchange Currency are same."
-      );
-      return false;
-    }
-
-    return addTransaction({
-      credit: {
-        customer: state.creditCustomer.id,
-        type: "Credit",
-      },
-      debit: {
-        customer: state.debitCustomer.id,
-        type: "Debit",
+  const saveBalance = async () => {
+    console.log(state);
+    return addBalance({
+      customer: {
+        customer: state.customer.id,
+        type: "Deposit",
       },
       transaction: {
         currency: state.currency.id,
         amount: state.amount,
-        exCurrency: state.exCurrency.id,
-        exRate: state.exRate,
         description: state.description,
       },
     });
   };
 
   useImperativeHandle(ref, () => ({
-    saveTransaction,
+    saveBalance,
   }));
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Transaction added successfully");
+      toast.success("Balance deposit successfully");
     }
   }, [isSuccess]);
 
@@ -77,7 +57,7 @@ export const AddTransaction = forwardRef((props, ref) => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={12}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
             options={customers}
@@ -85,15 +65,7 @@ export const AddTransaction = forwardRef((props, ref) => {
             renderInput={(params) => <TextField {...params} label="Credit Customer" />}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Autocomplete
-            getOptionLabel={(option) => option.name}
-            options={customers}
-            onChange={(event, value) => setState({ ...state, debitCustomer: value })}
-            renderInput={(params) => <TextField {...params} label="Debit Customer" />}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={12}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
             options={currencies}
@@ -101,31 +73,13 @@ export const AddTransaction = forwardRef((props, ref) => {
             renderInput={(params) => <TextField {...params} label="Currency" />}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={12}>
           <TextField
             type="number"
             value={state.amount}
             fullWidth
             label="Amount"
             name="amount"
-            onChange={handleChange}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Autocomplete
-            getOptionLabel={(option) => option.name}
-            options={currencies}
-            onChange={(event, value) => setState({ ...state, exCurrency: value })}
-            renderInput={(params) => <TextField {...params} label="Exchange Currency" />}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            type="number"
-            value={state.exRate}
-            fullWidth
-            label="Exchange Rate"
-            name="exRate"
             onChange={handleChange}
           />
         </Grid>
@@ -140,11 +94,6 @@ export const AddTransaction = forwardRef((props, ref) => {
             name="description"
             onChange={handleChange}
           />
-        </Grid>
-        <Grid item xs={12} md={12}>
-          <Typography>
-            {state.exCurrency && "Calculated Amount: " + state.amount * state.exRate}
-          </Typography>
         </Grid>
       </Grid>
     </>
