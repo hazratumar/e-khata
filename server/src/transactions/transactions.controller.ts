@@ -33,6 +33,12 @@ export class TransactionsController {
     @Body("debit") debit: CreateDebitWalletDto,
     @Body("credit") credit: CreateCreditWalletDto
   ) {
+    await this.transactionsService.validation(
+      credit.customer,
+      debit.customer,
+      transaction.currency,
+      transaction.exCurrency
+    );
     const savedTransaction = await this.transactionsService.create(
       +userId,
       transaction
@@ -63,6 +69,12 @@ export class TransactionsController {
     @Body("debit") debit: CreateDebitWalletDto,
     @Body("credit") credit: CreateCreditWalletDto
   ) {
+    await this.transactionsService.validation(
+      credit.customer,
+      debit.customer,
+      transaction.currency,
+      transaction.exCurrency
+    );
     const updatedTransaction = await this.transactionsService.update(
       +userId,
       transaction

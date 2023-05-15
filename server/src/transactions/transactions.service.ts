@@ -1,4 +1,6 @@
 import {
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -44,6 +46,21 @@ export class TransactionsService {
     } catch (error) {
       // handle error
       throw new Error(`Failed to update transaction: ${error.message}`);
+    }
+  }
+
+  async validation(
+    creditCustomer: number,
+    debitCustomer: number,
+    currency: number,
+    exCurrency: number
+  ) {
+    if (creditCustomer === debitCustomer || currency === exCurrency) {
+      const errorMessage =
+        creditCustomer === debitCustomer
+          ? "Credit and Debit customers are the same."
+          : "Currency and Exchange Currency are the same.";
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
     }
   }
 

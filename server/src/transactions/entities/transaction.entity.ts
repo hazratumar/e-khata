@@ -36,7 +36,7 @@ export class Transaction {
   })
   exCurrency?: Currency;
 
-  @Column({ default: "0" })
+  @Column({ default: "1" })
   exRate?: string;
 
   @Column()

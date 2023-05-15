@@ -59,17 +59,6 @@ export const UpdateTransaction = forwardRef((props, ref) => {
   };
 
   const saveTransaction = async () => {
-    if (
-      state.creditCustomer.id === state.debitCustomer.id ||
-      state.currency.id === state.exCurrency.id
-    ) {
-      toast.error(
-        state.creditCustomer.id === state.debitCustomer.id
-          ? "Credit and Debit customer are same."
-          : "Currency and Exchange Currency are same."
-      );
-      return false;
-    }
     return updateTransaction({
       credit: {
         id: state.creditWalletId,
