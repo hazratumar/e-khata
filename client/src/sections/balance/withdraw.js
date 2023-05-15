@@ -1,6 +1,6 @@
 import { Autocomplete, Grid, TextField, Typography } from "@mui/material";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { useAddBalanceMutation } from "src/store/services/transactionService";
+import { useAddBalanceMutation } from "src/store/services/balanceService";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 

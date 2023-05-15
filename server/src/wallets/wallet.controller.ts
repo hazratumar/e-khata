@@ -6,15 +6,6 @@ import { UpdateWalletDto } from "./dto/update-wallet.dto";
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
-  @Get("balance/:page/:limit/:searchTerm?")
-  balanceListing(
-    @Param("page", ParseIntPipe) page: number,
-    @Param("limit", ParseIntPipe) limit: number,
-    @Param("searchTerm") searchTerm: string
-  ) {
-    return this.walletService.balanceListing(page, limit, searchTerm);
-  }
-
   @Get(":page/:limit/:searchTerm?")
   transactionListing(
     @Param("page", ParseIntPipe) page: number,

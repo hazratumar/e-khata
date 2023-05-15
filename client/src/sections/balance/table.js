@@ -87,7 +87,7 @@ export const BalanceTable = (props) => {
                           horizontal: "center",
                         }}
                       >
-                        <BalanceModal balanceId={item?.transaction?.id} />
+                        <BalanceModal balanceId={item?.id} />
                         <MenuItem onClick={() => handleClose(index)}>Balance</MenuItem>
                       </Popover>
                     </div>

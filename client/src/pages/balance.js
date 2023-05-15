@@ -4,7 +4,7 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { BalanceTable } from "src/sections/balance/table";
 import { Search } from "src/components/search";
-import { useGetBalanceQuery } from "src/store/services/walletsService";
+import { useGetBalanceQuery } from "src/store/services/balanceService";
 import { BalanceModal } from "src/sections/balance/modal";
 import { useSelfCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";

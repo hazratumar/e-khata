@@ -1,7 +1,7 @@
-import { Autocomplete, Grid, TextField, Typography } from "@mui/material";
+import { Autocomplete, Grid, TextField } from "@mui/material";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { useGetOneTransactionQuery } from "src/store/services/transactionService";
-import { useUpdateTransactionMutation } from "src/store/services/transactionService";
+import { useGetOneBalanceQuery } from "src/store/services/balanceService";
+import { useUpdateBalanceMutation } from "src/store/services/balanceService";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
@@ -20,12 +20,12 @@ export const UpdateBalance = forwardRef((props, ref) => {
   });
   const { customers, currencies } = useSelector((state) => state.option);
 
-  const { data } = useGetOneTransactionQuery({ balanceId });
+  const { data } = useGetOneBalanceQuery({ balanceId });
 
-  const [updateBalance, { isSuccess, error }] = useUpdateTransactionMutation();
+  const [updateBalance, { isSuccess, error }] = useUpdateBalanceMutation();
 
-  const creditRecords = data?.wallets?.filter((record) => record.type === "Credit");
-  const debitRecords = data?.wallets?.filter((record) => record.type === "Debit");
+  const creditRecords = data?.wallets?.filter((record) => record.type === "Withdraw");
+  const depositRecords = data?.wallets?.filter((record) => record.type === "Deposit");
 
   useEffect(() => {
     if (data) {

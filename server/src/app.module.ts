@@ -17,6 +17,7 @@ import { ExpenseItemModule } from "./expense-items/expense-item.module";
 import { ExpenseItem } from "./expense-items/entities/expense-item.entity";
 import { Wallet } from "./wallets/entities/wallet.entity";
 import { WalletModule } from "./wallets/wallet.module";
+import { BalanceModule } from "./balance/balance.module";
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { WalletModule } from "./wallets/wallet.module";
     UserModule,
     CustomerModule,
     CurrencyModule,
+    BalanceModule,
     TransactionModule,
     WalletModule,
     ExpenseItemModule,

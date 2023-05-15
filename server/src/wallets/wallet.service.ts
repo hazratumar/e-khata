@@ -48,41 +48,6 @@ export class WalletService {
     return this.walletRepository.find();
   }
 
-  async balanceListing(
-    page: number,
-    limit: number,
-    search?: string
-  ): Promise<{
-    wallets: Wallet[];
-    total: number;
-    page: number;
-    totalPages: number;
-  }> {
-    if (limit < 1 || limit > 100) {
-      throw new Error("Limit must be between 1 and 100.");
-    }
-
-    const skip = page * limit;
-
-    const [wallets, total] = await this.walletRepository.findAndCount({
-      where: [{ type: "Deposit" }, { type: "Withdraw" }],
-      order: { updatedAt: "DESC" },
-      take: limit,
-      skip: skip,
-      relations: ["user", "transaction"],
-    });
-
-    const totalPages = Math.ceil(total / limit);
-
-    // Handle case when page number is greater than total pages
-    if (totalPages > 0 && page > totalPages) {
-      throw new Error(
-        `Page number must be less than or equal to ${totalPages}.`
-      );
-    }
-
-    return { wallets, total, page, totalPages };
-  }
   async transactionListing(
     page: number,
     limit: number,
@@ -118,11 +83,8 @@ export class WalletService {
 
     return { wallets, total, page, totalPages };
   }
-
-  async getByTransaction(id: number): Promise<Wallet[]> {
-    return this.walletRepository.find({
-      where: { transaction: { id } },
-    });
+  async getByTransaction(id: number): Promise<Wallet> {
+    return this.walletRepository.findOne({ where: { transaction: { id } } });
   }
 
   async findOne(id: number): Promise<Wallet> {

@@ -27,19 +27,6 @@ export const WalletService = createApi({
       },
       providesTags: ["wallets"],
     }),
-    getBalance: builder.query({
-      query: ({ page, rowsPerPage, searchTerm }) => {
-        let url = `/wallets/balance/${page}/${rowsPerPage}`;
-        if (searchTerm) {
-          url += `/${searchTerm}`;
-        }
-        return {
-          url,
-          method: "GET",
-        };
-      },
-      providesTags: ["wallets"],
-    }),
     updateWallet: builder.mutation({
       query: (payload) => ({
         url: `/wallets`,
@@ -51,9 +38,4 @@ export const WalletService = createApi({
   }),
 });
 
-export const {
-  useAddWalletMutation,
-  useGetWalletsQuery,
-  useGetBalanceQuery,
-  useUpdateWalletMutation,
-} = WalletService;
+export const { useAddWalletMutation, useGetWalletsQuery, useUpdateWalletMutation } = WalletService;
