@@ -1,11 +1,11 @@
 import { IsIn, IsNotEmpty, IsNumber } from "class-validator";
 
-export class CreateCreditWalletDto {
+export class CreateBalanceWalletDto {
   @IsNotEmpty()
-  @IsNumber({}, { message: "Select credit customer" })
+  @IsNumber({}, { message: "Please select customer" })
   customer: number;
 
-  @IsIn(["Credit"], {
+  @IsIn(["Deposit", "Withdraw"], {
     message: "Please select a valid transaction type.",
   })
   type: string;

@@ -53,6 +53,16 @@ export class CustomersService {
     return query.getRawMany();
   }
 
+  async getBalanceOptions(): Promise<{ id: number; name: string }[]> {
+    const query = await this.customerRepository
+      .createQueryBuilder("customer")
+      .select("customer.id", "id")
+      .addSelect("customer.name", "name")
+      .where("customer.isSelf = true");
+
+    return query.getRawMany();
+  }
+
   async findAll(
     page: number,
     limit: number,

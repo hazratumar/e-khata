@@ -4,9 +4,9 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { BalanceTable } from "src/sections/balance/table";
 import { Search } from "src/components/search";
-import { useGetWalletsQuery } from "src/store/services/walletsService";
+import { useGetBalanceQuery } from "src/store/services/walletsService";
 import { BalanceModal } from "src/sections/balance/modal";
-import { useAllCustomersQuery } from "src/store/services/customerService";
+import { useSelfCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import { setCustomerOptions, setCurrencyOptions } from "src/store/reducers/optionsSlice";
 import { useDispatch } from "react-redux";
@@ -25,11 +25,11 @@ const Page = () => {
   });
 
   // Get customer and currency options data
-  const { data: customerOptions } = useAllCustomersQuery();
+  const { data: customerOptions } = useSelfCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
 
   // Get balance data
-  const { data } = useGetWalletsQuery(state);
+  const { data } = useGetBalanceQuery(state);
 
   const onRowsPerPageChange = useCallback((event) => {
     setState((prevState) => ({ ...prevState, rowsPerPage: event.target.value }));

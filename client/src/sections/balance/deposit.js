@@ -1,6 +1,6 @@
 import { Autocomplete, Grid, TextField, Typography } from "@mui/material";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { useAddTransactionMutation } from "src/store/services/transactionService";
+import { useAddBalanceMutation } from "src/store/services/transactionService";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
@@ -13,7 +13,7 @@ export const DepositBalance = forwardRef((props, ref) => {
   });
   const { customers, currencies } = useSelector((state) => state.option);
 
-  const [addBalance, { isSuccess, error }] = useAddTransactionMutation();
+  const [addBalance, { isSuccess, error }] = useAddBalanceMutation();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -23,11 +23,11 @@ export const DepositBalance = forwardRef((props, ref) => {
   const saveBalance = async () => {
     console.log(state);
     return addBalance({
-      customer: {
+      wallet: {
         customer: state.customer.id,
         type: "Deposit",
       },
-      transaction: {
+      balance: {
         currency: state.currency.id,
         amount: state.amount,
         description: state.description,
@@ -61,8 +61,8 @@ export const DepositBalance = forwardRef((props, ref) => {
           <Autocomplete
             getOptionLabel={(option) => option.name}
             options={customers}
-            onChange={(event, value) => setState({ ...state, creditCustomer: value })}
-            renderInput={(params) => <TextField {...params} label="Credit Customer" />}
+            onChange={(event, value) => setState({ ...state, customer: value })}
+            renderInput={(params) => <TextField {...params} label="Customer" />}
           />
         </Grid>
         <Grid item xs={12} md={12}>

@@ -14,6 +14,14 @@ export const TransactionService = createApi({
       }),
       invalidatesTags: ["transactions"],
     }),
+    addBalance: builder.mutation({
+      query: (payload) => ({
+        url: `/transactions/balance`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["transactions"],
+    }),
     getOneTransaction: builder.query({
       query: ({ transactionId }) => {
         return {
@@ -49,6 +57,7 @@ export const TransactionService = createApi({
 
 export const {
   useAddTransactionMutation,
+  useAddBalanceMutation,
   useGetOneTransactionQuery,
   useGetTransactionsQuery,
   useUpdateTransactionMutation,

@@ -28,6 +28,10 @@ export class CustomersController {
   getOptions() {
     return this.customersService.getOptions();
   }
+  @Get("self")
+  getBalanceOptions() {
+    return this.customersService.getBalanceOptions();
+  }
 
   @Get(":page/:limit/:searchTerm?")
   findAll(

@@ -11,10 +11,13 @@ import {
 import { TransactionsService } from "./transactions.service";
 import { GetCurrentUserId } from "src/common/decorators";
 import { WalletService } from "src/wallets/wallet.service";
-import { CreateAllTransactionDto } from "./dto/create-all-transaction.dto";
 import { CreateCreditWalletDto } from "src/wallets/dto/create-credit-wallet.dto";
 import { CreateDebitWalletDto } from "src/wallets/dto/create-debit-wallet.dto";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
+import { CreateWalletDto } from "src/wallets/dto/create-wallet.dto";
+import { CreateAllTransactionDto } from "./dto/create-all-transaction.dto copy";
+import { CreateBalanceDto } from "./dto/create-balance-transaction.dto";
+import { CreateBalanceWalletDto } from "src/wallets/dto/create-balance-wallet.dto";
 
 @Controller("transactions")
 export class TransactionsController {
@@ -38,6 +41,21 @@ export class TransactionsController {
     await this.walletService.create(+userId, debit, savedTransaction?.id);
     return savedTransaction;
   }
+
+  @Post("balance")
+  async createBalance(
+    @GetCurrentUserId() userId: string,
+    @Body("balance") balance: CreateBalanceDto,
+    @Body("wallet") wallet: CreateBalanceWalletDto
+  ) {
+    const savedTransaction = await this.transactionsService.create(
+      +userId,
+      balance
+    );
+    await this.walletService.create(+userId, wallet, savedTransaction?.id);
+    return savedTransaction;
+  }
+
   @Put()
   async update(
     @GetCurrentUserId() userId: string,

@@ -5,7 +5,7 @@ export class CreateDebitWalletDto {
   @IsNumber({}, { message: "Select debit customer" })
   customer: number;
 
-  @IsIn(["Credit", "Debit", "Deposit", "Withdrawal"], {
+  @IsIn(["Debit"], {
     message: "Please select a valid transaction type.",
   })
   type: string;

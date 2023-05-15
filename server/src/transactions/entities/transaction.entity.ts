@@ -34,10 +34,10 @@ export class Transaction {
     cascade: true,
     onDelete: "CASCADE",
   })
-  exCurrency: Currency;
+  exCurrency?: Currency;
 
-  @Column()
-  exRate: string;
+  @Column({ default: "0" })
+  exRate?: string;
 
   @Column()
   description: string;
