@@ -24,7 +24,7 @@ export const WithdrawBalance = forwardRef((props, ref) => {
     return addBalance({
       wallet: {
         customer: state.customer.id,
-        type: "Deposit",
+        type: "Withdraw",
       },
       balance: {
         currency: state.currency.id,
