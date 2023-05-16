@@ -1,6 +1,6 @@
 import { IsIn, IsNotEmpty, IsNumber } from "class-validator";
 
-export class CreateBalanceWalletDto {
+export class CreateWalletDto {
   @IsNotEmpty()
   @IsNumber({}, { message: "Please select customer" })
   customer: number;

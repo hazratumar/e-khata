@@ -5,13 +5,17 @@ import { UsersService } from "src/users/users.service";
 import { TransactionsService } from "src/transactions/transactions.service";
 import { CustomersService } from "src/customers/customers.service";
 import { Wallet } from "src/wallets/entities/wallet.entity";
+import { UpdateWalletDto } from "./dto/update-wallet.dto";
+import { Transaction } from "src/transactions/entities/transaction.entity";
+import { UpdateBalanceDto } from "./dto/update-balance.dto";
 
 @Injectable()
 export class BalanceService {
   constructor(
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
-    private readonly transactionsService: TransactionsService,
+    @InjectRepository(Transaction) // Add this line
+    private readonly transactionRepository: Repository<Transaction>,
     private readonly customersService: CustomersService,
     private readonly usersService: UsersService
   ) {}
@@ -49,5 +53,39 @@ export class BalanceService {
     }
 
     return { wallets, total, page, totalPages };
+  }
+  async updateBalance(
+    userId: number,
+    updateBalanceDto: UpdateBalanceDto
+  ): Promise<Transaction> {
+    try {
+      const { id } = updateBalanceDto;
+      const user = await this.usersService.findOne(userId);
+      const balance = await this.transactionRepository.findOne({
+        where: { id },
+      });
+      Object.assign(balance, updateBalanceDto, { user });
+      await this.transactionRepository.save(balance);
+      return balance;
+    } catch (error) {
+      // handle error
+      throw new Error(`Failed to update transaction: ${error.message}`);
+    }
+  }
+
+  async updateWallet(userId: number, wallet: UpdateWalletDto): Promise<Wallet> {
+    const user = await this.usersService.findOne(userId);
+    const customer = await this.customersService.findOne(wallet?.customer);
+    const existingWallet = await this.walletRepository.findOne({
+      where: { id: wallet.id },
+    });
+
+    if (!existingWallet) {
+      throw new NotFoundException(`Wallet with ID ${wallet?.id} not found`);
+    }
+
+    Object.assign(existingWallet, wallet, customer, user);
+
+    return this.walletRepository.save(existingWallet);
   }
 }

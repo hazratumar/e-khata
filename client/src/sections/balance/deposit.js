@@ -21,7 +21,6 @@ export const DepositBalance = forwardRef((props, ref) => {
   };
 
   const saveBalance = async () => {
-    console.log(state);
     return addBalance({
       wallet: {
         customer: state.customer.id,

@@ -11,11 +11,9 @@ export const UpdateBalance = forwardRef((props, ref) => {
   const [state, setState] = useState({
     walletId: "",
     customer: "",
-    transactionId: "",
+    balanceId: "",
     currency: "",
     amount: "",
-    exCurrency: "",
-    exRate: "",
     description: "",
   });
   const { customers, currencies } = useSelector((state) => state.option);
@@ -24,24 +22,22 @@ export const UpdateBalance = forwardRef((props, ref) => {
 
   const [updateBalance, { isSuccess, error }] = useUpdateBalanceMutation();
 
-  const creditRecords = data?.wallets?.filter((record) => record.type === "Withdraw");
-  const depositRecords = data?.wallets?.filter((record) => record.type === "Deposit");
-
   useEffect(() => {
     if (data) {
       setState((prevState) => ({
         ...prevState,
-        debitWalletId: debitRecords[0]?.id,
+        walletId: data?.id,
         customer: {
-          id: debitRecords[0]?.customer?.id,
-          name: debitRecords[0]?.customer?.name,
+          id: data?.customer?.id,
+          name: data?.customer?.name,
         },
-        transactionId: prevState.transactionId || data?.id,
-        currency: { id: data?.currency?.id, name: data?.currency?.name },
-        amount: data?.amount,
-        exCurrency: { id: data?.exCurrency?.id, name: data?.exCurrency?.name },
-        exRate: data?.exRate,
-        description: data?.description,
+        balanceId: data?.transaction?.id,
+        currency: {
+          id: data?.transaction?.currency?.id,
+          name: data?.transaction?.currency?.name,
+        },
+        amount: data?.transaction?.amount,
+        description: data?.transaction?.description,
       }));
     }
   }, [data]);
@@ -51,21 +47,23 @@ export const UpdateBalance = forwardRef((props, ref) => {
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const saveTransaction = async () => {
+  const saveBalance = async () => {
     return updateBalance({
-      credit: {
-        id: state.creditWalletId,
-        customer: state.creditCustomer.id,
+      wallet: {
+        id: state.walletId,
+        customerId: state.customer.id,
       },
-      transaction: {
-        id: state.transactionId,
+      balance: {
+        id: state.balanceId,
         currency: state.currency.id,
         amount: state.amount,
         description: state.description,
       },
     });
   };
-
+  useImperativeHandle(ref, () => ({
+    saveBalance,
+  }));
   useEffect(() => {
     if (isSuccess) {
       toast.success("Balance updated successfully");
@@ -83,7 +81,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
   }, [error]);
 
   useImperativeHandle(ref, () => ({
-    saveTransaction,
+    saveBalance,
   }));
 
   return (

@@ -7,10 +7,12 @@ import { BalanceController } from "./balance.controller";
 import { BalanceService } from "./balance.service";
 import { WalletModule } from "src/wallets/wallet.module";
 import { Wallet } from "src/wallets/entities/wallet.entity";
+import { Transaction } from "src/transactions/entities/transaction.entity";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Wallet]),
+    TypeOrmModule.forFeature([Transaction]),
     WalletModule,
     TransactionModule,
     CustomerModule,

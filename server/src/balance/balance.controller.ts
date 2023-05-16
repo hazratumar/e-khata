@@ -5,13 +5,16 @@ import {
   Param,
   ParseIntPipe,
   Get,
+  Put,
 } from "@nestjs/common";
 import { GetCurrentUserId } from "src/common/decorators";
 import { CreateBalanceDto } from "./dto/create-balance.dto";
-import { CreateBalanceWalletDto } from "./dto/create-balance-wallet.dto";
+import { CreateWalletDto } from "./dto/create-wallet.dto";
 import { TransactionsService } from "src/transactions/transactions.service";
 import { WalletService } from "src/wallets/wallet.service";
 import { BalanceService } from "./balance.service";
+import { UpdateBalanceDto } from "./dto/update-balance.dto";
+import { UpdateWalletDto } from "./dto/update-wallet.dto";
 
 @Controller("balance")
 export class BalanceController {
@@ -25,7 +28,7 @@ export class BalanceController {
   async createBalance(
     @GetCurrentUserId() userId: string,
     @Body("balance") balance: CreateBalanceDto,
-    @Body("wallet") wallet: CreateBalanceWalletDto
+    @Body("wallet") wallet: CreateWalletDto
   ) {
     const savedTransaction = await this.transactionsService.create(
       +userId,
@@ -33,6 +36,15 @@ export class BalanceController {
     );
     await this.walletService.create(+userId, wallet, savedTransaction?.id);
     return savedTransaction;
+  }
+  @Put()
+  async updateBalance(
+    @GetCurrentUserId() userId: string,
+    @Body("balance") balance: UpdateBalanceDto,
+    @Body("wallet") wallet: UpdateWalletDto
+  ) {
+    await this.balanceService.updateBalance(+userId, balance);
+    return this.balanceService.updateWallet(+userId, wallet);
   }
 
   @Get(":page/:limit/:searchTerm?")
