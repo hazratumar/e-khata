@@ -26,8 +26,8 @@ export class Transaction {
   })
   currency: Currency;
 
-  @Column()
-  amount: string;
+  @Column({ default: 0 })
+  amount: number;
 
   @ManyToOne(() => Currency, (currency) => currency.transactions, {
     eager: true,
@@ -36,8 +36,8 @@ export class Transaction {
   })
   exCurrency?: Currency;
 
-  @Column({ default: "1" })
-  exRate?: string;
+  @Column({ default: 1 })
+  exRate?: number;
 
   @Column()
   description: string;

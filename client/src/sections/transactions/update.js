@@ -73,9 +73,9 @@ export const UpdateTransaction = forwardRef((props, ref) => {
       transaction: {
         id: state.transactionId,
         currency: state.currency.id,
-        amount: state.amount,
+        amount: parseInt(state.amount, 10),
         exCurrency: state.exCurrency.id,
-        exRate: state.exRate,
+        exRate: parseInt(state.exRate, 10),
         description: state.description,
       },
     });

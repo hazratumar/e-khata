@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
-import { TransactionsService } from "src/transactions/transactions.service";
 import { CustomersService } from "src/customers/customers.service";
 import { Wallet } from "src/wallets/entities/wallet.entity";
 import { UpdateWalletDto } from "./dto/update-wallet.dto";
@@ -87,5 +86,28 @@ export class BalanceService {
     Object.assign(existingWallet, wallet, customer, user);
 
     return this.walletRepository.save(existingWallet);
+  }
+
+  async getBalancesByCurrency(): Promise<Record<string, number>> {
+    const balances = await this.walletRepository
+      .createQueryBuilder("wallet")
+      .leftJoin("wallet.customer", "customer")
+      .where("customer.isSelf = :isSelf", { isSelf: true })
+      .leftJoin("wallet.transaction", "transaction")
+      .leftJoin("transaction.currency", "currency")
+      .select("currency.abbreviation", "currency")
+      .addSelect(
+        "SUM(CASE WHEN wallet.type = 'Credit' THEN -transaction.amount WHEN wallet.type = 'Withdraw' THEN -transaction.amount ELSE transaction.amount END)",
+        "amount"
+      )
+      .groupBy("currency.abbreviation")
+      .getRawMany();
+
+    const balancesByCurrency: Record<string, number> = {};
+    balances.forEach((balance: { currency: string; amount: number }) => {
+      balancesByCurrency[balance.currency] = balance.amount;
+    });
+
+    return balancesByCurrency;
   }
 }

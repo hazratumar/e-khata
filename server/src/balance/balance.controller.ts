@@ -47,6 +47,11 @@ export class BalanceController {
     return this.balanceService.updateWallet(+userId, wallet);
   }
 
+  @Get("amount")
+  async getBalancesByCurrency() {
+    return this.balanceService.getBalancesByCurrency();
+  }
+
   @Get(":page/:limit/:searchTerm?")
   getBalanceList(
     @Param("page", ParseIntPipe) page: number,

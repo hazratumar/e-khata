@@ -11,15 +11,16 @@ export class CreateAllTransactionDto {
   @IsNumber({}, { message: "Select a currency" })
   currency: number;
 
-  @IsNumberString({}, { message: "Amount must be a valid number" })
-  amount: string;
+  @IsNotEmpty({ message: "Amount must not be empty" })
+  @IsNumber({}, { message: "Amount must be a valid number" })
+  amount: number;
 
   @IsNumber({}, { message: "Select exchange currency" })
   exCurrency: number;
 
-  @IsNumberString({}, { message: "Exchange rate must be a valid number" })
   @IsOptional()
-  exRate?: string;
+  @IsNumber({}, { message: "Exchange rate must be a valid number" })
+  exRate?: number;
 
   @IsOptional()
   @IsString({ message: "Description must be a string" })

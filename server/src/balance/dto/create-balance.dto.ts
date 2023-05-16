@@ -11,8 +11,9 @@ export class CreateBalanceDto {
   @IsNumber({}, { message: "Select a currency" })
   currency: number;
 
-  @IsNumberString({}, { message: "Amount must be a valid number" })
-  amount: string;
+  @IsNotEmpty({ message: "Amount must not be empty" })
+  @IsNumber({}, { message: "Amount must be a valid number" })
+  amount: number;
 
   @IsOptional()
   @IsString({ message: "Description must be a string" })
