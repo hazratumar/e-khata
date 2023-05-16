@@ -39,11 +39,11 @@ export class CurrencyService {
     }
   }
 
-  async getOptions(): Promise<{ id: number; name: string }[]> {
+  async getOptions(): Promise<{ id: number; abbreviation: string }[]> {
     const query = await this.currencyRepository
       .createQueryBuilder("currency")
       .select("currency.id", "id")
-      .addSelect("currency.name", "name");
+      .addSelect("currency.abbreviation", "abbreviation");
 
     return query.getRawMany();
   }

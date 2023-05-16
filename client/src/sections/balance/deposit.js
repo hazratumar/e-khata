@@ -66,7 +66,7 @@ export const DepositBalance = forwardRef((props, ref) => {
         </Grid>
         <Grid item xs={12} md={12}>
           <Autocomplete
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.abbreviation}
             options={currencies}
             onChange={(event, value) => setState({ ...state, currency: value })}
             renderInput={(params) => <TextField {...params} label="Currency" />}

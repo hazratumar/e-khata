@@ -34,7 +34,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
         balanceId: data?.transaction?.id,
         currency: {
           id: data?.transaction?.currency?.id,
-          name: data?.transaction?.currency?.name,
+          abbreviation: data?.transaction?.currency?.abbreviation,
         },
         amount: data?.transaction?.amount,
         description: data?.transaction?.description,
@@ -99,7 +99,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
         <Grid item xs={12} md={12}>
           <Autocomplete
             value={state.currency}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.abbreviation}
             options={currencies}
             onChange={(event, value) => setState({ ...state, currency: value })}
             renderInput={(params) => <TextField {...params} label="Currency" />}

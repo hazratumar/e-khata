@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Option {
   id: number;
-  name: string;
+  abbreviation: string;
 }
 
 interface OptionState {

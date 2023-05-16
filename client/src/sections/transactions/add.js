@@ -83,7 +83,7 @@ export const AddTransaction = forwardRef((props, ref) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Autocomplete
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.abbreviation}
             options={currencies}
             onChange={(event, value) => setState({ ...state, currency: value })}
             renderInput={(params) => <TextField {...params} label="Currency" />}
@@ -101,7 +101,7 @@ export const AddTransaction = forwardRef((props, ref) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Autocomplete
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.abbreviation}
             options={currencies}
             onChange={(event, value) => setState({ ...state, exCurrency: value })}
             renderInput={(params) => <TextField {...params} label="Exchange Currency" />}

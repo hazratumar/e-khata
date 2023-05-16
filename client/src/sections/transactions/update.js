@@ -44,9 +44,9 @@ export const UpdateTransaction = forwardRef((props, ref) => {
           name: debitRecords[0]?.customer?.name,
         },
         transactionId: prevState.transactionId || data?.id,
-        currency: { id: data?.currency?.id, name: data?.currency?.name },
+        currency: { id: data?.currency?.id, abbreviation: data?.currency?.abbreviation },
         amount: data?.amount,
-        exCurrency: { id: data?.exCurrency?.id, name: data?.exCurrency?.name },
+        exCurrency: { id: data?.exCurrency?.id, abbreviation: data?.exCurrency?.abbreviation },
         exRate: data?.exRate,
         description: data?.description,
       }));
@@ -125,7 +125,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             value={state.currency}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.abbreviation}
             options={currencies}
             onChange={(event, value) => setState({ ...state, currency: value })}
             renderInput={(params) => <TextField {...params} label="Currency" />}
@@ -144,7 +144,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             value={state.exCurrency}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.abbreviation}
             options={currencies}
             onChange={(event, value) => setState({ ...state, exCurrency: value })}
             renderInput={(params) => <TextField {...params} label="Exchange Currency" />}
