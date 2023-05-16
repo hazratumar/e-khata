@@ -110,4 +110,41 @@ export class BalanceService {
 
     return balancesByCurrency;
   }
+
+  async getBalancesByCustomer(): Promise<
+    Record<string, Record<string, number>>
+  > {
+    const balances = await this.walletRepository
+      .createQueryBuilder("wallet")
+      .leftJoin("wallet.customer", "customer")
+      .where("customer.isSelf = :isSelf", { isSelf: true })
+      .leftJoin("wallet.transaction", "transaction")
+      .leftJoin("transaction.currency", "currency")
+      .select("customer.name", "customer")
+      .addSelect("currency.abbreviation", "currency")
+      .addSelect(
+        "SUM(CASE WHEN wallet.type = 'Credit' THEN -transaction.amount WHEN wallet.type = 'Withdraw' THEN -transaction.amount ELSE transaction.amount END)",
+        "amount"
+      )
+      .groupBy("customer.name")
+      .addGroupBy("currency.abbreviation")
+      .getRawMany();
+
+    const amountByCurrency: Record<string, Record<string, number>> = {};
+    balances.forEach(
+      (balance: { customer: string; currency: string; amount: string }) => {
+        const customer = balance.customer;
+        const currency = balance.currency;
+        const amount = parseFloat(balance.amount);
+
+        if (!amountByCurrency[customer]) {
+          amountByCurrency[customer] = {};
+        }
+
+        amountByCurrency[customer][currency] = amount;
+      }
+    );
+
+    return amountByCurrency;
+  }
 }
