@@ -16,7 +16,7 @@ import { BalanceService } from "./balance.service";
 import { UpdateBalanceDto } from "./dto/update-balance.dto";
 import { UpdateWalletDto } from "./dto/update-wallet.dto";
 
-@Controller("balance")
+@Controller("balances")
 export class BalanceController {
   constructor(
     private readonly balanceService: BalanceService,

@@ -88,27 +88,38 @@ export class BalanceService {
     return this.walletRepository.save(existingWallet);
   }
 
-  async getBalancesByCurrency(): Promise<Record<string, number>> {
+  async getBalancesByCurrency(): Promise<
+    { name: string; abbreviation: string; amount: number }[]
+  > {
     const balances = await this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.customer", "customer")
       .where("customer.isSelf = :isSelf", { isSelf: true })
       .leftJoin("wallet.transaction", "transaction")
       .leftJoin("transaction.currency", "currency")
-      .select("currency.abbreviation", "currency")
+      .select("currency.name", "name")
+      .addSelect("currency.abbreviation", "abbreviation")
       .addSelect(
         "SUM(CASE WHEN wallet.type = 'Credit' THEN -transaction.amount WHEN wallet.type = 'Withdraw' THEN -transaction.amount ELSE transaction.amount END)",
         "amount"
       )
-      .groupBy("currency.abbreviation")
+      .groupBy("currency.name")
+      .addGroupBy("currency.abbreviation")
       .getRawMany();
 
-    const balancesByCurrency: Record<string, number> = {};
-    balances.forEach((balance: { currency: string; amount: number }) => {
-      balancesByCurrency[balance.currency] = balance.amount;
-    });
+    const balancesArray: {
+      name: string;
+      abbreviation: string;
+      amount: number;
+    }[] = balances.map(
+      (balance: { name: string; abbreviation: string; amount: number }) => ({
+        name: balance.name,
+        abbreviation: balance.abbreviation,
+        amount: balance.amount,
+      })
+    );
 
-    return balancesByCurrency;
+    return balancesArray;
   }
 
   async getBalancesByCustomer(): Promise<

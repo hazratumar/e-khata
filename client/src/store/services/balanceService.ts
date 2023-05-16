@@ -3,27 +3,27 @@ import { api } from "./api";
 
 export const BalanceService = createApi({
   reducerPath: "balanceService",
-  tagTypes: ["balance"],
+  tagTypes: ["balances"],
   baseQuery: api,
   endpoints: (builder) => ({
     addBalance: builder.mutation({
       query: (payload) => ({
-        url: `/balance`,
+        url: `/balances`,
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["balance"],
+      invalidatesTags: ["balances"],
     }),
     getOneBalance: builder.query({
       query: ({ balanceId }) => ({
-        url: `/balance/${balanceId}`,
+        url: `/balances/${balanceId}`,
         method: "GET",
       }),
-      providesTags: ["balance"],
+      providesTags: ["balances"],
     }),
     getBalance: builder.query({
       query: ({ page, rowsPerPage, searchTerm }) => {
-        let url = `/balance/${page}/${rowsPerPage}`;
+        let url = `/balances/${page}/${rowsPerPage}`;
         if (searchTerm) {
           url += `/${searchTerm}`;
         }
@@ -32,15 +32,22 @@ export const BalanceService = createApi({
           method: "GET",
         };
       },
-      providesTags: ["balance"],
+      providesTags: ["balances"],
+    }),
+    getBalanceByCurrency: builder.query({
+      query: () => ({
+        url: "balances/currency",
+        method: "GET",
+      }),
+      providesTags: ["balances"],
     }),
     updateBalance: builder.mutation({
       query: (payload) => ({
-        url: `/balance`,
+        url: `/balances`,
         method: "PUT",
         body: payload,
       }),
-      invalidatesTags: ["balance"],
+      invalidatesTags: ["balances"],
     }),
   }),
 });
@@ -48,6 +55,7 @@ export const BalanceService = createApi({
 export const {
   useAddBalanceMutation,
   useGetBalanceQuery,
+  useGetBalanceByCurrencyQuery,
   useGetOneBalanceQuery,
   useUpdateBalanceMutation,
 } = BalanceService;
