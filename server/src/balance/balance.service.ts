@@ -158,4 +158,62 @@ export class BalanceService {
 
     return amountByCurrency;
   }
+
+  async getBalancesByDateRange(
+    startDate: Date,
+    endDate: Date
+  ): Promise<{
+    credit: Array<{ name: string; abbreviation: string; amount: number }>;
+    debit: Array<{ name: string; abbreviation: string; amount: number }>;
+  }> {
+    const creditBalances = await this.getBalancesOfTypeByDateRange(
+      "Credit",
+      startDate,
+      endDate
+    );
+    const debitBalances = await this.getBalancesOfTypeByDateRange(
+      "Debit",
+      startDate,
+      endDate
+    );
+
+    return {
+      credit: this.parseBalances(creditBalances),
+      debit: this.parseBalances(debitBalances),
+    };
+  }
+
+  async getBalancesOfTypeByDateRange(
+    type: string,
+    startDate: Date,
+    endDate: Date
+  ) {
+    return await this.walletRepository
+      .createQueryBuilder("wallet")
+      .leftJoin("wallet.transaction", "transaction")
+      .leftJoin("wallet.customer", "customer")
+      .where("customer.isSelf = :isSelf", { isSelf: true })
+      .andWhere("transaction.createdAt >= :startDate", { startDate })
+      .andWhere("transaction.createdAt <= :endDate", { endDate })
+      .leftJoin("transaction.currency", "currency")
+      .select("currency.name", "name")
+      .addSelect("currency.abbreviation", "abbreviation")
+      .addSelect(
+        `SUM(CASE WHEN wallet.type = '${type}' THEN amount ELSE 0 END)`,
+        "amount"
+      )
+      .groupBy("currency.name")
+      .addGroupBy("currency.abbreviation")
+
+      .getRawMany();
+  }
+
+  parseBalances(
+    balances: Array<{ name: string; abbreviation: string; amount: string }>
+  ) {
+    return balances.map((balance) => ({
+      ...balance,
+      amount: parseFloat(balance.amount),
+    }));
+  }
 }

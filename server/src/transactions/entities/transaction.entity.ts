@@ -49,16 +49,10 @@ export class Transaction {
   })
   user: User;
 
-  @CreateDateColumn({
-    type: "timestamp with time zone",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({
-    type: "timestamp with time zone",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   constructor(partial: Partial<Transaction>) {

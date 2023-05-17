@@ -1,4 +1,3 @@
-import { Currency } from "src/currency/entities/currency.entity";
 import { Customer } from "src/customers/entities/customer.entity";
 import { Transaction } from "src/transactions/entities/transaction.entity";
 import { User } from "src/users/entities/user.entity";
@@ -40,16 +39,10 @@ export class Wallet {
   })
   user: User;
 
-  @CreateDateColumn({
-    type: "timestamp with time zone",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({
-    type: "timestamp with time zone",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   constructor(partial: Partial<Wallet>) {

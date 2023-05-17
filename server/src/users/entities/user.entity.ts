@@ -63,16 +63,10 @@ export class User {
   @OneToMany(() => ExpenseItem, (expenseItem) => expenseItem.user)
   expenseItems: ExpenseItem[];
 
-  @CreateDateColumn({
-    type: "timestamp with time zone",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({
-    type: "timestamp with time zone",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   constructor(partial: Partial<User>) {

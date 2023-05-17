@@ -36,7 +36,14 @@ export const BalanceService = createApi({
     }),
     getBalanceByCurrency: builder.query({
       query: () => ({
-        url: "balances/currency",
+        url: "balances/by_currency",
+        method: "GET",
+      }),
+      providesTags: ["balances"],
+    }),
+    getCreditByDateRange: builder.query({
+      query: ({ startDate, endDate }) => ({
+        url: `balances/credit_by_date/${startDate}/${endDate}`,
         method: "GET",
       }),
       providesTags: ["balances"],
@@ -56,6 +63,7 @@ export const {
   useAddBalanceMutation,
   useGetBalanceQuery,
   useGetBalanceByCurrencyQuery,
+  useGetCreditByDateRangeQuery,
   useGetOneBalanceQuery,
   useUpdateBalanceMutation,
 } = BalanceService;

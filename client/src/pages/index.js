@@ -1,38 +1,128 @@
 import Head from "next/head";
-import numeral from "numeral";
-import { Box, Container, Unstable_Grid2 as Grid } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  Unstable_Grid2 as Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { OverviewBudget } from "src/sections/overview/overview-budget";
-import { OverviewLatestOrders } from "src/sections/overview/overview-latest-orders";
-import { OverviewCurrentBalances } from "src/sections/overview/overview-current-balances";
-import { OverviewSales } from "src/sections/overview/overview-sales";
-import { OverviewTasksProgress } from "src/sections/overview/overview-tasks-progress";
-import { OverviewTotalCustomers } from "src/sections/overview/overview-total-customers";
-import { OverviewTotalProfit } from "src/sections/overview/overview-total-profit";
-import { OverviewTraffic } from "src/sections/overview/overview-traffic";
-import { useGetBalanceByCurrencyQuery } from "src/store/services/balanceService";
+import { LocalizationProvider } from "@mui/x-date-pickers-pro";
+import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import { format, subDays } from "date-fns";
+import { useEffect, useState } from "react";
+import { useGetCreditByDateRangeQuery } from "src/store/services/balanceService";
 
+const Credit = "Credit";
+const Debit = "Debit";
 const Page = () => {
-  const { data, isLoading: isBalanceLoading } = useGetBalanceByCurrencyQuery();
+  const [selectedOption, setSelectedOption] = useState(1);
 
+  const { data } = useGetCreditByDateRangeQuery({
+    startDate: format(new Date(), "yyyy-MM-dd"),
+    endDate: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+  });
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+    const dateRange = getSelectedDateRange(event.target.value);
+    refetch();
+    console.log("Selected Date Range:", dateRange);
+  };
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
+
+  const getSelectedDateRange = (option) => {
+    const today = new Date();
+    const startDate = today;
+    let endDate = today;
+
+    switch (option) {
+      case 7:
+        endDate = subDays(today, 7);
+        break;
+      case 30:
+        endDate = subDays(today, 30);
+        break;
+      case 365:
+        endDate = subDays(today, 365);
+        break;
+      default:
+        break;
+    }
+
+    return {
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate:
+        option === 1 ? format(endDate, "yyyy-MM-dd HH:mm:ss") : format(startDate, "yyyy-MM-dd"),
+    };
+  };
   return (
     <>
       <Head>
         <title>Overview | e-khata</title>
       </Head>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
+      <Box component="main">
         <Container maxWidth="xl">
-          <Grid container spacing={3}>
-            <Grid xs={12} sm={6} lg={3}>
-              <OverviewBudget difference={12} positive sx={{ height: "100%" }} value="$24k" />
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={6} md={6} lg={6}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateRangePicker startText="Check-in" endText="Check-out" />
+              </LocalizationProvider>
             </Grid>
-            <Grid xs={12} sm={6} lg={3}>
+            <Grid item xs={3} sm={3} md={3} lg={3}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedOption}
+                  label="Age"
+                  onChange={handleOptionChange}
+                >
+                  <MenuItem value={1}>Today</MenuItem>
+                  <MenuItem value={7}>Last 7 Days</MenuItem>
+                  <MenuItem value={30}>Last 30 Days</MenuItem>
+                  {/* <MenuItem value={365}>Last Year</MenuItem> */}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            {data?.credit.map((item) => {
+              return (
+                <Grid xs={12} sm={6} md={4} lg={2.4}>
+                  <OverviewBudget
+                    type={"Credit"}
+                    name={item?.name}
+                    abbreviation={item?.abbreviation}
+                    value={item?.amount}
+                  />
+                </Grid>
+              );
+            })}
+            {data?.debit.map((item) => {
+              return (
+                <Grid xs={12} sm={6} md={4} lg={2.4}>
+                  <OverviewBudget
+                    type={"Debit"}
+                    name={item?.name}
+                    abbreviation={item?.abbreviation}
+                    value={item?.amount}
+                  />
+                </Grid>
+              );
+            })}
+            {/* <Grid xs={12} sm={6} lg={3}>
               <OverviewTotalCustomers
                 difference={16}
                 positive={false}
@@ -45,7 +135,7 @@ const Page = () => {
             </Grid>
             <Grid xs={12} sm={6} lg={3}>
               <OverviewTotalProfit sx={{ height: "100%" }} value="$15k" />
-            </Grid>
+            </Grid> 
             <Grid xs={12} lg={8}>
               <OverviewSales
                 chartSeries={[
@@ -67,7 +157,7 @@ const Page = () => {
                 labels={["USD", "PKR", "DRH"]}
                 sx={{ height: "100%" }}
               />
-            </Grid>
+            </Grid> 
             <Grid xs={12} md={6} lg={4}>
               <OverviewCurrentBalances
                 products={data?.map((balance) => ({
@@ -146,7 +236,7 @@ const Page = () => {
                 ]}
                 sx={{ height: "100%" }}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Container>
       </Box>

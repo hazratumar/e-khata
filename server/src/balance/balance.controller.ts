@@ -47,14 +47,22 @@ export class BalanceController {
     return this.balanceService.updateWallet(+userId, wallet);
   }
 
-  @Get("currency")
+  @Get("by_currency")
   async getBalancesByCurrency() {
     return this.balanceService.getBalancesByCurrency();
   }
 
-  @Get("customer")
+  @Get("by_customer")
   async getBalancesByCustomer() {
     return this.balanceService.getBalancesByCustomer();
+  }
+
+  @Get("credit_by_date/:startDate/:endDate")
+  async getCreditByDateRange(
+    @Param("startDate") startDate: Date,
+    @Param("endDate") endDate: Date
+  ) {
+    return this.balanceService.getBalancesByDateRange(startDate, endDate);
   }
 
   @Get(":page/:limit/:searchTerm?")

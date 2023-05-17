@@ -43,10 +43,10 @@ export class Customer {
   })
   user: User;
 
-  @CreateDateColumn({ type: "timestamptz" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   constructor(partial: Partial<Customer>) {
