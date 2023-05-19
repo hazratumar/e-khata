@@ -1,7 +1,6 @@
 import Head from "next/head";
 import {
   Box,
-  Button,
   Container,
   FormControl,
   Unstable_Grid2 as Grid,
@@ -17,30 +16,7 @@ import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { format, subDays } from "date-fns";
 import { useEffect, useState } from "react";
 import { useGetCreditByDateRangeQuery } from "src/store/services/balanceService";
-
-const Credit = "Credit";
-const Debit = "Debit";
 const Page = () => {
-  const [selectedOption, setSelectedOption] = useState(1);
-
-  const { data } = useGetCreditByDateRangeQuery({
-    startDate: format(new Date(), "yyyy-MM-dd"),
-    endDate: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
-  });
-
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
-    const dateRange = getSelectedDateRange(event.target.value);
-    refetch();
-    console.log("Selected Date Range:", dateRange);
-  };
-
-  useEffect(() => {
-    if (data) {
-      console.log(data);
-    }
-  }, [data]);
-
   const getSelectedDateRange = (option) => {
     const today = new Date();
     const startDate = today;
@@ -66,6 +42,23 @@ const Page = () => {
         option === 1 ? format(endDate, "yyyy-MM-dd HH:mm:ss") : format(startDate, "yyyy-MM-dd"),
     };
   };
+
+  const [selectedOption, setSelectedOption] = useState(1);
+  const { data, refetch } = useGetCreditByDateRangeQuery(getSelectedDateRange(selectedOption));
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+    const dateRange = getSelectedDateRange(event.target.value);
+    refetch(dateRange); // Pass the updated date range to the refetch function
+    console.log("Selected Date Range:", dateRange);
+  };
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
+
   return (
     <>
       <Head>
@@ -103,7 +96,6 @@ const Page = () => {
                 <Grid xs={12} sm={6} md={4} lg={2.4}>
                   <OverviewBudget
                     type={"Credit"}
-                    name={item?.name}
                     abbreviation={item?.abbreviation}
                     value={item?.amount}
                   />
@@ -115,7 +107,6 @@ const Page = () => {
                 <Grid xs={12} sm={6} md={4} lg={2.4}>
                   <OverviewBudget
                     type={"Debit"}
-                    name={item?.name}
                     abbreviation={item?.abbreviation}
                     value={item?.amount}
                   />

@@ -43,6 +43,7 @@ export class CurrencyService {
     const query = await this.currencyRepository
       .createQueryBuilder("currency")
       .select("currency.id", "id")
+      .addSelect("currency.name", "name")
       .addSelect("currency.abbreviation", "abbreviation");
 
     return query.getRawMany();

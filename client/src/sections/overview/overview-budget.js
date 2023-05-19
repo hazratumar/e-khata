@@ -6,7 +6,7 @@ import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from "@mui/mate
 import numeral from "numeral";
 
 export const OverviewBudget = (props) => {
-  const { type, name, abbreviation, value } = props;
+  const { type, abbreviation, value } = props;
 
   return (
     <Card>
@@ -16,12 +16,14 @@ export const OverviewBudget = (props) => {
             <Typography color="text.secondary" variant="overline">
               {type}
             </Typography>
-            <Typography variant="h4">{numeral(value).format("0,0.0a")}</Typography>
+            <Typography variant="h4">
+              {value < 999 ? value : numeral(value).format("0,0.0a")}
+            </Typography>
           </Stack>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={2} sx={{ mt: 2 }}>
           <Typography color="text.secondary" variant="caption">
-            {`${abbreviation}: ${`(${numeral(value).format("0,0.00")})`}`}
+            {`${abbreviation}: ${numeral(value).format("0,0.00")}`}
           </Typography>
         </Stack>
       </CardContent>
@@ -31,7 +33,6 @@ export const OverviewBudget = (props) => {
 
 OverviewBudget.propTypes = {
   type: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
   abbreviation: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
 };

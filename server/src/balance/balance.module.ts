@@ -8,6 +8,7 @@ import { BalanceService } from "./balance.service";
 import { WalletModule } from "src/wallets/wallet.module";
 import { Wallet } from "src/wallets/entities/wallet.entity";
 import { Transaction } from "src/transactions/entities/transaction.entity";
+import { CurrencyModule } from "src/currency/currency.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { Transaction } from "src/transactions/entities/transaction.entity";
     WalletModule,
     TransactionModule,
     CustomerModule,
+    CurrencyModule,
     UserModule,
   ],
   controllers: [BalanceController],

@@ -163,8 +163,8 @@ export class BalanceService {
     startDate: Date,
     endDate: Date
   ): Promise<{
-    credit: Array<{ name: string; abbreviation: string; amount: number }>;
-    debit: Array<{ name: string; abbreviation: string; amount: number }>;
+    credit: Array<{ abbreviation: string; amount: number }>;
+    debit: Array<{ abbreviation: string; amount: number }>;
   }> {
     const creditBalances = await this.getBalancesOfTypeByDateRange(
       "Credit",
@@ -177,9 +177,37 @@ export class BalanceService {
       endDate
     );
 
+    const creditParsedBalances = this.parseBalances(creditBalances);
+    const debitParsedBalances = this.parseBalances(debitBalances);
+
+    const currencies = ["AFG", "PKR", "USD", "DHR", "RMB"];
+
+    currencies.forEach((currency) => {
+      if (
+        !creditParsedBalances.find(
+          (balance) => balance.abbreviation === currency
+        )
+      ) {
+        creditParsedBalances.push({
+          abbreviation: currency,
+          amount: 0,
+        });
+      }
+      if (
+        !debitParsedBalances.find(
+          (balance) => balance.abbreviation === currency
+        )
+      ) {
+        debitParsedBalances.push({
+          abbreviation: currency,
+          amount: 0,
+        });
+      }
+    });
+
     return {
-      credit: this.parseBalances(creditBalances),
-      debit: this.parseBalances(debitBalances),
+      credit: creditParsedBalances,
+      debit: debitParsedBalances,
     };
   }
 
@@ -208,9 +236,7 @@ export class BalanceService {
       .getRawMany();
   }
 
-  parseBalances(
-    balances: Array<{ name: string; abbreviation: string; amount: string }>
-  ) {
+  parseBalances(balances: Array<{ abbreviation: string; amount: string }>) {
     return balances.map((balance) => ({
       ...balance,
       amount: parseFloat(balance.amount),
