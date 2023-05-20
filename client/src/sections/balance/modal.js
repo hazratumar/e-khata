@@ -11,7 +11,12 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
-import { ArrowDownTrayIcon, ArrowUpTrayIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowDownTrayIcon,
+  ArrowUpTrayIcon,
+  PencilSquareIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/solid";
 import { useRef, useState } from "react";
 import { DepositBalance } from "./deposit";
 import { UpdateBalance } from "./update";
@@ -60,7 +65,11 @@ export const BalanceModal = ({ balanceId }) => {
   return (
     <div>
       {balanceId ? (
-        <MenuItem onClick={handleOpen}>Update</MenuItem>
+        <Button onClick={handleOpen}>
+          <SvgIcon fontSize="small">
+            <PencilSquareIcon />
+          </SvgIcon>
+        </Button>
       ) : (
         <Stack direction="row" spacing={2}>
           <Button

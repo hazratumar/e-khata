@@ -1,10 +1,7 @@
 import {
+  Badge,
   Box,
   Card,
-  IconButton,
-  MenuItem,
-  Popover,
-  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -13,28 +10,13 @@ import {
   TableRow,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import { useState } from "react";
-import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { UpdateCustomer } from "src/sections/customers/update";
+import { options } from "../../utils/constant";
+import moment from "moment";
 
 export const CustomersTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
-  const options = [5, 10, 25, 50, 100];
   const rowsPerPageOptions = options.filter((option) => option <= count);
-
-  const [anchorElArr, setAnchorElArr] = useState(items.map(() => null));
-
-  const handleClick = (event, index) => {
-    const newAnchorElArr = [...anchorElArr];
-    newAnchorElArr[index] = event.currentTarget;
-    setAnchorElArr(newAnchorElArr);
-  };
-
-  const handleClose = (index) => {
-    const newAnchorElArr = [...anchorElArr];
-    newAnchorElArr[index] = null;
-    setAnchorElArr(newAnchorElArr);
-  };
 
   return (
     <Card>
@@ -46,46 +28,28 @@ export const CustomersTable = (props) => {
                 <TableCell>ID</TableCell>
                 <TableCell>FullName</TableCell>
                 <TableCell>Nickname</TableCell>
+                <TableCell>Type</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Address</TableCell>
-                {/* <TableCell>Others</TableCell> */}
-                <TableCell>Action</TableCell>
+                <TableCell>Recent Updates</TableCell>
+                <TableCell>Update</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer, index) => (
+              {items.map((customer) => (
                 <TableRow hover key={customer.id}>
                   <TableCell>{customer.id}</TableCell>
                   <TableCell>{customer.name}</TableCell>
                   <TableCell>{customer.nickname}</TableCell>
+                  <TableCell>
+                    {customer.isSelf && <Badge badgeContent={"Self"} color={"primary"} />}
+                  </TableCell>
+
                   <TableCell>{customer.phone}</TableCell>
                   <TableCell>{customer.address}</TableCell>
-                  {/* <TableCell>{customer.other}</TableCell> */}
+                  <TableCell>{moment(customer.updatedAt).fromNow()}</TableCell>
                   <TableCell>
-                    <div>
-                      <IconButton onClick={(event) => handleClick(event, index)}>
-                        <SvgIcon>
-                          <Cog6ToothIcon />
-                        </SvgIcon>
-                      </IconButton>
-                      <Popover
-                        open={Boolean(anchorElArr[index])}
-                        anchorEl={anchorElArr[index]}
-                        onClose={() => handleClose(index)}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "center",
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "center",
-                        }}
-                      >
-                        <UpdateCustomer customer={customer} />
-                        <MenuItem onClick={() => handleClose(index)}>Transaction</MenuItem>
-                        {/* <MenuItem onClick={() => handleClose(index)}>Delete "disable"</MenuItem> */}
-                      </Popover>
-                    </div>
+                    <UpdateCustomer customer={customer} />
                   </TableCell>
                 </TableRow>
               ))}

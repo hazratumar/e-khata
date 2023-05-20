@@ -1,10 +1,6 @@
 import {
   Box,
   Card,
-  IconButton,
-  MenuItem,
-  Popover,
-  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -13,27 +9,13 @@ import {
   TableRow,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import { useState } from "react";
-import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { UpdateCurrency } from "src/sections/currencies/update";
+import { options } from "../../utils/constant";
+import moment from "moment";
 export const CurrenciesTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
-  const options = [5, 10, 25, 50, 100];
   const rowsPerPageOptions = options.filter((option) => option <= count);
 
-  const [anchorElArr, setAnchorElArr] = useState(items.map(() => null));
-
-  const handleClick = (event, index) => {
-    const newAnchorElArr = [...anchorElArr];
-    newAnchorElArr[index] = event.currentTarget;
-    setAnchorElArr(newAnchorElArr);
-  };
-
-  const handleClose = (index) => {
-    const newAnchorElArr = [...anchorElArr];
-    newAnchorElArr[index] = null;
-    setAnchorElArr(newAnchorElArr);
-  };
   return (
     <Card>
       <Scrollbar>
@@ -44,40 +26,19 @@ export const CurrenciesTable = (props) => {
                 <TableCell>ID</TableCell>
                 <TableCell>Currency</TableCell>
                 <TableCell>Abbreviation</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell>Recent Updates</TableCell>
+                <TableCell>Update</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((currency, index) => (
+              {items.map((currency) => (
                 <TableRow hover key={currency.id}>
                   <TableCell>{currency.id}</TableCell>
                   <TableCell>{currency.name}</TableCell>
                   <TableCell>{currency.abbreviation}</TableCell>
+                  <TableCell>{moment(currency.updatedAt).fromNow()}</TableCell>
                   <TableCell>
-                    <div>
-                      <IconButton onClick={(event) => handleClick(event, index)}>
-                        <SvgIcon>
-                          <Cog6ToothIcon />
-                        </SvgIcon>
-                      </IconButton>
-                      <Popover
-                        open={Boolean(anchorElArr[index])}
-                        anchorEl={anchorElArr[index]}
-                        onClose={() => handleClose(index)}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "center",
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "center",
-                        }}
-                      >
-                        <UpdateCurrency currency={currency} />
-                        {/* <MenuItem onClick={handleClose}>Transition</MenuItem>
-                        <MenuItem onClick={handleClose}>Delete "disable"</MenuItem> */}
-                      </Popover>
-                    </div>
+                    <UpdateCurrency currency={currency} />
                   </TableCell>
                 </TableRow>
               ))}

@@ -22,3 +22,6 @@ export function getDateRange(days) {
     endDate: endDateFormatted,
   };
 }
+export function getNewUpdate(update1, update2) {
+  return new Date(update1) > new Date(update2) ? update1 : update2;
+}

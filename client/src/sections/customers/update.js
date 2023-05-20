@@ -1,4 +1,3 @@
-import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
@@ -10,11 +9,10 @@ import {
   Checkbox,
   Grid,
   IconButton,
-  MenuItem,
   SvgIcon,
   TextField,
 } from "@mui/material";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useUpdateCustomerMutation } from "src/store/services/customerService";
 import toast from "react-hot-toast";
@@ -77,10 +75,8 @@ export const UpdateCustomer = (props) => {
       setOpen(false);
       console.log("Update data", state);
     }
-
   }, [isSuccess]);
   useEffect(() => {
-
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
         ? error.data.message[0]
@@ -91,17 +87,11 @@ export const UpdateCustomer = (props) => {
   }, [error]);
   return (
     <div>
-      <MenuItem
-        starticon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={handleOpen}
-      >
-        Update
-      </MenuItem>
+      <Button onClick={handleOpen}>
+        <SvgIcon fontSize="small">
+          <PencilSquareIcon />
+        </SvgIcon>
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -178,7 +168,7 @@ export const UpdateCustomer = (props) => {
                     <Checkbox
                       checked={state.isSelf}
                       onChange={handleChangeCheckbox}
-                      inputProps={{ 'aria-label': 'controlled' }}
+                      inputProps={{ "aria-label": "controlled" }}
                     />
                     <span>Self-customer</span>
                   </Grid>

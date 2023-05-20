@@ -8,9 +8,8 @@ import {
   SvgIcon,
   Modal,
   CardActions,
-  MenuItem,
 } from "@mui/material";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useRef, useState } from "react";
 import { AddTransaction } from "./add";
 import { UpdateTransaction } from "./update";
@@ -45,7 +44,11 @@ export const TransactionModal = ({ transactionId }) => {
   return (
     <div>
       {transactionId ? (
-        <MenuItem onClick={handleOpen}>Update</MenuItem>
+        <Button onClick={handleOpen}>
+          <SvgIcon fontSize="small">
+            <PencilSquareIcon />
+          </SvgIcon>
+        </Button>
       ) : (
         <Button
           startIcon={
