@@ -12,10 +12,8 @@ import { setCustomerOptions, setCurrencyOptions } from "src/store/reducers/optio
 import { useDispatch } from "react-redux";
 
 const Page = () => {
-  // Get dispatch method from Redux
   const dispatch = useDispatch();
 
-  // Define initial state
   const [state, setState] = useState({
     page: 0,
     rowsPerPage: 10,
@@ -24,11 +22,9 @@ const Page = () => {
     searchTerm: "",
   });
 
-  // Get customer and currency options data
   const { data: customerOptions } = useSelfCustomersQuery();
   const { data: currencyOptions } = useAllCurrenciesQuery();
 
-  // Get balance data
   const { data } = useGetBalanceQuery(state);
 
   const onRowsPerPageChange = useCallback((event) => {
@@ -43,7 +39,6 @@ const Page = () => {
     setState((prevState) => ({ ...prevState, searchTerm: search }));
   }, []);
 
-  // Update state with balance data when the data is available
   useEffect(() => {
     if (data) {
       setState((prevState) => ({

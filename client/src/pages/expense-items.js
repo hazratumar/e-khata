@@ -17,7 +17,7 @@ const Page = () => {
     searchTerm: "",
   });
 
-  const { isSuccess, data, refetch } = useGetExpenseItemsQuery(state);
+  const { data } = useGetExpenseItemsQuery(state);
 
   const onRowsPerPageChange = useCallback((event) => {
     setState((prevState) => ({ ...prevState, rowsPerPage: event.target.value }));
@@ -32,15 +32,14 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    refetch();
-    if (isSuccess) {
+    if (data) {
       setState((prevState) => ({
         ...prevState,
         count: data.total,
         expenseItems: data.expenseItems,
       }));
     }
-  }, [data, refetch]);
+  }, [data]);
 
   return (
     <>

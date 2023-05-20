@@ -17,7 +17,7 @@ const Page = () => {
     searchTerm: "",
   });
 
-  const { isSuccess, data, refetch } = useGetCustomersQuery(state);
+  const { data } = useGetCustomersQuery(state);
 
   const handleRowsPerPageChange = useCallback((event) => {
     setState((prevState) => ({ ...prevState, rowsPerPage: event.target.value }));
@@ -32,10 +32,10 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (data) {
       setState((prevState) => ({ ...prevState, count: data.total, customers: data.customers }));
     }
-  }, [isSuccess, data]);
+  }, [data]);
 
   return (
     <>

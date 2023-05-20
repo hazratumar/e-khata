@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
-import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
-import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CurrenciesTable } from "../sections/currencies/table";
 import { Search } from "src/components/search";
@@ -17,7 +16,7 @@ const Page = () => {
     searchTerm: "",
   });
 
-  const { isSuccess, data, refetch } = useGetCurrenciesQuery(state);
+  const { data } = useGetCurrenciesQuery(state);
 
   const onRowsPerPageChange = useCallback((event) => {
     setState((prevState) => ({ ...prevState, rowsPerPage: event.target.value }));
@@ -32,11 +31,10 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    refetch();
-    if (isSuccess) {
+    if (data) {
       setState((prevState) => ({ ...prevState, count: data.total, currencies: data.currencies }));
     }
-  }, [data, refetch]);
+  }, [data]);
 
   return (
     <>
