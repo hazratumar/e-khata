@@ -7,6 +7,7 @@ import { Wallet } from "src/wallets/entities/wallet.entity";
 import { UpdateWalletDto } from "./dto/update-wallet.dto";
 import { Transaction } from "src/transactions/entities/transaction.entity";
 import { UpdateBalanceDto } from "./dto/update-balance.dto";
+import { CurrencyService } from "src/currency/currency.service";
 
 @Injectable()
 export class BalanceService {
@@ -16,6 +17,7 @@ export class BalanceService {
     @InjectRepository(Transaction) // Add this line
     private readonly transactionRepository: Repository<Transaction>,
     private readonly customersService: CustomersService,
+    private readonly currencyService: CurrencyService,
     private readonly usersService: UsersService
   ) {}
   async balanceList(
@@ -180,7 +182,7 @@ export class BalanceService {
     const creditParsedBalances = this.parseBalances(creditBalances);
     const debitParsedBalances = this.parseBalances(debitBalances);
 
-    const currencies = ["AFG", "PKR", "USD", "DHR", "RMB"];
+    const currencies = await this.currencyService.getCurrenciesAbbreviation();
 
     currencies.forEach((currency) => {
       if (

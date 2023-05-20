@@ -48,6 +48,16 @@ export class CurrencyService {
 
     return query.getRawMany();
   }
+  async getCurrenciesAbbreviation(): Promise<string[]> {
+    const query = await this.currencyRepository
+      .createQueryBuilder("currency")
+      .select("currency.abbreviation", "abbreviation");
+
+    const results = await query.getRawMany();
+    const abbreviations = results.map((result) => result.abbreviation);
+
+    return abbreviations;
+  }
 
   async findAll(
     page: number,
