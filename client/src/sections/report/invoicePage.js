@@ -29,7 +29,7 @@ const InvoicePage = ({ invoice }) => {
   } = invoice;
 
   return (
-    <Box py={4}>
+    <Box p={4}>
       <Box display="flex" justifyContent="space-between" mb={3}>
         <Typography variant="h4">Rahat Shinwari Enterprises</Typography>
         <Image src="/assets/logos/logo.png" alt="Logo" width={85} height={80} />

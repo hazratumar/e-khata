@@ -21,7 +21,7 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
   }
 
   async printCustomerReport() {
-    const directory = join(__dirname, "..", "assets", "customer");
+    const directory = join(__dirname, "..", "assets/customer");
     const filename = "customer_Report.pdf";
     const publicUrl = `http://localhost:3001/assets/customer/${filename}`;
 
@@ -33,10 +33,12 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
 
     // Unlink (delete) all existing files in the directory
     const files = readdirSync(directory);
-    await files.forEach(async (file) => {
-      const filePath = join(directory, file);
-      await unlinkSync(filePath);
-    });
+    if (files) {
+      await files.forEach(async (file) => {
+        const filePath = join(directory, file);
+        await unlinkSync(filePath);
+      });
+    }
 
     await page.goto("http://localhost:3000/report");
     await page.waitForLoadState("networkidle");

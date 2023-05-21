@@ -59,11 +59,11 @@ import { join } from "path";
     CustomerModule,
     CurrencyModule,
     BalanceModule,
+    PrinterModule,
     TransactionModule,
     WalletModule,
     ExpenseItemModule,
     ExpenseModule,
-    PrinterModule,
   ],
   providers: [
     {
