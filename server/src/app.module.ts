@@ -18,9 +18,16 @@ import { ExpenseItem } from "./expense-items/entities/expense-item.entity";
 import { Wallet } from "./wallets/entities/wallet.entity";
 import { WalletModule } from "./wallets/wallet.module";
 import { BalanceModule } from "./balance/balance.module";
+import { PrinterModule } from "./Printer/printer.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      serveRoot: "/assets",
+      rootPath: join(__dirname, "assets"),
+    }),
     TypeOrmModule.forRoot({
       type: "postgres",
       host: "localhost",
@@ -56,6 +63,7 @@ import { BalanceModule } from "./balance/balance.module";
     WalletModule,
     ExpenseItemModule,
     ExpenseModule,
+    PrinterModule,
   ],
   providers: [
     {

@@ -43,7 +43,7 @@ const InvoicePage = ({ invoice }) => {
         </Box>
         <Box>
           <Typography variant="subtitle1">{`Customer ID: ${customerNumber}`}</Typography>
-          <Typography variant="body2">{`Date: ${date}`}</Typography>
+          <Typography variant="body2">{`Date: ${date} to ${date}`}</Typography>
         </Box>
       </Box>
 
@@ -51,6 +51,7 @@ const InvoicePage = ({ invoice }) => {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>Date</TableCell>
               <TableCell>Customer</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Currency</TableCell>
@@ -62,6 +63,7 @@ const InvoicePage = ({ invoice }) => {
           <TableBody>
             {items.map((item, index) => (
               <TableRow key={index}>
+                <TableCell>{date}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell>{item.quantity}</TableCell>
                 <TableCell>{item.unitPrice}</TableCell>
