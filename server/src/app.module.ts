@@ -18,9 +18,10 @@ import { ExpenseItem } from "./expense-items/entities/expense-item.entity";
 import { Wallet } from "./wallets/entities/wallet.entity";
 import { WalletModule } from "./wallets/wallet.module";
 import { BalanceModule } from "./balance/balance.module";
-import { PrinterModule } from "./Printer/printer.module";
+import { PrinterModule } from "./printer/printer.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
+import { ReportModule } from "./report/report.module";
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { join } from "path";
     WalletModule,
     ExpenseItemModule,
     ExpenseModule,
+    ReportModule,
   ],
   providers: [
     {

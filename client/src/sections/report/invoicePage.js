@@ -17,8 +17,6 @@ const InvoicePage = ({ invoice }) => {
     customerName,
     address,
     Currency,
-    state,
-    zip,
     customerNumber,
     date,
     items,
@@ -47,7 +45,7 @@ const InvoicePage = ({ invoice }) => {
         </Box>
       </Box>
 
-      <TableContainer component={Paper} mb={3}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -55,8 +53,8 @@ const InvoicePage = ({ invoice }) => {
               <TableCell>Customer</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Currency</TableCell>
-              <TableCell>Credit Amount</TableCell>
-              <TableCell>Debit Amount</TableCell>
+              <TableCell>Credit</TableCell>
+              <TableCell>Debit</TableCell>
               <TableCell>Balance</TableCell>
             </TableRow>
           </TableHead>

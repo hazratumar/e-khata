@@ -15,7 +15,7 @@ const InvoiceList = () => {
         state: "State",
         zip: "12345",
         customerNumber: "1",
-        date: "2023-05-20",
+        date: "2023/05/20",
         items: [
           { description: "Item 1", quantity: 2, unitPrice: "$10.00", total: "$20.00" },
           { description: "Item 2", quantity: 3, unitPrice: "$15.00", total: "$45.00" },
