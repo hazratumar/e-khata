@@ -39,9 +39,12 @@ export class WalletService {
       throw new NotFoundException(`Wallet with ID ${wallet?.id} not found`);
     }
 
-    Object.assign(existingWallet, wallet, customer, user);
+    Object.assign(existingWallet, wallet);
+    existingWallet.customer = customer;
+    existingWallet.user = user;
 
-    return this.walletRepository.save(existingWallet);
+    const updatedWallet = await this.walletRepository.save(existingWallet);
+    return updatedWallet;
   }
 
   async findAll(): Promise<Wallet[]> {

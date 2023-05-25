@@ -29,19 +29,14 @@ export class TransactionsController {
     @Body("debit") debit: CreateDebitWalletDto,
     @Body("credit") credit: CreateCreditWalletDto
   ) {
-    await this.transactionsService.validation(
-      credit.customer,
-      debit.customer,
-      transaction.currency,
-      transaction.exCurrency
-    );
-    const savedTransaction = await this.transactionsService.create(
+    await this.transactionsService.validation(credit.customer, debit.customer);
+    const savedData = await this.transactionsService.create(
       +userId,
       transaction
     );
-    await this.walletService.create(+userId, credit, savedTransaction?.id);
-    await this.walletService.create(+userId, debit, savedTransaction?.id);
-    return savedTransaction;
+    await this.walletService.create(+userId, credit, savedData?.id);
+    await this.walletService.create(+userId, debit, savedData?.id);
+    return savedData;
   }
 
   @Put()
@@ -51,33 +46,21 @@ export class TransactionsController {
     @Body("debit") debit: CreateDebitWalletDto,
     @Body("credit") credit: CreateCreditWalletDto
   ) {
-    await this.transactionsService.validation(
-      credit.customer,
-      debit.customer,
-      transaction.currency,
-      transaction.exCurrency
-    );
-    const updatedTransaction = await this.transactionsService.update(
-      +userId,
-      transaction
-    );
-    const updatedDebit = await this.walletService.update(+userId, debit);
-    const updatedCredit = await this.walletService.update(+userId, credit);
-    return updatedTransaction;
-  }
+    await this.transactionsService.validation(credit.customer, debit.customer);
 
-  @Get()
-  find() {
-    return this.transactionsService.find();
+    await this.walletService.update(+userId, debit);
+    await this.walletService.update(+userId, credit);
+
+    return this.transactionsService.update(+userId, transaction);
   }
 
   @Get(":page/:limit/:searchTerm?")
-  findAll(
+  transactionListing(
     @Param("page", ParseIntPipe) page: number,
     @Param("limit", ParseIntPipe) limit: number,
     @Param("searchTerm") searchTerm: string
   ) {
-    return this.transactionsService.findAll(page, limit, searchTerm);
+    return this.walletService.transactionListing(page, limit, searchTerm);
   }
 
   @Get(":id")

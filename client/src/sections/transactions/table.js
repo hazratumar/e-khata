@@ -9,7 +9,6 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
-import { useState } from "react";
 import { Scrollbar } from "src/components/scrollbar";
 import { TransactionModal } from "./modal";
 import moment from "moment";

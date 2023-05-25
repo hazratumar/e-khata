@@ -4,7 +4,7 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
-import { useGetWalletsQuery } from "src/store/services/walletsService";
+import { useGetTransactionsQuery } from "src/store/services/transactionService";
 import { TransactionModal } from "src/sections/transactions/modal";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
@@ -29,7 +29,7 @@ const Page = () => {
   const { data: currencyOptions } = useAllCurrenciesQuery();
 
   // Get transaction data
-  const { data } = useGetWalletsQuery(state);
+  const { data } = useGetTransactionsQuery(state);
 
   // Define functions to handle changes in rows per page, page number, and search term respectively
   const onRowsPerPageChange = useCallback((event) => {

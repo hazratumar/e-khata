@@ -49,61 +49,17 @@ export class TransactionsService {
     }
   }
 
-  async validation(
-    creditCustomer: number,
-    debitCustomer: number,
-    currency: number,
-    exCurrency: number
-  ) {
-    if (creditCustomer === debitCustomer || currency === exCurrency) {
-      const errorMessage =
-        creditCustomer === debitCustomer
-          ? "Credit and Debit customers are the same."
-          : "Currency and Exchange Currency are the same.";
-      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+  async validation(creditCustomer: number, debitCustomer: number) {
+    if (creditCustomer === debitCustomer) {
+      throw new HttpException(
+        "Credit and Debit customers are the same.",
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
 
   async find(): Promise<Transaction[]> {
     return this.transactionRepository.find();
-  }
-
-  async findAll(
-    page: number,
-    limit: number,
-    search?: string
-  ): Promise<{
-    transactions: Transaction[];
-    total: number;
-    page: number;
-    totalPages: number;
-  }> {
-    if (limit < 1 || limit > 100) {
-      throw new Error("Limit must be between 1 and 100.");
-    }
-
-    const skip = page * limit;
-    const [transactions, total] = await this.transactionRepository.findAndCount(
-      {
-        where: {
-          // your search query
-        },
-        take: limit,
-        skip: skip,
-        relations: ["user", "wallets"],
-      }
-    );
-
-    const totalPages = Math.ceil(total / limit);
-
-    // Handle case when page number is greater than total pages
-    if (totalPages > 0 && page > totalPages) {
-      throw new Error(
-        `Page number must be less than or equal to ${totalPages}.`
-      );
-    }
-
-    return { transactions, total, page, totalPages };
   }
 
   async findOne(id: number): Promise<Transaction> {
