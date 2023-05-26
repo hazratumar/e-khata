@@ -32,6 +32,8 @@ export const TransactionsTable = (props) => {
                 <TableCell>Currency</TableCell>
                 <TableCell>Credit Amount</TableCell>
                 <TableCell>Debit Amount</TableCell>
+                <TableCell>Exchange</TableCell>
+                <TableCell>Rate</TableCell>
                 <TableCell>Recent Updates</TableCell>
                 <TableCell>Update</TableCell>
               </TableRow>
@@ -50,6 +52,8 @@ export const TransactionsTable = (props) => {
                   <TableCell>{item?.transaction?.currency?.abbreviation}</TableCell>
                   <TableCell>{item?.type === "Credit" ? item?.transaction?.amount : "0"}</TableCell>
                   <TableCell>{item?.type === "Debit" ? item?.transaction?.amount : "0"}</TableCell>
+                  <TableCell>{item?.transaction?.exCurrency?.abbreviation}</TableCell>
+                  <TableCell>{item?.transaction?.exRate}</TableCell>
                   <TableCell>
                     {moment(getNewUpdate(item?.updatedAt, item?.transaction?.updatedAt)).fromNow()}
                   </TableCell>
