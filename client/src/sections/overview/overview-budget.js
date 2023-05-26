@@ -1,8 +1,5 @@
 import PropTypes from "prop-types";
-import ArrowDownIcon from "@heroicons/react/24/solid/ArrowDownIcon";
-import ArrowUpIcon from "@heroicons/react/24/solid/ArrowUpIcon";
-import CurrencyDollarIcon from "@heroicons/react/24/solid/CurrencyDollarIcon";
-import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from "@mui/material";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
 import numeral from "numeral";
 
 export const OverviewBudget = (props) => {
@@ -34,5 +31,5 @@ export const OverviewBudget = (props) => {
 OverviewBudget.propTypes = {
   type: PropTypes.string.isRequired,
   abbreviation: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
 };

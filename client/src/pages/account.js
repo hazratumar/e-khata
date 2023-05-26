@@ -5,6 +5,7 @@ import { AccountProfile } from "src/sections/account/account-profile";
 import { AccountProfileDetails } from "src/sections/account/account-profile-details";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { SettingsPassword } from "../sections/account/settings-password";
 
 const Page = () => {
   const { user } = useSelector((state) => state.auth);
@@ -47,6 +48,9 @@ const Page = () => {
                 </Grid>
                 <Grid xs={12} md={6} lg={8}>
                   <AccountProfileDetails user={state} />
+                </Grid>
+                <Grid xs={12} md={12} lg={12}>
+                  <SettingsPassword />
                 </Grid>
               </Grid>
             </div>

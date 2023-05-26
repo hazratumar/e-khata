@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 
-export const SettingsPassword = () => {
+export const Settings = () => {
   const [values, setValues] = useState({
     password: "",
     confirm: "",

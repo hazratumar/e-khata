@@ -30,13 +30,13 @@ const Page = () => {
             <FilterModal filterDashboard={filterDashboard} />
           </Grid>
           <Grid container spacing={3}>
-            {data?.credit.map(({ abbreviation, amount, id }) => (
-              <Grid key={id} item xs={12} sm={6} md={4} lg={2.4}>
+            {data?.credit.map(({ abbreviation, amount }) => (
+              <Grid key={abbreviation} item xs={12} sm={6} md={4} lg={2.4}>
                 <OverviewBudget type="Credit" abbreviation={abbreviation} value={amount} />
               </Grid>
             ))}
-            {data?.debit.map(({ abbreviation, amount, id }) => (
-              <Grid key={id} item xs={12} sm={6} md={4} lg={2.4}>
+            {data?.debit.map(({ abbreviation, amount }) => (
+              <Grid key={abbreviation} item xs={12} sm={6} md={4} lg={2.4}>
                 <OverviewBudget type="Debit" abbreviation={abbreviation} value={amount} />
               </Grid>
             ))}
