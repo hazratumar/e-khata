@@ -17,7 +17,8 @@ import {
   MenuItem,
   CardActions,
 } from "@mui/material";
-import { CalendarDaysIcon, XMarkIcon } from "@heroicons/react/24/solid";
+
+import { XMarkIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
 import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { getDateRange, getCustomDate } from "src/utils/generic-functions";
@@ -75,7 +76,7 @@ export const FilterModal = ({ filterDashboard }) => {
     <div>
       <Button onClick={handleOpen}>
         <SvgIcon>
-          <CalendarDaysIcon />
+          <AdjustmentsHorizontalIcon />
         </SvgIcon>
       </Button>
       <Modal
