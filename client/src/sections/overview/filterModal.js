@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import {
-  CardContent,
   Button,
   Fade,
   Box,
+  CardContent,
   CardHeader,
   IconButton,
   SvgIcon,
@@ -12,17 +12,15 @@ import {
   RadioGroup,
   FormControl,
   FormControlLabel,
-  CardActions,
   InputLabel,
   Select,
   MenuItem,
+  CardActions,
 } from "@mui/material";
 import { CalendarDaysIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { getDateRange } from "src/utils/generic-functions";
-import { format } from "date-fns";
+import { getDateRange, getCustomDate } from "src/utils/generic-functions";
 
 const style = {
   position: "absolute",
@@ -37,7 +35,7 @@ const style = {
   padding: "20px",
 };
 
-export const FilterModal = () => {
+export const FilterModal = ({ filterDashboard }) => {
   const [open, setOpen] = useState(false);
   const [selection, setSelection] = useState("static");
   const [selectedOption, setSelectedOption] = useState(1);
@@ -53,12 +51,11 @@ export const FilterModal = () => {
   };
 
   const handleApplyFilter = () => {
-    // Handle applying the selected filter option and dates
-    console.log("Selected Option:", getDateRange(selectedOption));
-    console.log("Custom Start Date:", format(customStartDate.$d, "yyyy-MM-dd"));
-    console.log("Custom End Date:", format(customEndDate.$d, "yyyy-MM-dd"));
-
-    // Close the modal
+    const dateRange =
+      selection === "static"
+        ? getDateRange(selectedOption)
+        : getCustomDate(customStartDate, customEndDate);
+    filterDashboard(dateRange);
     handleOpen();
   };
 

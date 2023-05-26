@@ -22,6 +22,16 @@ export function getDateRange(days) {
     endDate: endDateFormatted,
   };
 }
+export function getCustomDate(startDate, endDate) {
+  const startDateObject = new Date(startDate);
+  const endDateObject = new Date(endDate);
+
+  const formattedStartDate = format(startDateObject, "yyyy-MM-dd");
+  const formattedEndDate = format(endDateObject, "yyyy-MM-dd");
+
+  return { startDate: formattedStartDate, endDate: formattedEndDate };
+}
+
 export function getNewUpdate(update1, update2) {
   return new Date(update1) > new Date(update2) ? update1 : update2;
 }

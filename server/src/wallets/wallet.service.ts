@@ -86,6 +86,7 @@ export class WalletService {
 
     return { wallets, total, page, totalPages };
   }
+
   async getByTransaction(id: number): Promise<Wallet> {
     return this.walletRepository.findOne({ where: { transaction: { id } } });
   }
