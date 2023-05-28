@@ -17,7 +17,8 @@ import {
   Stack,
 } from "@mui/material";
 
-import { XMarkIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import { Summarize } from "@mui/icons-material";
 import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
@@ -115,10 +116,8 @@ export const ReportModal = () => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>
-        <SvgIcon>
-          <AdjustmentsHorizontalIcon />
-        </SvgIcon>
+      <Button startIcon={<Summarize />} onClick={handleOpen}>
+        Report
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
