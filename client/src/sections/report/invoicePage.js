@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   Box,
   Typography,
@@ -9,14 +8,10 @@ import {
   TableCell,
   TableBody,
   TableFooter,
-  Button,
 } from "@mui/material";
 import Image from "next/image";
-import { CloudDownload, Downloading } from "@mui/icons-material";
-import { useDownloadReportMutation } from "src/store/services/printerService";
-import download from "downloadjs";
 
-const InvoicePage = ({ invoice, params }) => {
+const InvoicePage = ({ invoice }) => {
   const {
     customerName,
     address,
@@ -30,17 +25,6 @@ const InvoicePage = ({ invoice, params }) => {
     dueDate,
   } = invoice;
 
-  const [getfile, { isSuccess, isLoading, data }] = useDownloadReportMutation();
-
-  const onDownload = () => {
-    getfile(params);
-  };
-
-  useEffect(() => {
-    if (data) {
-      download(data?.url);
-    }
-  }, [isSuccess]);
   return (
     <Box p={4}>
       <Box display="flex" justifyContent="space-between" mb={3}>
@@ -106,19 +90,6 @@ const InvoicePage = ({ invoice, params }) => {
       <Box textAlign="right">
         <Typography variant="body2">{`Payment due by: ${dueDate}`}</Typography>
       </Box>
-
-      <Button
-        variant="contained"
-        color="info"
-        position="fixed"
-        bottom={16}
-        right={16}
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
-        startIcon={isLoading ? <Downloading /> : <CloudDownload />}
-        onClick={onDownload}
-      >
-        {isLoading ? "Downloading..." : "Download"}
-      </Button>
     </Box>
   );
 };

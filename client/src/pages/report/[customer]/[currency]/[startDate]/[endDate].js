@@ -1,3 +1,4 @@
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import InvoicePage from "src/sections/report/invoicePage";
 import { useCustomerReportQuery } from "src/store/services/printerService";
@@ -40,17 +41,31 @@ const InvoiceList = ({ customer, currency, startDate, endDate }) => {
   }, [endDate]);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: "100vh" }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <CircularProgress size={"10vh"} thickness={4} />
+          <Box sx={{ marginTop: "20px" }}>
+            <Typography variant="h6" align="center">
+              Loading...
+            </Typography>
+          </Box>
+        </Box>
+      </Grid>
+    );
   }
 
   return (
     <>
       {invoices.map((invoice) => (
-        <InvoicePage
-          key={invoice.id}
-          invoice={invoice}
-          params={{ customer, currency, startDate, endDate }}
-        />
+        <InvoicePage key={invoice.id} invoice={invoice} />
       ))}
     </>
   );

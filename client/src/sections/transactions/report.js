@@ -14,6 +14,7 @@ import {
   Autocomplete,
   Grid,
   TextField,
+  Stack,
 } from "@mui/material";
 
 import { XMarkIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
@@ -22,6 +23,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { getDate, validate } from "src/utils/generic-functions";
+import { CloudDownload, Downloading } from "@mui/icons-material";
+import { useDownloadReportMutation } from "src/store/services/printerService";
+import download from "downloadjs";
 
 const style = {
   position: "absolute",
@@ -47,6 +51,7 @@ export const ReportModal = () => {
   });
 
   const { customers, currencies } = useSelector((state) => state.option);
+  const [getFileUrl, { isSuccess, isLoading }] = useDownloadReportMutation();
 
   const handleOpen = () => setOpen(!open);
 
@@ -77,6 +82,26 @@ export const ReportModal = () => {
       const formattedEndDate = getDate(endDate);
       const nextPageUrl = `/report/${customer.id}/${currency.id}/${formattedStartDate}/${formattedEndDate}`;
       window.open(nextPageUrl, "_blank");
+    }
+  };
+
+  const onDownloadReport = async () => {
+    const { customer, currency, startDate, endDate } = state;
+
+    if (validateFields(customer, currency, startDate, endDate)) {
+      const params = {
+        customer: customer.id,
+        currency: currency.id,
+        startDate: getDate(startDate),
+        endDate: getDate(endDate),
+      };
+
+      try {
+        const url = (await getFileUrl(params)).data.url;
+        download(url);
+      } catch (error) {
+        toast.error("File downloading error:", error);
+      }
     }
   };
 
@@ -157,11 +182,22 @@ export const ReportModal = () => {
                   </Grid>
                 </Grid>
               </CardContent>
-              <CardActions style={{ justifyContent: "space-between" }}>
+              <CardActions sx={{ justifyContent: "space-between" }}>
                 <Button onClick={handleOpen}>Cancel</Button>
-                <Button variant="contained" color="primary" onClick={onViewReport}>
-                  View
-                </Button>
+                <Stack direction="row" spacing={2}>
+                  <Button
+                    variant="outlined"
+                    startIcon={isLoading ? <Downloading /> : <CloudDownload />}
+                    onClick={onDownloadReport}
+                  >
+                    {isLoading ? "Downloading..." : "Download"}
+                  </Button>
+                  <Box ml={1}>
+                    <Button variant="contained" color="primary" onClick={onViewReport}>
+                      View
+                    </Button>
+                  </Box>
+                </Stack>
               </CardActions>
             </Card>
           </Box>
