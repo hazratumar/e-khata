@@ -10,6 +10,7 @@ import { TransactionService } from "./services/transactionService";
 import { ExpenseItemService } from "./services/expenseItemService";
 import { ExpenseService } from "./services/expenseService";
 import { BalanceService } from "./services/balanceService";
+import { PrinterService } from "./services/printerService";
 
 const combinedMiddleware: Middleware[] = [
   AuthService.middleware,
@@ -21,6 +22,7 @@ const combinedMiddleware: Middleware[] = [
   TransactionService.middleware,
   ExpenseItemService.middleware,
   ExpenseService.middleware,
+  PrinterService.middleware,
 ];
 
 export function makeStore() {
@@ -35,6 +37,7 @@ export function makeStore() {
       [TransactionService.reducerPath]: TransactionService.reducer,
       [ExpenseService.reducerPath]: ExpenseService.reducer,
       [ExpenseItemService.reducerPath]: ExpenseItemService.reducer,
+      [PrinterService.reducerPath]: PrinterService.reducer,
       auth: authReducer,
       option: optionReducer,
     },

@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { PrinterService } from "./printer.service";
 import { Public } from "../common/decorators";
 
@@ -7,8 +7,18 @@ export class PrinterController {
   constructor(private readonly printerService: PrinterService) {}
 
   @Public()
-  @Get("/customer/report")
-  customerReport() {
-    return this.printerService.printCustomerReport();
+  @Get(":customer/:currency/:startDate/:endDate")
+  printCustomerReport(
+    @Param("customer") customer: number,
+    @Param("currency") currency: number,
+    @Param("startDate") startDate: Date,
+    @Param("endDate") endDate: Date
+  ) {
+    return this.printerService.printCustomerReport(
+      customer,
+      currency,
+      startDate,
+      endDate
+    );
   }
 }

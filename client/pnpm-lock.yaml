@@ -19,6 +19,9 @@ dependencies:
   '@material-ui/icons':
     specifier: ^4.11.3
     version: 4.11.3(@material-ui/core@4.12.4)(@types/react@18.0.34)(react-dom@18.2.0)(react@18.2.0)
+  '@mui/icons-material':
+    specifier: ^5.11.16
+    version: 5.11.16(@mui/material@5.11.16)(@types/react@18.0.34)(react@18.2.0)
   '@mui/material':
     specifier: 5.11.16
     version: 5.11.16(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.0.34)(react-dom@18.2.0)(react@18.2.0)
@@ -40,6 +43,9 @@ dependencies:
   dayjs:
     specifier: ^1.11.7
     version: 1.11.7
+  downloadjs:
+    specifier: ^1.4.7
+    version: 1.4.7
   formik:
     specifier: 2.2.9
     version: 2.2.9(react@18.2.0)
@@ -526,6 +532,23 @@ packages:
 
   /@mui/core-downloads-tracker@5.11.16:
     resolution: {integrity: sha512-GxRfZ/HquQ/1nUc9qQVGReP6oOMS8/3QjPJ+23a7TMrxl2wjlmXrMNn7tRa30vZcGcDgEG+J0aseefUN0AoawQ==}
+    dev: false
+
+  /@mui/icons-material@5.11.16(@mui/material@5.11.16)(@types/react@18.0.34)(react@18.2.0):
+    resolution: {integrity: sha512-oKkx9z9Kwg40NtcIajF9uOXhxiyTZrrm9nmIJ4UjkU2IdHpd4QVLbCc/5hZN/y0C6qzi2Zlxyr9TGddQx2vx2A==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@mui/material': ^5.0.0
+      '@types/react': ^17.0.0 || ^18.0.0
+      react: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@mui/material': 5.11.16(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.0.34)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.0.34
+      react: 18.2.0
     dev: false
 
   /@mui/material@5.11.16(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.0.34)(react-dom@18.2.0)(react@18.2.0):
@@ -1436,6 +1459,10 @@ packages:
     dependencies:
       '@babel/runtime': 7.21.0
       csstype: 3.1.2
+    dev: false
+
+  /downloadjs@1.4.7:
+    resolution: {integrity: sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==}
     dev: false
 
   /duplexer2@0.1.4:

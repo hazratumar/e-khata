@@ -20,10 +20,17 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
     await this.browser.close();
   }
 
-  async printCustomerReport() {
+  async printCustomerReport(
+    customer: number,
+    currency: number,
+    startDate: Date,
+    endDate: Date
+  ): Promise<{ url: string }> {
     const directory = join(__dirname, "..", "assets/customer");
-    const filename = "customer_Report.pdf";
-    const publicUrl = `http://localhost:3001/assets/customer/${filename}`;
+    const filename = `Report-${startDate}-${endDate}.pdf`;
+    const fileUrl = {
+      url: `http://localhost:3001/assets/customer/${filename}`,
+    };
 
     const browser = await chromium.launch();
     const context = await browser.newContext();
@@ -40,11 +47,13 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
       });
     }
 
-    await page.goto("http://localhost:3000/report");
+    await page.goto(
+      `http://localhost:3000/report/${customer}/${currency}/${startDate}/${endDate}`
+    );
     await page.waitForLoadState("networkidle");
     await page.pdf({ path: filePath, format: "a4" });
 
     await browser.close();
-    return publicUrl;
+    return fileUrl;
   }
 }

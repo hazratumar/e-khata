@@ -2,7 +2,7 @@ import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import { Card, InputAdornment, OutlinedInput, SvgIcon } from "@mui/material";
 import { useState } from "react";
 
-export const Search = ({ onSearch, item }) => {
+export const Search = ({ onSearch, item, report }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (e) => {
@@ -12,7 +12,7 @@ export const Search = ({ onSearch, item }) => {
   };
 
   return (
-    <Card sx={{ p: 2 }}>
+    <Card sx={{ p: 2, display: "flex", justifyContent: "space-between" }}>
       <OutlinedInput
         value={searchTerm}
         fullWidth
@@ -27,6 +27,7 @@ export const Search = ({ onSearch, item }) => {
         }
         sx={{ maxWidth: 500 }}
       />
+      {report}
     </Card>
   );
 };

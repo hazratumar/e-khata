@@ -1,8 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe } from "@nestjs/common";
 import { ReportService } from "./report.service";
 import { Public } from "../common/decorators";
-import { Customer } from "src/customers/entities/customer.entity";
-import { Currency } from "src/currency/entities/currency.entity";
 
 @Controller("report")
 export class ReportController {

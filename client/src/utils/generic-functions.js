@@ -32,6 +32,30 @@ export function getCustomDate(startDate, endDate) {
   return { startDate: formattedStartDate, endDate: formattedEndDate };
 }
 
+export function getDate(date) {
+  const state = format(date, "yyyy-MM-dd");
+  return state;
+}
 export function getNewUpdate(update1, update2) {
   return new Date(update1) > new Date(update2) ? update1 : update2;
+}
+
+export function validate(text) {
+  if (
+    text === "" ||
+    text === " " ||
+    text === "null" ||
+    text === null ||
+    text === "undefined" ||
+    text === undefined ||
+    text === false ||
+    text === "false" ||
+    text === 0 ||
+    Number.isNaN(text) ||
+    text === "invalid"
+  ) {
+    return false;
+  } else {
+    return true;
+  }
 }
