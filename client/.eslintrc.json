@@ -1,6 +1,6 @@
 {
-  "presets": ["next/babel"],
-  "extends": "next/core-web-vitals",
+"presets": ["next/babel"],
+"extends": ["next/core-web-vitals"],
   "rules": {
     "@next/next/no-img-element": "off",
     "jsx-a11y/alt-text": "off",

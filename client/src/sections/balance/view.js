@@ -106,9 +106,9 @@ export const ViewTransaction = (props) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {multiItems.map((item) => {
+                      {multiItems.map((item, index) => {
                         return (
-                          <TableRow>
+                          <TableRow key={index}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.from.name}</TableCell>
                             <TableCell>{item.to.name}</TableCell>

@@ -16,7 +16,7 @@ import {
   SvgIcon,
   TextField,
 } from "@mui/material";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useUpdateExpenseMutation } from "src/store/services/expenseService";
 import toast from "react-hot-toast";
@@ -78,17 +78,11 @@ export const UpdateExpense = (props) => {
   }, [isSuccess, error]);
   return (
     <div>
-      <MenuItem
-        starticon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={handleOpen}
-      >
-        Update
-      </MenuItem>
+      <Button onClick={handleOpen}>
+        <SvgIcon fontSize="small">
+          <PencilSquareIcon />
+        </SvgIcon>
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

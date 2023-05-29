@@ -18,13 +18,13 @@ import {
 } from "@mui/material";
 
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { Summarize } from "@mui/icons-material";
+import { LibraryBooks } from "@material-ui/icons";
 import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { getDate, validate } from "src/utils/generic-functions";
-import { CloudDownload, Downloading } from "@mui/icons-material";
+import { CloudDownload, RotateLeft } from "@material-ui/icons";
 import { useDownloadReportMutation } from "src/store/services/printerService";
 import download from "downloadjs";
 
@@ -116,7 +116,7 @@ export const ReportModal = () => {
 
   return (
     <div>
-      <Button startIcon={<Summarize />} onClick={handleOpen}>
+      <Button startIcon={<LibraryBooks />} onClick={handleOpen}>
         Report
       </Button>
       <Modal
@@ -186,7 +186,7 @@ export const ReportModal = () => {
                 <Stack direction="row" spacing={2}>
                   <Button
                     variant="outlined"
-                    startIcon={isLoading ? <Downloading /> : <CloudDownload />}
+                    startIcon={isLoading ? <RotateLeft /> : <CloudDownload />}
                     onClick={onDownloadReport}
                   >
                     {isLoading ? "Downloading..." : "Download"}
