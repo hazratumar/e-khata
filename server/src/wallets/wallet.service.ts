@@ -21,16 +21,21 @@ export class WalletService {
   async create(
     userId: number,
     wallet: CreateWalletDto,
-    transactionId: number
+    transactionId: number,
+    from?: any
   ): Promise<Wallet> {
     const user = await this.usersService.findOne(userId);
     const transaction = await this.transactionsService.findOne(transactionId);
 
-    const wallets = new Wallet({ ...wallet, user, transaction });
+    const wallets = new Wallet({ ...wallet, user, transaction, from });
     return this.walletRepository.save(wallets);
   }
 
-  async update(userId: number, wallet: UpdateWalletDto): Promise<Wallet> {
+  async update(
+    userId: number,
+    wallet: UpdateWalletDto,
+    from?: any
+  ): Promise<Wallet> {
     const user = await this.usersService.findOne(userId);
     const customer = await this.customersService.findOne(wallet?.customer);
     const existingWallet = await this.findOne(wallet?.id);
@@ -39,9 +44,9 @@ export class WalletService {
       throw new NotFoundException(`Wallet with ID ${wallet?.id} not found`);
     }
 
-    Object.assign(existingWallet, wallet);
     existingWallet.customer = customer;
     existingWallet.user = user;
+    existingWallet.from = from;
 
     const updatedWallet = await this.walletRepository.save(existingWallet);
     return updatedWallet;

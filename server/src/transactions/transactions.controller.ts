@@ -29,14 +29,19 @@ export class TransactionsController {
     @Body("debit") debit: CreateDebitWalletDto,
     @Body("credit") credit: CreateCreditWalletDto
   ) {
-    await this.transactionsService.validation(credit.customer, debit.customer);
-    const savedData = await this.transactionsService.create(
-      +userId,
-      transaction
-    );
-    await this.walletService.create(+userId, credit, savedData?.id);
-    await this.walletService.create(+userId, debit, savedData?.id);
-    return savedData;
+    const { customer: cr } = credit;
+    const { customer: db } = debit;
+
+    await this.transactionsService.validation(cr, db);
+
+    const t = await this.transactionsService.create(+userId, transaction);
+
+    await Promise.all([
+      this.walletService.create(+userId, credit, t.id, db),
+      this.walletService.create(+userId, debit, t.id, cr),
+    ]);
+
+    return t;
   }
 
   @Put()
@@ -46,10 +51,15 @@ export class TransactionsController {
     @Body("debit") debit: CreateDebitWalletDto,
     @Body("credit") credit: CreateCreditWalletDto
   ) {
-    await this.transactionsService.validation(credit.customer, debit.customer);
+    const { customer: cr } = credit;
+    const { customer: db } = debit;
 
-    await this.walletService.update(+userId, debit);
-    await this.walletService.update(+userId, credit);
+    await this.transactionsService.validation(cr, db);
+
+    await Promise.all([
+      this.walletService.update(+userId, debit, cr),
+      this.walletService.update(+userId, credit, db),
+    ]);
 
     return this.transactionsService.update(+userId, transaction);
   }

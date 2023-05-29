@@ -22,6 +22,13 @@ export class Wallet {
   })
   customer: Customer;
 
+  @ManyToOne(() => Customer, (from) => from.wallets, {
+    eager: true,
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  from: Customer;
+
   @Column()
   type: string;
 

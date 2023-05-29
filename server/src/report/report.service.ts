@@ -20,16 +20,18 @@ export class ReportService {
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
       .leftJoin("wallet.customer", "customer")
+      .leftJoin("wallet.from", "from")
       .leftJoin("transaction.currency", "currency")
       .leftJoin("transaction.exCurrency", "exCurrency")
       .select([
-        "transaction.createdAt",
-        "customer.name",
-        "wallet.type",
-        "currency.abbreviation",
-        "transaction.amount",
-        "exCurrency.abbreviation",
-        "transaction.exRate",
+        "transaction.createdAt AS date",
+        "customer.name AS customer",
+        "from.name AS from",
+        "wallet.type AS type",
+        "currency.abbreviation AS currency",
+        "transaction.amount AS amount",
+        "exCurrency.abbreviation AS excurrency",
+        "transaction.exRate AS exrate",
       ])
       .where("customer.id = :customerId", { customerId })
       .andWhere("transaction.exCurrency = :currencyId", { currencyId })

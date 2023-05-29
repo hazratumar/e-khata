@@ -1,6 +1,5 @@
 import { Controller, Get, Param, Delete, ParseIntPipe } from "@nestjs/common";
 import { WalletService } from "./wallet.service";
-import { UpdateWalletDto } from "./dto/update-wallet.dto";
 
 @Controller("wallets")
 export class WalletController {
