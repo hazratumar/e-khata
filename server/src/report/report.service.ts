@@ -11,8 +11,8 @@ export class ReportService {
   ) {}
 
   async customerReport(
-    customer: number,
-    currency: number,
+    customerId: number,
+    currencyId: number,
     startDate: Date,
     endDate: Date
   ) {
@@ -25,15 +25,16 @@ export class ReportService {
       .select([
         "transaction.createdAt",
         "customer.name",
+        "wallet.type",
         "currency.abbreviation",
         "transaction.amount",
-        "exCurrency.name",
+        "exCurrency.abbreviation",
         "transaction.exRate",
       ])
-      .where("customer.id = :customerId", { customerId: customer })
+      .where("customer.id = :customerId", { customerId })
+      .andWhere("transaction.exCurrency = :currencyId", { currencyId })
       .andWhere("transaction.createdAt >= :startDate", { startDate })
       .andWhere("transaction.createdAt <= :endDate", { endDate })
-      .andWhere("currency.id = :currencyId", { currencyId: currency })
       .getRawMany();
 
     return result;

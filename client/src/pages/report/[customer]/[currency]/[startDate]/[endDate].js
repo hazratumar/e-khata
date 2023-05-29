@@ -32,6 +32,9 @@ const InvoiceList = ({ customer, currency, startDate, endDate }) => {
         ];
 
         setInvoices(dummyData);
+        console.log("====================================");
+        console.log(data);
+        console.log("====================================");
       } catch (error) {
         console.error("Error fetching invoices:", error);
       }
