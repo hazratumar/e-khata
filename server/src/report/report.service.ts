@@ -29,7 +29,10 @@ export class ReportService {
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
       .leftJoin("transaction.exCurrency", "currency")
-      .select(["currency.name AS currency"])
+      .select([
+        "currency.name AS currency",
+        "currency.abbreviation AS abbreviation",
+      ])
       .where("currency.id = :currencyId", { currencyId })
       .getRawOne();
 

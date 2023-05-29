@@ -1,4 +1,7 @@
 import { subDays, format } from "date-fns";
+const DATEFORMAT = "yyyy-MM-dd";
+const PAKDATEFORMAT = "dd-MM-yyyy";
+const DATEFORMATwITHTIME = `${DATEFORMAT} HH:mm:ss`;
 
 export function getDateRange(days) {
   const today = new Date();
@@ -13,9 +16,9 @@ export function getDateRange(days) {
     startDate = subDays(today, 365);
   }
 
-  const startDateFormatted = format(startDate, "yyyy-MM-dd");
+  const startDateFormatted = format(startDate, DateFormat);
   const endDateFormatted =
-    days === 1 ? format(endDate, "yyyy-MM-dd HH:mm:ss") : format(endDate, "yyyy-MM-dd");
+    days === 1 ? format(endDate, DATEFORMATwITHTIME) : format(endDate, DATEFORMAT);
 
   return {
     startDate: startDateFormatted,
@@ -26,16 +29,23 @@ export function getCustomDate(startDate, endDate) {
   const startDateObject = new Date(startDate);
   const endDateObject = new Date(endDate);
 
-  const formattedStartDate = format(startDateObject, "yyyy-MM-dd");
-  const formattedEndDate = format(endDateObject, "yyyy-MM-dd");
+  const formattedStartDate = format(startDateObject, DATEFORMAT);
+  const formattedEndDate = format(endDateObject, DATEFORMAT);
 
   return { startDate: formattedStartDate, endDate: formattedEndDate };
 }
 
 export function getDate(date) {
-  const state = format(date, "yyyy-MM-dd");
+  const state = format(date, DATEFORMAT);
   return state;
 }
+
+export function dateFormat(inputDate) {
+  const stringDate = new Date(inputDate);
+  const formattedDate = format(stringDate, PAKDATEFORMAT);
+  return formattedDate;
+}
+
 export function getNewUpdate(update1, update2) {
   return new Date(update1) > new Date(update2) ? update1 : update2;
 }

@@ -10,21 +10,27 @@ import {
   TableFooter,
 } from "@mui/material";
 import Image from "next/image";
+import { dateFormat } from "../../utils/generic-functions";
 
 const InvoicePage = ({ invoice }) => {
-  const {
-    customerName,
-    address,
-    currency,
-    customerNumber,
-    date,
-    items,
-    subtotal,
-    tax,
-    total,
-    dueDate,
-  } = invoice;
+  const { name, address, currency, abbreviation, openingBalance, startDate, endDate, result } =
+    invoice;
 
+  const calculateBalance = (rows) => {
+    let balance = openingBalance;
+
+    for (let i = 0; i < rows.length; i++) {
+      const currentItem = rows[i];
+      const creditAmount =
+        currentItem.type === "Credit" ? currentItem.amount * currentItem.exrate : 0;
+      const debitAmount =
+        currentItem.type === "Debit" ? currentItem.amount * currentItem.exrate : 0;
+
+      balance += creditAmount - debitAmount;
+    }
+
+    return balance;
+  };
   return (
     <Box p={4}>
       <Box display="flex" justifyContent="space-between" mb={3}>
@@ -34,13 +40,13 @@ const InvoicePage = ({ invoice }) => {
 
       <Box display="flex" justifyContent="space-between" mb={2}>
         <Box>
-          <Typography variant="subtitle1">{`Customer: ${customerName}`}</Typography>
+          <Typography variant="subtitle1">{`Customer: ${name}`}</Typography>
           <Typography variant="body2">{`Address: ${address}`}</Typography>
           <Typography variant="body2">{`Currency: ${currency}`}</Typography>
         </Box>
         <Box>
-          <Typography variant="subtitle1">{`Customer ID: ${customerNumber}`}</Typography>
-          <Typography variant="body2">{`Date: ${date} to ${date}`}</Typography>
+          <Typography variant="subtitle1">{`Opening Balance: ${abbreviation} ${openingBalance}`}</Typography>
+          <Typography variant="body2">{`Date: ${startDate} to ${endDate}`}</Typography>
         </Box>
       </Box>
 
@@ -50,46 +56,55 @@ const InvoicePage = ({ invoice }) => {
             <TableRow>
               <TableCell>Date</TableCell>
               <TableCell>Customer</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Currency</TableCell>
-              <TableCell>Credit</TableCell>
               <TableCell>Debit</TableCell>
+              <TableCell>Credit</TableCell>
               <TableCell>Balance</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{date}</TableCell>
-                <TableCell>{item.description}</TableCell>
-                <TableCell>{item.quantity}</TableCell>
-                <TableCell>{item.unitPrice}</TableCell>
-                <TableCell>{item.total}</TableCell>
-                <TableCell>{item.total}</TableCell>
-                <TableCell>{item.total}</TableCell>
-              </TableRow>
-            ))}
+            {result.map((item, index) => {
+              const balance = calculateBalance(result.slice(0, index + 1)); // Calculate balance up to the current row
+              return (
+                <TableRow key={index}>
+                  <TableCell>{dateFormat(item.date)}</TableCell>
+                  <TableCell>{`From ${item.customer} to ${item.from} ${item.currency} ${item.type}`}</TableCell>
+                  <TableCell>{item.type === "Debit" ? item.amount * item.exrate : 0}</TableCell>
+                  <TableCell>{item.type === "Credit" ? item.amount * item.exrate : 0}</TableCell>
+                  <TableCell>{balance}</TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell align="right">Subtotal:</TableCell>
-              <TableCell>{subtotal}</TableCell>
+              <TableCell align="right">Total Debits:</TableCell>
+              <TableCell>
+                {result.reduce((sum, item) => {
+                  if (item.type === "Debit") {
+                    return sum + item.amount * item.exrate;
+                  }
+                  return sum;
+                }, 0)}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell align="right">Tax (10%):</TableCell>
-              <TableCell>{tax}</TableCell>
+              <TableCell align="right">Total Credits:</TableCell>
+              <TableCell>
+                {result.reduce((sum, item) => {
+                  if (item.type === "Credit") {
+                    return sum + item.amount * item.exrate;
+                  }
+                  return sum;
+                }, 0)}
+              </TableCell>{" "}
             </TableRow>
             <TableRow>
-              <TableCell align="right">Total:</TableCell>
-              <TableCell>{total}</TableCell>
+              <TableCell align="right">Closing Balance:</TableCell>
+              <TableCell>{calculateBalance(result)}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>
       </TableContainer>
-
-      <Box textAlign="right">
-        <Typography variant="body2">{`Payment due by: ${dueDate}`}</Typography>
-      </Box>
     </Box>
   );
 };
