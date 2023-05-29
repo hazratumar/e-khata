@@ -1,11 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Customer } from "src/customers/entities/customer.entity";
 import { Wallet } from "src/wallets/entities/wallet.entity";
 import { Repository } from "typeorm";
 
 @Injectable()
 export class ReportService {
   constructor(
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>
   ) {}
@@ -16,6 +19,20 @@ export class ReportService {
     startDate: Date,
     endDate: Date
   ) {
+    const customerDetails = await this.customerRepository
+      .createQueryBuilder("customer")
+      .select(["customer.name AS name", "customer.address AS address"])
+      .where("customer.id = :customerId", { customerId })
+      .getRawOne();
+
+    const currency = await this.walletRepository
+      .createQueryBuilder("wallet")
+      .leftJoin("wallet.transaction", "transaction")
+      .leftJoin("transaction.exCurrency", "currency")
+      .select(["currency.name AS currency"])
+      .where("currency.id = :currencyId", { currencyId })
+      .getRawOne();
+
     const result = await this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
@@ -39,6 +56,37 @@ export class ReportService {
       .andWhere("transaction.createdAt <= :endDate", { endDate })
       .getRawMany();
 
-    return result;
+    const openingBalanceQuery = await this.walletRepository
+      .createQueryBuilder("wallet")
+      .leftJoin("wallet.transaction", "transaction")
+      .leftJoin("wallet.customer", "customer")
+      .leftJoin("transaction.currency", "currency")
+      .select([
+        "transaction.createdAt AS date",
+        "transaction.exRate AS exrate",
+        "transaction.amount AS amount",
+      ])
+      .where("customer.id = :customerId", { customerId })
+      .andWhere("transaction.exCurrency = :currencyId", { currencyId })
+      .andWhere("transaction.createdAt <= :startDate", { startDate })
+      .getRawMany();
+
+    // Calculate opening balance
+    let openingBalance = 0;
+    for (const row of openingBalanceQuery) {
+      const exRate = row.exrate;
+      const amount = row.amount;
+
+      openingBalance += amount * exRate;
+    }
+
+    return {
+      ...customerDetails,
+      ...currency,
+      startDate,
+      endDate,
+      openingBalance,
+      result,
+    };
   }
 }
