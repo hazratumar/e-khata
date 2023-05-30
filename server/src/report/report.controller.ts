@@ -1,6 +1,5 @@
-import { Controller, Get, Param, ParseIntPipe } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { ReportService } from "./report.service";
-import { Public } from "../common/decorators";
 
 @Controller("report")
 export class ReportController {

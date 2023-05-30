@@ -1,6 +1,5 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { PrinterService } from "./printer.service";
-import { Public } from "../common/decorators";
 
 @Controller("printer")
 export class PrinterController {
