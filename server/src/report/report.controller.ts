@@ -6,7 +6,6 @@ import { Public } from "../common/decorators";
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  @Public()
   @Get(":customer/:currency/:startDate/:endDate")
   customerReport(
     @Param("customer") customer: number,

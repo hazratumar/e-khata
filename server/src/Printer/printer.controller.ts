@@ -6,7 +6,6 @@ import { Public } from "../common/decorators";
 export class PrinterController {
   constructor(private readonly printerService: PrinterService) {}
 
-  @Public()
   @Get(":customer/:currency/:startDate/:endDate")
   printCustomerReport(
     @Param("customer") customer: number,
