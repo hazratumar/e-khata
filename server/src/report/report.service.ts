@@ -57,31 +57,55 @@ export class ReportService {
       .andWhere("transaction.exCurrency = :currencyId", { currencyId })
       .andWhere("transaction.createdAt >= :startDate", { startDate })
       .andWhere("transaction.createdAt <= :endDate", { endDate })
+      .orderBy("transaction.createdAt", "ASC")
       .getRawMany();
 
-    const openingBalanceQuery = await this.walletRepository
+    const creditQuery = this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
       .leftJoin("wallet.customer", "customer")
       .leftJoin("transaction.currency", "currency")
       .select([
         "transaction.createdAt AS date",
+        "wallet.type AS type",
         "transaction.exRate AS exrate",
         "transaction.amount AS amount",
       ])
       .where("customer.id = :customerId", { customerId })
       .andWhere("transaction.exCurrency = :currencyId", { currencyId })
-      .andWhere("transaction.createdAt <= :startDate", { startDate })
-      .getRawMany();
+      .andWhere("transaction.createdAt < :startDate", { startDate })
+      .andWhere("wallet.type = :creditTypeName", { creditTypeName: "Credit" });
 
-    // Calculate opening balance
-    let openingBalance = 0;
-    for (const row of openingBalanceQuery) {
-      const exRate = row.exrate;
-      const amount = row.amount;
+    const debitQuery = this.walletRepository
+      .createQueryBuilder("wallet")
+      .leftJoin("wallet.transaction", "transaction")
+      .leftJoin("wallet.customer", "customer")
+      .leftJoin("transaction.currency", "currency")
+      .select([
+        "transaction.createdAt AS date",
+        "wallet.type AS type",
+        "transaction.exRate AS exrate",
+        "transaction.amount AS amount",
+      ])
+      .where("customer.id = :customerId", { customerId })
+      .andWhere("transaction.exCurrency = :currencyId", { currencyId })
+      .andWhere("transaction.createdAt < :startDate", { startDate })
+      .andWhere("wallet.type = :debitTypeName", { debitTypeName: "Debit" });
 
-      openingBalance += amount * exRate;
-    }
+    const creditTransactions = await creditQuery.getRawMany();
+    const debitTransactions = await debitQuery.getRawMany();
+
+    const calculateOpeningBalance = (transactions) =>
+      transactions.reduce(
+        (total, { exrate, amount }) => total + amount * exrate,
+        0
+      );
+
+    const openingBalanceCreditTotal =
+      calculateOpeningBalance(creditTransactions);
+    const openingBalanceDebitTotal = calculateOpeningBalance(debitTransactions);
+
+    const openingBalance = openingBalanceCreditTotal - openingBalanceDebitTotal;
 
     return {
       ...customerDetails,
