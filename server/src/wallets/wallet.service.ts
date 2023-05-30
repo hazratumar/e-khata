@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { FindManyOptions, In, IsNull, Not, Raw, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
 import { Wallet } from "./entities/wallet.entity";
@@ -72,13 +72,22 @@ export class WalletService {
 
     const skip = page * limit;
 
-    const [wallets, total] = await this.walletRepository.findAndCount({
-      where: [{ type: "Credit" }, { type: "Debit" }],
+    const query: FindManyOptions<Wallet> = {
+      where: {
+        type: In(["Credit", "Debit"]),
+        customer: {
+          name: search
+            ? Raw((alias) => `${alias} ILIKE '%${search}%'`)
+            : Not(IsNull()),
+        },
+      },
       order: { updatedAt: "DESC" },
       take: limit,
       skip: skip,
       relations: ["user", "transaction"],
-    });
+    };
+
+    const [wallets, total] = await this.walletRepository.findAndCount(query);
 
     const totalPages = Math.ceil(total / limit);
 
