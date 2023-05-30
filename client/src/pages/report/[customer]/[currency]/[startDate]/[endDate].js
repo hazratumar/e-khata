@@ -39,6 +39,13 @@ const InvoiceList = ({ customer, currency, startDate, endDate }) => {
       </Typography>
     );
   }
+  if (!data?.currency) {
+    return (
+      <Typography variant="h6" align="center">
+        We couldn't find the currency record.
+      </Typography>
+    );
+  }
 
   return <InvoicePage invoice={data} />;
 };

@@ -56,6 +56,9 @@ const InvoicePage = ({ invoice }) => {
             <TableRow>
               <TableCell>Date</TableCell>
               <TableCell>Customer</TableCell>
+              <TableCell>Currency</TableCell>
+              <TableCell>Amount</TableCell>
+              <TableCell>Ex Rate</TableCell>
               <TableCell>Debit</TableCell>
               <TableCell>Credit</TableCell>
               <TableCell>Balance</TableCell>
@@ -67,7 +70,14 @@ const InvoicePage = ({ invoice }) => {
               return (
                 <TableRow key={index}>
                   <TableCell>{dateFormat(item.date)}</TableCell>
-                  <TableCell>{`From ${item.customer} to ${item.from} ${item.currency} ${item.type}`}</TableCell>
+                  <TableCell>
+                    {item.type === "Credit"
+                      ? item.customer + " to " + item.from
+                      : item.from + " to " + item.customer}
+                  </TableCell>
+                  <TableCell>{item.currency}</TableCell>
+                  <TableCell>{item.amount}</TableCell>
+                  <TableCell>{item.exrate}</TableCell>
                   <TableCell>{item.type === "Debit" ? item.amount * item.exrate : 0}</TableCell>
                   <TableCell>{item.type === "Credit" ? item.amount * item.exrate : 0}</TableCell>
                   <TableCell>{balance}</TableCell>
