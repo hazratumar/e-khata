@@ -16,7 +16,7 @@ export function getDateRange(days) {
     startDate = subDays(today, 365);
   }
 
-  const startDateFormatted = format(startDate, DateFormat);
+  const startDateFormatted = format(startDate, DATEFORMAT);
   const endDateFormatted =
     days === 1 ? format(endDate, DATEFORMATwITHTIME) : format(endDate, DATEFORMAT);
 
