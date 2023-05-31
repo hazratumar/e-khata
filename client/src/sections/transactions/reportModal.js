@@ -49,7 +49,7 @@ export const ReportModal = () => {
     currency: null,
     startDate: null,
     endDate: null,
-    currency: true,
+    disabled: true,
     currencies: [],
   });
 
@@ -64,7 +64,7 @@ export const ReportModal = () => {
         currency: null,
         startDate: null,
         endDate: null,
-        currency: true,
+        disabled: true,
         currencies: [],
       });
     }
@@ -134,7 +134,7 @@ export const ReportModal = () => {
 
     await getCustomerKhata(value?.id);
     if (isSuccess) {
-      setState({ ...state, currency: false, currencies: data });
+      setState({ ...state, disabled: false, currencies: data });
     }
   };
 
@@ -180,7 +180,7 @@ export const ReportModal = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Autocomplete
-                      disabled={state.currency}
+                      disabled={state.disabled}
                       getOptionLabel={(option) => option?.abbreviation}
                       options={state.currencies}
                       onChange={onCurrencyChange}

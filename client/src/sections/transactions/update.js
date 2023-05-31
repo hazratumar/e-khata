@@ -100,6 +100,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     saveTransaction,
   }));
+  const getOptionLabel = (option) => option?.name || option?.abbreviation || "";
 
   return (
     <>
@@ -107,7 +108,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             value={state.creditCustomer}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={getOptionLabel}
             options={customers}
             onChange={(event, value) => setState({ ...state, creditCustomer: value })}
             renderInput={(params) => <TextField {...params} label="Credit Customer" />}
@@ -116,7 +117,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             value={state.debitCustomer}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={getOptionLabel}
             options={customers}
             onChange={(event, value) => setState({ ...state, debitCustomer: value })}
             renderInput={(params) => <TextField {...params} label="Debit Customer" />}
@@ -125,7 +126,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             value={state.currency}
-            getOptionLabel={(option) => option.abbreviation}
+            getOptionLabel={getOptionLabel}
             options={currencies}
             onChange={(event, value) => setState({ ...state, currency: value })}
             renderInput={(params) => <TextField {...params} label="Currency" />}
@@ -144,7 +145,7 @@ export const UpdateTransaction = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <Autocomplete
             value={state.exCurrency}
-            getOptionLabel={(option) => option.abbreviation}
+            getOptionLabel={getOptionLabel}
             options={currencies}
             onChange={(event, value) => setState({ ...state, exCurrency: value })}
             renderInput={(params) => <TextField {...params} label="Exchange Currency" />}
