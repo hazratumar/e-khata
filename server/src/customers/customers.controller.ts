@@ -33,6 +33,11 @@ export class CustomersController {
     return this.customersService.getBalanceOptions();
   }
 
+  @Get("detail/:id")
+  async customerDetail(@Param("id") id: string) {
+    return await this.customersService.customerDetail(+id);
+  }
+
   @Get(":page/:limit/:searchTerm?")
   findAll(
     @Param("page", ParseIntPipe) page: number,

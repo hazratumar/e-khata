@@ -5,17 +5,22 @@ import {
   Injectable,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Brackets, Repository, QueryFailedError } from "typeorm";
+import { Brackets, Repository } from "typeorm";
 import { Customer } from "./entities/customer.entity";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer";
 import { UsersService } from "src/users/users.service";
+import { Wallet } from "src/wallets/entities/wallet.entity";
+import { CurrencyService } from "src/currency/currency.service";
 
 @Injectable()
 export class CustomersService {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(Wallet)
+    private readonly walletRepository: Repository<Wallet>,
+    private readonly currencyService: CurrencyService,
     private readonly usersService: UsersService
   ) {}
 
@@ -118,6 +123,13 @@ export class CustomersService {
     return { customers, total: length, page, totalPages };
   }
 
+  async customerDetail(id: number) {
+    const customer = await this.findOne(id);
+    const stock = await this.getCustomerStock(id);
+
+    return { ...customer, stock };
+  }
+
   async findOne(id: number): Promise<Customer> {
     return this.customerRepository.findOne({ where: { id } });
   }
@@ -163,5 +175,41 @@ export class CustomersService {
     if (result.affected === 0) {
       throw new HttpException("Customer not found", HttpStatus.NOT_FOUND);
     }
+  }
+
+  async getCustomerStock(
+    id: number
+  ): Promise<{ currency: string; stock: number }[]> {
+    const stock = await this.walletRepository
+      .createQueryBuilder("wallet")
+      .leftJoin("wallet.customer", "customer")
+      .where("customer.id = :id", { id })
+      .leftJoin("wallet.transaction", "transaction")
+      .leftJoin("transaction.currency", "currency")
+      .select("currency.abbreviation", "currency")
+      .addSelect(
+        "SUM(CASE WHEN wallet.type = 'Credit' THEN -transaction.amount WHEN wallet.type = 'Withdraw' THEN -transaction.amount ELSE transaction.amount END)",
+        "amount"
+      )
+      .groupBy("currency.abbreviation")
+      .getRawMany();
+
+    const amountByCurrency: Record<string, number> = {};
+    stock.forEach((balance: { currency: string; amount: string }) => {
+      const currency = balance.currency;
+      const amount = parseFloat(balance.amount);
+
+      amountByCurrency[currency] = amount;
+    });
+
+    const currencies = await this.currencyService.getCurrenciesAbbreviation();
+
+    const allCurrenciesStock: { currency: string; stock: number }[] = [];
+    currencies.forEach((currency: string) => {
+      const stockValue = amountByCurrency[currency] || 0;
+      allCurrenciesStock.push({ currency, stock: stockValue });
+    });
+
+    return allCurrenciesStock;
   }
 }

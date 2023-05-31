@@ -52,7 +52,7 @@ export const ReportModal = () => {
   });
 
   const { customers, currencies } = useSelector((state) => state.option);
-  const [getFileUrl, { isSuccess, isLoading }] = useDownloadReportMutation();
+  const [getFileUrl, { isLoading }] = useDownloadReportMutation();
 
   const handleOpen = () => setOpen(!open);
 

@@ -13,6 +13,7 @@ import { Scrollbar } from "src/components/scrollbar";
 import { UpdateCustomer } from "src/sections/customers/update";
 import { options } from "../../utils/constant";
 import moment from "moment";
+import { ViewCustomer } from "./view";
 
 export const CustomersTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
@@ -33,6 +34,7 @@ export const CustomersTable = (props) => {
                 <TableCell>Address</TableCell>
                 <TableCell>Recent Updates</TableCell>
                 <TableCell>Update</TableCell>
+                <TableCell>View</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -50,6 +52,9 @@ export const CustomersTable = (props) => {
                   <TableCell>{moment(customer.updatedAt).fromNow()}</TableCell>
                   <TableCell>
                     <UpdateCustomer customer={customer} />
+                  </TableCell>
+                  <TableCell>
+                    <ViewCustomer id={customer.id} />
                   </TableCell>
                 </TableRow>
               ))}

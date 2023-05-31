@@ -149,7 +149,7 @@ export const AddCustomer = () => {
                     <Checkbox
                       checked={state.isSelf}
                       onChange={handleChangeCheckbox}
-                      inputProps={{ 'aria-label': 'controlled' }}
+                      inputProps={{ "aria-label": "controlled" }}
                     />
                     <span>Self-customer</span>
                   </Grid>

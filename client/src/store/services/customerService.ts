@@ -21,6 +21,13 @@ export const CustomerService = createApi({
       }),
       providesTags: ["customers"],
     }),
+    customerDetail: builder.mutation({
+      query: (id) => ({
+        url: `/customers/detail/${id}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["customers"],
+    }),
     selfCustomers: builder.query({
       query: () => ({
         url: "/customers/self",
@@ -57,5 +64,6 @@ export const {
   useAllCustomersQuery,
   useSelfCustomersQuery,
   useGetCustomersQuery,
+  useCustomerDetailMutation,
   useUpdateCustomerMutation,
 } = CustomerService;
