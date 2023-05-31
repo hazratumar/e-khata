@@ -24,11 +24,12 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "50%",
+  width: "500px",
+  height: "500px",
   backgroundColor: "#fff",
   borderRadius: "10px",
   boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
-  padding: "10px",
+  padding: "20px",
 };
 
 export const AddCustomer = () => {
@@ -111,7 +112,7 @@ export const AddCustomer = () => {
             />
             <CardContent sx={{ pt: 0 }}>
               <Box sx={{ m: -1.5 }}>
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth

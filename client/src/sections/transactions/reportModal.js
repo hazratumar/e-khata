@@ -33,13 +33,12 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "50%",
-  maxHeight: "80vh",
+  width: "380px",
+  maxHeight: "500px",
   backgroundColor: "#fff",
   borderRadius: "10px",
   boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
   padding: "20px",
-  overflowY: "auto",
 };
 
 export const ReportModal = () => {
@@ -54,7 +53,17 @@ export const ReportModal = () => {
   const { customers, currencies } = useSelector((state) => state.option);
   const [getFileUrl, { isLoading }] = useDownloadReportMutation();
 
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = () => {
+    if (open) {
+      setState({
+        customer: null,
+        currency: null,
+        startDate: null,
+        endDate: null,
+      });
+    }
+    setOpen(!open);
+  };
 
   const validateFields = (customer, currency, startDate, endDate) => {
     const validations = [
@@ -141,7 +150,7 @@ export const ReportModal = () => {
               />
               <CardContent>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <Autocomplete
                       getOptionLabel={(option) => option.name}
                       options={customers}
@@ -149,7 +158,7 @@ export const ReportModal = () => {
                       renderInput={(params) => <TextField {...params} label="Customer" />}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <Autocomplete
                       getOptionLabel={(option) => option.abbreviation}
                       options={currencies}
@@ -157,7 +166,7 @@ export const ReportModal = () => {
                       renderInput={(params) => <TextField {...params} label="Currency" />}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -168,7 +177,7 @@ export const ReportModal = () => {
                       </LocalizationProvider>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker

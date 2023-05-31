@@ -26,12 +26,12 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "40%",
-  height: "85vh",
+  width: "360px",
+  height: "500px",
   backgroundColor: "#fff",
   borderRadius: "10px",
   boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
-  padding: "20px",
+  padding: "10px",
 };
 
 export const BalanceModal = ({ balanceId }) => {
@@ -120,7 +120,7 @@ export const BalanceModal = ({ balanceId }) => {
               sx={{ width: "100%" }}
             />
             <CardContent sx={{ pt: 0 }}>
-              <Box sx={{ m: -1.5 }}>
+              <Box>
                 {balanceId ? (
                   <UpdateBalance ref={updateBalanceRef} balanceId={balanceId} />
                 ) : modalType === "deposit" ? (

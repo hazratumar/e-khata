@@ -46,6 +46,13 @@ const InvoiceList = ({ customer, currency, startDate, endDate }) => {
       </Typography>
     );
   }
+  if (data?.result.length === 0) {
+    return (
+      <Typography variant="h6" align="center">
+        No records found in this date range.
+      </Typography>
+    );
+  }
 
   return <InvoicePage invoice={data} />;
 };

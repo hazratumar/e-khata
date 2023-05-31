@@ -24,11 +24,12 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "50%",
+  width: "400px",
+  height: "460px",
   backgroundColor: "#fff",
   borderRadius: "10px",
   boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
-  padding: "10px",
+  padding: "20px",
 };
 
 export const UpdateExpenseItem = (props) => {
@@ -107,8 +108,8 @@ export const UpdateExpenseItem = (props) => {
             />
             <CardContent sx={{ pt: 0 }}>
               <Box sx={{ m: -1.5 }}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       value={state.name}
@@ -117,7 +118,7 @@ export const UpdateExpenseItem = (props) => {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <TextField
                       type="number"
                       fullWidth
@@ -144,7 +145,7 @@ export const UpdateExpenseItem = (props) => {
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
               <Button onClick={handleSubmit} variant="contained" color="primary">
-                {isLoading ? "Loading..." : "Update ExpenseItem"}
+                {isLoading ? "Loading..." : "Update Expense Item"}
               </Button>
             </CardActions>
           </Box>

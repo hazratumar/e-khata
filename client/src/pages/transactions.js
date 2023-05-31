@@ -6,7 +6,7 @@ import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
 import { useGetTransactionsQuery } from "src/store/services/transactionService";
 import { TransactionModal } from "src/sections/transactions/modal";
-import { ReportModal } from "src/sections/transactions/report";
+import { ReportModal } from "src/sections/transactions/reportModal";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import { setCustomerOptions, setCurrencyOptions } from "src/store/reducers/optionsSlice";
@@ -73,7 +73,7 @@ const Page = () => {
               <Typography variant="h4">Transactions</Typography>
               <TransactionModal />
             </Stack>
-            <Search onSearch={onSearch} item="transactions" report={<ReportModal />} />
+            <Search onSearch={onSearch} item="transactions" reportModal={<ReportModal />} />
             <TransactionsTable
               page={state.page}
               rowsPerPage={state.rowsPerPage}
