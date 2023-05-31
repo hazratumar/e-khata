@@ -1,3 +1,14 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
+const serverUrl = new URL(process.env.SERVER_URL).hostname;
+
 module.exports = {
-  reactStrictMode: true
+  reactStrictMode: true,
+  env: {
+    SERVER_URL: process.env.SERVER_URL,
+  },
+  images: {
+    domains: [serverUrl],
+  },
 };

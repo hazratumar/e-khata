@@ -22,6 +22,8 @@ import { PrinterModule } from "./printer/printer.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { ReportModule } from "./report/report.module";
+import { DatabaseModule } from "./database/database.modules";
+import { ConfigModule } from "./config/config.module";
 
 @Module({
   imports: [
@@ -29,32 +31,8 @@ import { ReportModule } from "./report/report.module";
       serveRoot: "/assets",
       rootPath: join(__dirname, "assets"),
     }),
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "postgres",
-      password: "1234",
-      database: "e-khata",
-      entities: [
-        User,
-        Customer,
-        Currency,
-        Wallet,
-        Transaction,
-        ExpenseItem,
-        Expense,
-      ],
-      synchronize: true,
-    }),
-    TypeOrmModule.forFeature([
-      User,
-      Customer,
-      Currency,
-      Transaction,
-      ExpenseItem,
-      Expense,
-    ]),
+    ConfigModule,
+    DatabaseModule,
     AuthModule,
     UserModule,
     CustomerModule,

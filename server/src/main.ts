@@ -1,17 +1,26 @@
+import { Logger, ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
-import { ValidationPipe } from "@nestjs/common";
-import { Logger } from "@nestjs/common";
-import { AppModule } from "./app.module";
-import * as dotenv from "dotenv";
-const cors = require("cors");
+import { NestExpressApplication } from "@nestjs/platform-express";
 
-async function bootstrap() {
-  dotenv.config();
-  const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
-  app.use(cors());
-  const port = process.env.SERVER_PORT;
-  await app.listen(port);
-  Logger.log(`Server is up and running! 🚀 🚀 🚀`, port);
-}
+import { AppModule } from "./app.module";
+
+const bootstrap = async () => {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const configService = app.get(ConfigService);
+
+  const appUrl = configService.get<any>("app.clientUrl");
+
+  // Middleware
+  app.enableCors({ origin: [appUrl], credentials: true });
+  app.enableShutdownHooks();
+
+  // Pipes
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  // Server Port
+  const serverPort = configService.get<number>("app.serverPort");
+  await app.listen(serverPort);
+  Logger.log(`Server is up and running! 🚀 🚀 🚀`, serverPort);
+};
 bootstrap();

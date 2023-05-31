@@ -26,10 +26,13 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
     startDate: Date,
     endDate: Date
   ): Promise<{ url: string }> {
+    const clientUrl = this.configService.get<string>("app.clientUrl");
+    const serverUrl = this.configService.get<string>("app.serverUrl");
+
     const directory = join(__dirname, "..", "assets/customer");
     const filename = `Report-${startDate}-${endDate}.pdf`;
     const fileUrl = {
-      url: `http://localhost:3001/assets/customer/${filename}`,
+      url: `${serverUrl}/assets/customer/${filename}`,
     };
 
     const browser = await chromium.launch();
@@ -48,7 +51,7 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
     }
 
     await page.goto(
-      `http://localhost:3000/report/${customer}/${currency}/${startDate}/${endDate}`
+      `${clientUrl}/report/${customer}/${currency}/${startDate}/${endDate}`
     );
     await page.waitForLoadState("networkidle");
     await page.pdf({ path: filePath, format: "a4" });

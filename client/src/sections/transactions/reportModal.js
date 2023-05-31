@@ -28,6 +28,7 @@ import { CloudDownload, RotateLeft } from "@material-ui/icons";
 import { useDownloadReportMutation } from "src/store/services/printerService";
 import { useCustomerKhataMutation } from "src/store/services/customerService";
 import download from "downloadjs";
+import { useEffect } from "react";
 
 const style = {
   position: "absolute",
@@ -43,14 +44,14 @@ const style = {
 };
 
 export const ReportModal = () => {
+  const [disabled, setDisabled] = useState(true);
+  const [currencies, setCurrencies] = useState([]);
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
     customer: null,
     currency: null,
     startDate: null,
     endDate: null,
-    disabled: true,
-    currencies: [],
   });
 
   const { customers } = useSelector((state) => state.option);
@@ -64,9 +65,9 @@ export const ReportModal = () => {
         currency: null,
         startDate: null,
         endDate: null,
-        disabled: true,
-        currencies: [],
       });
+      setDisabled(true);
+      setCurrencies([]);
     }
     setOpen(!open);
   };
@@ -130,17 +131,20 @@ export const ReportModal = () => {
   };
 
   const onCustomerChange = async (e, value) => {
+    await setCurrencies([]);
     setState((prevState) => ({ ...prevState, customer: value }));
 
-    await getCustomerKhata(value?.id);
-    if (isSuccess) {
-      setState({ ...state, disabled: false, currencies: data });
-    }
+    getCustomerKhata(value?.id);
   };
 
   const onCurrencyChange = (e, value) => {
     setState((prevState) => ({ ...prevState, currency: value }));
   };
+
+  useEffect(() => {
+    setDisabled(false);
+    setCurrencies(data);
+  }, [data]);
 
   return (
     <div>
@@ -171,7 +175,7 @@ export const ReportModal = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Autocomplete
-                      clearIcon
+                      disableClearable={true}
                       getOptionLabel={(option) => option?.name}
                       options={customers}
                       onChange={onCustomerChange}
@@ -180,9 +184,9 @@ export const ReportModal = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Autocomplete
-                      disabled={state.disabled}
+                      disabled={disabled}
                       getOptionLabel={(option) => option?.abbreviation}
-                      options={state.currencies}
+                      options={currencies}
                       onChange={onCurrencyChange}
                       renderInput={(params) => <TextField {...params} label="Khata" />}
                     />

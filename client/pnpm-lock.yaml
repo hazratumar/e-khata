@@ -40,6 +40,9 @@ dependencies:
   dayjs:
     specifier: ^1.11.7
     version: 1.11.7
+  dotenv:
+    specifier: ^16.1.2
+    version: 16.1.2
   downloadjs:
     specifier: ^1.4.7
     version: 1.4.7
@@ -1439,6 +1442,11 @@ packages:
     dependencies:
       '@babel/runtime': 7.21.0
       csstype: 3.1.2
+    dev: false
+
+  /dotenv@16.1.2:
+    resolution: {integrity: sha512-RiNjjDF5yr9NtjqJqmWYA/XZShmt3r8FtJgAaqTiYqb99SqT0+aw5xAwOIvjMyXsH/C9/fLNafFkkZDwRi1KHA==}
+    engines: {node: '>=12'}
     dev: false
 
   /downloadjs@1.4.7:

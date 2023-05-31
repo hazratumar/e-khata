@@ -25,6 +25,7 @@
     "apexcharts": "3.37.3",
     "date-fns": "2.29.3",
     "dayjs": "^1.11.7",
+    "dotenv": "^16.1.2",
     "downloadjs": "^1.4.7",
     "formik": "2.2.9",
     "joi": "^17.9.1",

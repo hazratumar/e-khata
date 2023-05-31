@@ -46,7 +46,9 @@ const InvoicePage = ({ invoice }) => {
         </Box>
         <Box>
           <Typography variant="subtitle1">{`Opening Balance: ${abbreviation} ${openingBalance}`}</Typography>
-          <Typography variant="body2">{`Date: ${startDate} to ${endDate}`}</Typography>
+          <Typography variant="body2">{`Date: ${dateFormat(startDate)} to ${dateFormat(
+            endDate
+          )}`}</Typography>
         </Box>
       </Box>
 

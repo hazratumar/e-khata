@@ -14,7 +14,11 @@ import { useDispatch } from "react-redux";
 
 const Page = () => {
   const dispatch = useDispatch();
+  const SERVER_URL = process.env.SECRET_KEY;
 
+  console.log("====================================");
+  console.log(SERVER_URL);
+  console.log("====================================");
   const [state, setState] = useState({
     page: 0,
     rowsPerPage: 10,
