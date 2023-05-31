@@ -69,9 +69,7 @@ const Page = () => {
         <Container maxWidth="xl">
           <Stack spacing={2}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
-              <Stack spacing={1}>
-                <Typography variant="h4">Balance</Typography>
-              </Stack>
+              <Typography variant="h4">Balance</Typography>
               <BalanceModal />
             </Stack>
             <Search onSearch={onSearch} item="balance" />
