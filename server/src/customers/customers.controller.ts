@@ -33,9 +33,14 @@ export class CustomersController {
     return this.customersService.getBalanceOptions();
   }
 
+  @Get("khata/:id")
+  customerKhata(@Param("id") id: string) {
+    return this.customersService.customerKhata(+id);
+  }
+
   @Get("detail/:id")
-  async customerDetail(@Param("id") id: string) {
-    return await this.customersService.customerDetail(+id);
+  customerDetail(@Param("id") id: string) {
+    return this.customersService.customerDetail(+id);
   }
 
   @Get(":page/:limit/:searchTerm?")

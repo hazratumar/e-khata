@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Fade,
@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import { getDate, validate } from "src/utils/generic-functions";
 import { CloudDownload, RotateLeft } from "@material-ui/icons";
 import { useDownloadReportMutation } from "src/store/services/printerService";
+import { useCustomerKhataMutation } from "src/store/services/customerService";
 import download from "downloadjs";
 
 const style = {
@@ -48,10 +49,13 @@ export const ReportModal = () => {
     currency: null,
     startDate: null,
     endDate: null,
+    currency: true,
+    currencies: [],
   });
 
-  const { customers, currencies } = useSelector((state) => state.option);
+  const { customers } = useSelector((state) => state.option);
   const [getFileUrl, { isLoading }] = useDownloadReportMutation();
+  const [getCustomerKhata, { isSuccess, data }] = useCustomerKhataMutation();
 
   const handleOpen = () => {
     if (open) {
@@ -60,6 +64,8 @@ export const ReportModal = () => {
         currency: null,
         startDate: null,
         endDate: null,
+        currency: true,
+        currencies: [],
       });
     }
     setOpen(!open);
@@ -123,10 +129,23 @@ export const ReportModal = () => {
     setState((prevState) => ({ ...prevState, endDate: date }));
   };
 
+  const onCustomerChange = async (e, value) => {
+    setState((prevState) => ({ ...prevState, customer: value }));
+
+    await getCustomerKhata(value?.id);
+    if (isSuccess) {
+      setState({ ...state, currency: false, currencies: data });
+    }
+  };
+
+  const onCurrencyChange = (e, value) => {
+    setState((prevState) => ({ ...prevState, currency: value }));
+  };
+
   return (
     <div>
       <Button startIcon={<LibraryBooks />} onClick={handleOpen}>
-        Report
+        Customer Khata
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -139,7 +158,7 @@ export const ReportModal = () => {
           <Box sx={style}>
             <Card>
               <CardHeader
-                title="Customer Report"
+                title="Customer Khata"
                 action={
                   <IconButton aria-label="close" onClick={handleOpen}>
                     <SvgIcon fontSize="small">
@@ -152,18 +171,20 @@ export const ReportModal = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Autocomplete
-                      getOptionLabel={(option) => option.name}
+                      clearIcon
+                      getOptionLabel={(option) => option?.name}
                       options={customers}
-                      onChange={(event, value) => setState({ ...state, customer: value })}
+                      onChange={onCustomerChange}
                       renderInput={(params) => <TextField {...params} label="Customer" />}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <Autocomplete
-                      getOptionLabel={(option) => option.abbreviation}
-                      options={currencies}
-                      onChange={(event, value) => setState({ ...state, currency: value })}
-                      renderInput={(params) => <TextField {...params} label="Currency" />}
+                      disabled={state.currency}
+                      getOptionLabel={(option) => option?.abbreviation}
+                      options={state.currencies}
+                      onChange={onCurrencyChange}
+                      renderInput={(params) => <TextField {...params} label="Khata" />}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -195,6 +216,7 @@ export const ReportModal = () => {
                 <Stack direction="row" spacing={2}>
                   <Button
                     variant="outlined"
+                    size="small"
                     startIcon={isLoading ? <RotateLeft /> : <CloudDownload />}
                     onClick={onDownloadReport}
                   >

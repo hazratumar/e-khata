@@ -28,6 +28,13 @@ export const CustomerService = createApi({
       }),
       invalidatesTags: ["customers"],
     }),
+    customerKhata: builder.mutation({
+      query: (id) => ({
+        url: `/customers/khata/${id}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["customers"],
+    }),
     selfCustomers: builder.query({
       query: () => ({
         url: "/customers/self",
@@ -65,5 +72,6 @@ export const {
   useSelfCustomersQuery,
   useGetCustomersQuery,
   useCustomerDetailMutation,
+  useCustomerKhataMutation,
   useUpdateCustomerMutation,
 } = CustomerService;
