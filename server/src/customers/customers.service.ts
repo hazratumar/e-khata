@@ -213,6 +213,23 @@ export class CustomersService {
     return allCurrenciesStock;
   }
 
+  async customerHistory(
+    id: number
+  ): Promise<{ id: number; currency: string }[]> {
+    const currencies = await this.walletRepository
+      .createQueryBuilder("wallet")
+      .leftJoinAndSelect("wallet.customer", "customer")
+      .leftJoinAndSelect("wallet.transaction", "transaction")
+      .leftJoinAndSelect("transaction.exCurrency", "exCurrency")
+      .select("exCurrency.id", "id")
+      .addSelect("exCurrency.abbreviation", "abbreviation")
+      .where("customer.id = :id", { id })
+      .andWhere("transaction.exCurrency IS NOT NULL")
+      .groupBy("exCurrency.id, exCurrency.abbreviation")
+      .getRawMany();
+
+    return currencies;
+  }
   async customerKhata(id: number): Promise<{ id: number; currency: string }[]> {
     const currencies = await this.walletRepository
       .createQueryBuilder("wallet")

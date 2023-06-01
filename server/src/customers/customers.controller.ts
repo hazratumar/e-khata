@@ -33,6 +33,10 @@ export class CustomersController {
     return this.customersService.getBalanceOptions();
   }
 
+  @Get("history/:id")
+  customerHistory(@Param("id") id: string) {
+    return this.customersService.customerHistory(+id);
+  }
   @Get("khata/:id")
   customerKhata(@Param("id") id: string) {
     return this.customersService.customerKhata(+id);
