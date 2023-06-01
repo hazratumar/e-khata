@@ -37,11 +37,13 @@ const style = {
 };
 
 export const FilterModal = ({ filterDashboard }) => {
+  const startDate = new Date(1 - 1 - 1900);
+  const endDate = new Date();
   const [open, setOpen] = useState(false);
   const [selection, setSelection] = useState("static");
   const [selectedOption, setSelectedOption] = useState(1);
-  const [customStartDate, setCustomStartDate] = useState(null);
-  const [customEndDate, setCustomEndDate] = useState(null);
+  const [customStartDate, setCustomStartDate] = useState(startDate);
+  const [customEndDate, setCustomEndDate] = useState(endDate);
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
