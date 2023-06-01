@@ -1,9 +1,9 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import InvoicePage from "src/sections/report/invoicePage";
-import { useCustomerReportQuery } from "src/store/services/printerService";
+import HistoryPage from "src/sections/report/historyPage";
+import { useCustomerHistoryQuery } from "src/store/services/reportService";
 
-const InvoiceList = ({ customer, currency, startDate, endDate }) => {
-  const { data, isLoading, error } = useCustomerReportQuery({
+const HistoryList = ({ customer, currency, startDate, endDate }) => {
+  const { data, isLoading, error } = useCustomerHistoryQuery({
     customer,
     currency,
     startDate,
@@ -54,7 +54,7 @@ const InvoiceList = ({ customer, currency, startDate, endDate }) => {
     );
   }
 
-  return <InvoicePage invoice={data} />;
+  return <HistoryPage invoice={data} />;
 };
 
 export async function getServerSideProps({ query }) {
@@ -70,4 +70,4 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default InvoiceList;
+export default HistoryList;

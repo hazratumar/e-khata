@@ -1,18 +1,18 @@
 import { Controller, Get, Param } from "@nestjs/common";
-import { ReportService } from "./report.service";
+import { DownloadService } from "./download.service";
 
-@Controller("report")
-export class ReportController {
-  constructor(private readonly reportService: ReportService) {}
+@Controller("download")
+export class DownloadController {
+  constructor(private readonly downloadService: DownloadService) {}
 
   @Get("history/:customer/:currency/:startDate/:endDate")
-  customerHistory(
+  downloadHistory(
     @Param("customer") customer: number,
     @Param("currency") currency: number,
     @Param("startDate") startDate: Date,
     @Param("endDate") endDate: Date
   ) {
-    return this.reportService.customerHistory(
+    return this.downloadService.downloadHistory(
       customer,
       currency,
       startDate,
@@ -20,13 +20,13 @@ export class ReportController {
     );
   }
   @Get("khata/:customer/:currency/:startDate/:endDate")
-  customerKhata(
+  downloadKhata(
     @Param("customer") customer: number,
     @Param("currency") currency: number,
     @Param("startDate") startDate: Date,
     @Param("endDate") endDate: Date
   ) {
-    return this.reportService.customerKhata(
+    return this.downloadService.downloadKhata(
       customer,
       currency,
       startDate,

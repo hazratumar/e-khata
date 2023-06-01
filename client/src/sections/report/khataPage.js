@@ -12,7 +12,7 @@ import {
 import Image from "next/image";
 import { dateFormat } from "../../utils/generic-functions";
 
-const InvoicePage = ({ invoice }) => {
+const KhataPage = ({ invoice }) => {
   const { name, address, currency, abbreviation, openingBalance, startDate, endDate, result } =
     invoice;
 
@@ -121,4 +121,4 @@ const InvoicePage = ({ invoice }) => {
   );
 };
 
-export default InvoicePage;
+export default KhataPage;

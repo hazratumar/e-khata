@@ -28,6 +28,13 @@ export const CustomerService = createApi({
       }),
       invalidatesTags: ["customers"],
     }),
+    customerHistory: builder.mutation({
+      query: (id) => ({
+        url: `/customers/history/${id}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["customers"],
+    }),
     customerKhata: builder.mutation({
       query: (id) => ({
         url: `/customers/khata/${id}`,
@@ -73,5 +80,6 @@ export const {
   useGetCustomersQuery,
   useCustomerDetailMutation,
   useCustomerKhataMutation,
+  useCustomerHistoryMutation,
   useUpdateCustomerMutation,
 } = CustomerService;

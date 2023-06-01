@@ -18,14 +18,13 @@ import {
 } from "@mui/material";
 
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { LibraryBooks } from "@material-ui/icons";
 import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { getDate, validate } from "src/utils/generic-functions";
 import { CloudDownload, RotateLeft } from "@material-ui/icons";
-import { useDownloadReportMutation } from "src/store/services/printerService";
+import { useDownloadKhataMutation } from "src/store/services/reportService";
 import { useCustomerKhataMutation } from "src/store/services/customerService";
 import download from "downloadjs";
 import { useEffect } from "react";
@@ -43,7 +42,7 @@ const style = {
   padding: "20px",
 };
 
-export const ReportModal = () => {
+export const KhataModal = () => {
   const [disabled, setDisabled] = useState(true);
   const [currencies, setCurrencies] = useState([]);
   const [open, setOpen] = useState(false);
@@ -55,8 +54,8 @@ export const ReportModal = () => {
   });
 
   const { customers } = useSelector((state) => state.option);
-  const [getFileUrl, { isLoading }] = useDownloadReportMutation();
-  const [getCustomerKhata, { isSuccess, data }] = useCustomerKhataMutation();
+  const [getFileUrl, { isLoading }] = useDownloadKhataMutation();
+  const [getCustomerKhata, { data }] = useCustomerKhataMutation();
 
   const handleOpen = () => {
     if (open) {
@@ -97,7 +96,7 @@ export const ReportModal = () => {
     if (validateFields(customer, currency, startDate, endDate)) {
       const formattedStartDate = getDate(startDate);
       const formattedEndDate = getDate(endDate);
-      const nextPageUrl = `/report/${customer.id}/${currency.id}/${formattedStartDate}/${formattedEndDate}`;
+      const nextPageUrl = `/khata/${customer.id}/${currency.id}/${formattedStartDate}/${formattedEndDate}`;
       window.open(nextPageUrl, "_blank");
     }
   };
@@ -148,9 +147,7 @@ export const ReportModal = () => {
 
   return (
     <div>
-      <Button startIcon={<LibraryBooks />} onClick={handleOpen}>
-        Customer Khata
-      </Button>
+      <Button onClick={handleOpen}>Khata</Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

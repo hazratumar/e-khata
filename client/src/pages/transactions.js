@@ -6,11 +6,12 @@ import { TransactionsTable } from "src/sections/transactions/table";
 import { Search } from "src/components/search";
 import { useGetTransactionsQuery } from "src/store/services/transactionService";
 import { TransactionModal } from "src/sections/transactions/modal";
-import { ReportModal } from "src/sections/transactions/reportModal";
 import { useAllCustomersQuery } from "src/store/services/customerService";
 import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import { setCustomerOptions, setCurrencyOptions } from "src/store/reducers/optionsSlice";
 import { useDispatch } from "react-redux";
+import { KhataModal } from "src/sections/transactions/khataModal";
+import { HistoryModal } from "../sections/transactions/historyModal";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -77,7 +78,12 @@ const Page = () => {
               <Typography variant="h4">Transactions</Typography>
               <TransactionModal />
             </Stack>
-            <Search onSearch={onSearch} item="transactions" reportModal={<ReportModal />} />
+            <Search
+              onSearch={onSearch}
+              item="transactions"
+              historyModal={<HistoryModal />}
+              khataModal={<KhataModal />}
+            />
             <TransactionsTable
               page={state.page}
               rowsPerPage={state.rowsPerPage}

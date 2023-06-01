@@ -5,7 +5,7 @@ import { Browser, chromium } from "playwright-chromium";
 import { readdirSync, unlinkSync } from "fs";
 
 @Injectable()
-export class PrinterService implements OnModuleInit, OnModuleDestroy {
+export class DownloadService implements OnModuleInit, OnModuleDestroy {
   private browser: Browser;
 
   constructor(private readonly configService: ConfigService) {}
@@ -20,7 +20,7 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
     await this.browser.close();
   }
 
-  async printCustomerReport(
+  async downloadHistory(
     customer: number,
     currency: number,
     startDate: Date,
@@ -29,10 +29,10 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
     const clientUrl = this.configService.get<string>("app.clientUrl");
     const serverUrl = this.configService.get<string>("app.serverUrl");
 
-    const directory = join(__dirname, "..", "assets/customer");
+    const directory = join(__dirname, "..", "assets/history");
     const filename = `Report-${startDate}-${endDate}.pdf`;
     const fileUrl = {
-      url: `${serverUrl}/assets/customer/${filename}`,
+      url: `${serverUrl}/assets/history/${filename}`,
     };
 
     const browser = await chromium.launch();
@@ -51,7 +51,46 @@ export class PrinterService implements OnModuleInit, OnModuleDestroy {
     }
 
     await page.goto(
-      `${clientUrl}/report/${customer}/${currency}/${startDate}/${endDate}`
+      `${clientUrl}/history/${customer}/${currency}/${startDate}/${endDate}`
+    );
+    await page.waitForLoadState("networkidle");
+    await page.pdf({ path: filePath, format: "a4" });
+
+    await browser.close();
+    return fileUrl;
+  }
+  async downloadKhata(
+    customer: number,
+    currency: number,
+    startDate: Date,
+    endDate: Date
+  ): Promise<{ url: string }> {
+    const clientUrl = this.configService.get<string>("app.clientUrl");
+    const serverUrl = this.configService.get<string>("app.serverUrl");
+
+    const directory = join(__dirname, "..", "assets/khata");
+    const filename = `Report-${startDate}-${endDate}.pdf`;
+    const fileUrl = {
+      url: `${serverUrl}/assets/khata/${filename}`,
+    };
+
+    const browser = await chromium.launch();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    const filePath = join(directory, filename);
+
+    // Unlink (delete) all existing files in the directory
+    const files = readdirSync(directory);
+    if (files) {
+      await files.forEach(async (file) => {
+        const filePath = join(directory, file);
+        await unlinkSync(filePath);
+      });
+    }
+
+    await page.goto(
+      `${clientUrl}/khata/${customer}/${currency}/${startDate}/${endDate}`
     );
     await page.waitForLoadState("networkidle");
     await page.pdf({ path: filePath, format: "a4" });
