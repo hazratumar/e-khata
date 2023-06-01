@@ -22,7 +22,7 @@ export const ReportService = createApi({
     }),
     customerHistory: builder.query({
       query: ({ customer, currency, startDate, endDate }) => ({
-        url: `/report/khata/${customer}/${currency}/${startDate}/${endDate}`,
+        url: `/report/history/${customer}/${currency}/${startDate}/${endDate}`,
         method: "GET",
       }),
       providesTags: ["report"],

@@ -21,10 +21,8 @@ const KhataPage = ({ invoice }) => {
 
     for (let i = 0; i < rows.length; i++) {
       const currentItem = rows[i];
-      const creditAmount =
-        currentItem.type === "Credit" ? currentItem.amount * currentItem.exrate : 0;
-      const debitAmount =
-        currentItem.type === "Debit" ? currentItem.amount * currentItem.exrate : 0;
+      const creditAmount = currentItem.type === "Credit" ? currentItem.calculatedamount : 0;
+      const debitAmount = currentItem.type === "Debit" ? currentItem.calculatedamount : 0;
 
       balance += creditAmount - debitAmount;
     }
@@ -33,20 +31,19 @@ const KhataPage = ({ invoice }) => {
   };
   return (
     <Box p={4}>
-      <Box display="flex" justifyContent="space-between" mb={3}>
-        <Typography variant="h4">Rahat Shinwari Enterprises</Typography>
-        <Image src="/assets/logos/logo.png" alt="Logo" width={85} height={80} />
-      </Box>
+      <Typography variant="h4" gutterBottom>
+        Customers Khata
+      </Typography>
 
-      <Box display="flex" justifyContent="space-between" mb={2}>
+      <Box marginBottom={2} display="flex" justifyContent="space-between">
         <Box>
           <Typography variant="subtitle1">{`Customer: ${name}`}</Typography>
           <Typography variant="body2">{`Address: ${address}`}</Typography>
-          <Typography variant="body2">{`Currency: ${currency}`}</Typography>
+          <Typography variant="body2">{`Currency: ${currency} (${abbreviation})`}</Typography>
         </Box>
         <Box>
           <Typography variant="subtitle1">{`Opening Balance: ${abbreviation} ${openingBalance}`}</Typography>
-          <Typography variant="body2">{`Date: ${dateFormat(startDate)} to ${dateFormat(
+          <Typography variant="body2">{`Period from: ${dateFormat(startDate)} to ${dateFormat(
             endDate
           )}`}</Typography>
         </Box>
@@ -60,7 +57,7 @@ const KhataPage = ({ invoice }) => {
               <TableCell>Customer</TableCell>
               <TableCell>Currency</TableCell>
               <TableCell>Amount</TableCell>
-              <TableCell>Ex Rate</TableCell>
+              <TableCell>Rate</TableCell>
               <TableCell>Debit</TableCell>
               <TableCell>Credit</TableCell>
               <TableCell>Balance</TableCell>
@@ -80,8 +77,8 @@ const KhataPage = ({ invoice }) => {
                   <TableCell>{item.currency}</TableCell>
                   <TableCell>{item.amount}</TableCell>
                   <TableCell>{item.exrate}</TableCell>
-                  <TableCell>{item.type === "Debit" ? item.amount * item.exrate : 0}</TableCell>
-                  <TableCell>{item.type === "Credit" ? item.amount * item.exrate : 0}</TableCell>
+                  <TableCell>{item.type === "Debit" ? item.calculatedamount : 0}</TableCell>
+                  <TableCell>{item.type === "Credit" ? item.calculatedamount : 0}</TableCell>
                   <TableCell>{balance}</TableCell>
                 </TableRow>
               );
@@ -91,28 +88,28 @@ const KhataPage = ({ invoice }) => {
             <TableRow>
               <TableCell align="right">Total Debits:</TableCell>
               <TableCell>
-                {result.reduce((sum, item) => {
+                {`${abbreviation} ${result.reduce((sum, item) => {
                   if (item.type === "Debit") {
-                    return sum + item.amount * item.exrate;
+                    return sum + item.calculatedamount;
                   }
                   return sum;
-                }, 0)}
+                }, 0)}`}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell align="right">Total Credits:</TableCell>
               <TableCell>
-                {result.reduce((sum, item) => {
+                {`${abbreviation} ${result.reduce((sum, item) => {
                   if (item.type === "Credit") {
-                    return sum + item.amount * item.exrate;
+                    return sum + item.calculatedamount;
                   }
                   return sum;
-                }, 0)}
-              </TableCell>{" "}
+                }, 0)}`}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell align="right">Closing Balance:</TableCell>
-              <TableCell>{calculateBalance(result)}</TableCell>
+              <TableCell>{`${abbreviation} ${calculateBalance(result)}`}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>

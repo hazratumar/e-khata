@@ -43,14 +43,17 @@ const style = {
 };
 
 export const KhataModal = () => {
+  const startDate = new Date(1 - 1 - 1900);
+  const endDate = new Date();
+
   const [disabled, setDisabled] = useState(true);
   const [currencies, setCurrencies] = useState([]);
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
     customer: null,
     currency: null,
-    startDate: null,
-    endDate: null,
+    startDate,
+    endDate,
   });
 
   const { customers } = useSelector((state) => state.option);
@@ -62,8 +65,8 @@ export const KhataModal = () => {
       setState({
         customer: null,
         currency: null,
-        startDate: null,
-        endDate: null,
+        startDate,
+        endDate,
       });
       setDisabled(true);
       setCurrencies([]);

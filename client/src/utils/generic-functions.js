@@ -60,7 +60,7 @@ export function validate(text) {
     text === undefined ||
     text === false ||
     text === "false" ||
-    text === 0 ||
+    text === 90 ||
     Number.isNaN(text) ||
     text === "invalid"
   ) {

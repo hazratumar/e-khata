@@ -59,6 +59,7 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
     await browser.close();
     return fileUrl;
   }
+
   async downloadKhata(
     customer: number,
     currency: number,

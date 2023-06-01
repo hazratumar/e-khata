@@ -25,9 +25,7 @@ import { useSelector } from "react-redux";
 import { getDate, validate } from "src/utils/generic-functions";
 import { CloudDownload, RotateLeft } from "@material-ui/icons";
 import { useDownloadHistoryMutation } from "src/store/services/reportService";
-import { useCustomerHistoryMutation } from "src/store/services/customerService";
 import download from "downloadjs";
-import { useEffect } from "react";
 
 const style = {
   position: "absolute",
@@ -43,30 +41,28 @@ const style = {
 };
 
 export const HistoryModal = () => {
-  const [disabled, setDisabled] = useState(true);
-  const [currencies, setCurrencies] = useState([]);
+  const startDate = new Date(1 - 1 - 1900);
+  const endDate = new Date();
+
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
     customer: null,
     currency: null,
-    startDate: null,
-    endDate: null,
+    startDate,
+    endDate,
   });
 
-  const { customers } = useSelector((state) => state.option);
+  const { customers, currencies } = useSelector((state) => state.option);
   const [getFileUrl, { isLoading }] = useDownloadHistoryMutation();
-  const [getCustomerhistory, { data }] = useCustomerHistoryMutation();
 
   const handleOpen = () => {
     if (open) {
       setState({
         customer: null,
         currency: null,
-        startDate: null,
-        endDate: null,
+        startDate,
+        endDate,
       });
-      setDisabled(true);
-      setCurrencies([]);
     }
     setOpen(!open);
   };
@@ -130,20 +126,12 @@ export const HistoryModal = () => {
   };
 
   const onCustomerChange = async (e, value) => {
-    await setCurrencies([]);
     setState((prevState) => ({ ...prevState, customer: value }));
-
-    getCustomerhistory(value?.id);
   };
 
   const onCurrencyChange = (e, value) => {
     setState((prevState) => ({ ...prevState, currency: value }));
   };
-
-  useEffect(() => {
-    setDisabled(false);
-    setCurrencies(data);
-  }, [data]);
 
   return (
     <div>
@@ -172,7 +160,6 @@ export const HistoryModal = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Autocomplete
-                      disableClearable={true}
                       getOptionLabel={(option) => option?.name}
                       options={customers}
                       onChange={onCustomerChange}
@@ -181,7 +168,6 @@ export const HistoryModal = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Autocomplete
-                      disabled={disabled}
                       getOptionLabel={(option) => option?.abbreviation}
                       options={currencies}
                       onChange={onCurrencyChange}

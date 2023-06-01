@@ -19,24 +19,38 @@ export class ReportService {
     startDate: Date,
     endDate: Date
   ) {
-    const customerDetails = await this.customerRepository
+    let customerQueryBuilder = this.customerRepository
       .createQueryBuilder("customer")
-      .select(["customer.name AS name", "customer.address AS address"])
-      .where("customer.id = :customerId", { customerId })
-      .getRawOne();
+      .select(["customer.name AS name", "customer.address AS address"]);
 
-    const currency = await this.walletRepository
+    if (customerId !== 0) {
+      customerQueryBuilder = customerQueryBuilder.where(
+        "customer.id = :customerId",
+        { customerId }
+      );
+    }
+
+    const customerDetails = await customerQueryBuilder.getRawOne();
+
+    let currencyQueryBuilder = this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
-      .leftJoin("transaction.exCurrency", "currency")
+      .leftJoin("transaction.currency", "currency")
       .select([
         "currency.name AS currency",
         "currency.abbreviation AS abbreviation",
-      ])
-      .where("currency.id = :currencyId", { currencyId })
-      .getRawOne();
+      ]);
 
-    const result = await this.walletRepository
+    if (currencyId !== 0) {
+      currencyQueryBuilder = currencyQueryBuilder.where(
+        "currency.id = :currencyId",
+        { currencyId }
+      );
+    }
+
+    const currency = await currencyQueryBuilder.getRawOne();
+
+    let walletQueryBuilder = this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
       .leftJoin("wallet.customer", "customer")
@@ -49,73 +63,40 @@ export class ReportService {
         "from.name AS from",
         "wallet.type AS type",
         "currency.abbreviation AS currency",
+        "exCurrency.abbreviation AS exCurrency",
         "transaction.amount AS amount",
-        "exCurrency.abbreviation AS excurrency",
-        "transaction.exRate AS exrate",
+        "transaction.exRate AS exRate",
+        "(transaction.amount * transaction.exRate) AS calculatedAmount",
       ])
-      .where("customer.id = :customerId", { customerId })
-      .andWhere("transaction.exCurrency = :currencyId", { currencyId })
-      .andWhere("transaction.createdAt >= :startDate", { startDate })
+      .where("transaction.createdAt >= :startDate", { startDate })
       .andWhere("transaction.createdAt <= :endDate", { endDate })
-      .orderBy("transaction.createdAt", "ASC")
-      .getRawMany();
+      .orderBy("transaction.createdAt", "ASC");
 
-    const creditQuery = this.walletRepository
-      .createQueryBuilder("wallet")
-      .leftJoin("wallet.transaction", "transaction")
-      .leftJoin("wallet.customer", "customer")
-      .leftJoin("transaction.currency", "currency")
-      .select([
-        "transaction.createdAt AS date",
-        "wallet.type AS type",
-        "transaction.exRate AS exrate",
-        "transaction.amount AS amount",
-      ])
-      .where("customer.id = :customerId", { customerId })
-      .andWhere("transaction.exCurrency = :currencyId", { currencyId })
-      .andWhere("transaction.createdAt < :startDate", { startDate })
-      .andWhere("wallet.type = :creditTypeName", { creditTypeName: "Credit" });
-
-    const debitQuery = this.walletRepository
-      .createQueryBuilder("wallet")
-      .leftJoin("wallet.transaction", "transaction")
-      .leftJoin("wallet.customer", "customer")
-      .leftJoin("transaction.currency", "currency")
-      .select([
-        "transaction.createdAt AS date",
-        "wallet.type AS type",
-        "transaction.exRate AS exrate",
-        "transaction.amount AS amount",
-      ])
-      .where("customer.id = :customerId", { customerId })
-      .andWhere("transaction.exCurrency = :currencyId", { currencyId })
-      .andWhere("transaction.createdAt < :startDate", { startDate })
-      .andWhere("wallet.type = :debitTypeName", { debitTypeName: "Debit" });
-
-    const creditTransactions = await creditQuery.getRawMany();
-    const debitTransactions = await debitQuery.getRawMany();
-
-    const calculateOpeningBalance = (transactions) =>
-      transactions.reduce(
-        (total, { exrate, amount }) => total + amount * exrate,
-        0
+    if (customerId !== 0) {
+      walletQueryBuilder = walletQueryBuilder.andWhere(
+        "customer.id = :customerId",
+        { customerId }
       );
+    }
 
-    const openingBalanceCreditTotal =
-      calculateOpeningBalance(creditTransactions);
-    const openingBalanceDebitTotal = calculateOpeningBalance(debitTransactions);
+    if (currencyId !== 0) {
+      walletQueryBuilder = walletQueryBuilder.andWhere(
+        "transaction.currency = :currencyId",
+        { currencyId }
+      );
+    }
 
-    const openingBalance = openingBalanceCreditTotal - openingBalanceDebitTotal;
+    const result = await walletQueryBuilder.getRawMany();
 
     return {
       ...customerDetails,
       ...currency,
       startDate,
       endDate,
-      openingBalance,
       result,
     };
   }
+
   async customerKhata(
     customerId: number,
     currencyId: number,
@@ -155,6 +136,7 @@ export class ReportService {
         "transaction.amount AS amount",
         "exCurrency.abbreviation AS excurrency",
         "transaction.exRate AS exrate",
+        "(transaction.amount * transaction.exRate) AS calculatedAmount",
       ])
       .where("customer.id = :customerId", { customerId })
       .andWhere("transaction.exCurrency = :currencyId", { currencyId })
