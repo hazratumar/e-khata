@@ -50,9 +50,7 @@ const HistoryPage = ({ invoice }) => {
               <TableRow key={index}>
                 <TableCell>{dateFormat(item.date)}</TableCell>
                 <TableCell>
-                  {item.type === "Credit"
-                    ? `${item.customer} to ${item.from}`
-                    : `${item.from} to ${item.customer}`}
+                  {item.customer} to {item.from}
                 </TableCell>
                 <TableCell>{item.currency}</TableCell>
                 <TableCell>{item.amount}</TableCell>
