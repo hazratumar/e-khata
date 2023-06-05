@@ -11,12 +11,14 @@ import { Transaction } from "./entities/transaction.entity";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { UsersService } from "src/users/users.service";
 import { CreateTransactionDto } from "./dto/create-Transaction.dto";
+import { CustomersService } from "src/customers/customers.service";
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectRepository(Transaction)
     private readonly transactionRepository: Repository<Transaction>,
+    private readonly customersService: CustomersService,
     private readonly usersService: UsersService
   ) {}
 
@@ -49,10 +51,28 @@ export class TransactionsService {
     }
   }
 
-  async validation(creditCustomer: number, debitCustomer: number) {
+  async validateTransaction(
+    creditCustomer: number,
+    debitCustomer: number
+  ): Promise<void> {
+    const [creditor, debtor] = await Promise.all([
+      this.customersService.findOne(creditCustomer),
+      this.customersService.findOne(debitCustomer),
+    ]);
+
+    const isCreditorSelfCustomer = creditor.isSelf;
+    const isDebtorSelfCustomer = debtor.isSelf;
+
     if (creditCustomer === debitCustomer) {
       throw new HttpException(
         "Credit and Debit customers are the same.",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
+    if (!isCreditorSelfCustomer && !isDebtorSelfCustomer) {
+      throw new HttpException(
+        "Select one self customer from the list.",
         HttpStatus.BAD_REQUEST
       );
     }

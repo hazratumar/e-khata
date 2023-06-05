@@ -32,7 +32,7 @@ export class TransactionsController {
     const { customer: cr } = credit;
     const { customer: db } = debit;
 
-    await this.transactionsService.validation(cr, db);
+    await this.transactionsService.validateTransaction(cr, db);
 
     const t = await this.transactionsService.create(+userId, transaction);
 
@@ -54,7 +54,7 @@ export class TransactionsController {
     const { customer: cr } = credit;
     const { customer: db } = debit;
 
-    await this.transactionsService.validation(cr, db);
+    await this.transactionsService.validateTransaction(cr, db);
 
     await Promise.all([
       this.walletService.update(+userId, debit, cr),
