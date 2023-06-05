@@ -23,14 +23,14 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
   async downloadHistory(
     customer: number,
     currency: number,
-    startDate: Date,
-    endDate: Date
+    startDate: string,
+    endDate: string
   ): Promise<{ url: string }> {
     const clientUrl = this.configService.get<string>("app.clientUrl");
     const serverUrl = this.configService.get<string>("app.serverUrl");
 
     const directory = join(__dirname, "..", "assets/history");
-    const filename = `Report-${startDate}-${endDate}.pdf`;
+    const filename = `history-from-${startDate}-to-${endDate}.pdf`;
     const fileUrl = {
       url: `${serverUrl}/assets/history/${filename}`,
     };
@@ -43,7 +43,7 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
 
     // Unlink (delete) all existing files in the directory
     const files = readdirSync(directory);
-    if (files) {
+    if (files.length !== 0) {
       await files.forEach(async (file) => {
         const filePath = join(directory, file);
         await unlinkSync(filePath);
@@ -63,14 +63,14 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
   async downloadKhata(
     customer: number,
     currency: number,
-    startDate: Date,
-    endDate: Date
+    startDate: string,
+    endDate: string
   ): Promise<{ url: string }> {
     const clientUrl = this.configService.get<string>("app.clientUrl");
     const serverUrl = this.configService.get<string>("app.serverUrl");
 
     const directory = join(__dirname, "..", "assets/khata");
-    const filename = `Report-${startDate}-${endDate}.pdf`;
+    const filename = `khata-from-${startDate}-to-${endDate}.pdf`;
     const fileUrl = {
       url: `${serverUrl}/assets/khata/${filename}`,
     };
@@ -83,7 +83,7 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
 
     // Unlink (delete) all existing files in the directory
     const files = readdirSync(directory);
-    if (files) {
+    if (files.length !== 0) {
       await files.forEach(async (file) => {
         const filePath = join(directory, file);
         await unlinkSync(filePath);

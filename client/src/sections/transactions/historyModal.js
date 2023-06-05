@@ -22,7 +22,7 @@ import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { getDate, validate } from "src/utils/generic-functions";
+import { getDate, isNotTruthy } from "src/utils/generic-functions";
 import { CloudDownload, RotateLeft } from "@material-ui/icons";
 import { useDownloadHistoryMutation } from "src/store/services/reportService";
 import download from "downloadjs";
@@ -46,20 +46,24 @@ export const HistoryModal = () => {
 
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
-    customer: null,
-    currency: null,
+    customer: { id: 0, name: "All Customers" },
+    currency: { id: 0, abbreviation: "All Currencies" },
     startDate,
     endDate,
   });
 
   const { customers, currencies } = useSelector((state) => state.option);
+
+  const customersWithAllOption = [{ id: 0, name: "All Customers" }, ...customers];
+  const currenciesWithAllOption = [{ id: 0, abbreviation: "All Currencies" }, ...currencies];
+
   const [getFileUrl, { isLoading }] = useDownloadHistoryMutation();
 
   const handleOpen = () => {
     if (open) {
       setState({
-        customer: null,
-        currency: null,
+        customer: { id: 0, name: "All Customers" },
+        currency: { id: 0, abbreviation: "All Currencies" },
         startDate,
         endDate,
       });
@@ -77,7 +81,7 @@ export const HistoryModal = () => {
     ];
 
     for (const [field, errorMessage] of validations) {
-      if (!validate(field)) {
+      if (isNotTruthy(field)) {
         toast.error(errorMessage);
         return false;
       }
@@ -160,16 +164,18 @@ export const HistoryModal = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Autocomplete
+                      value={state.customer}
                       getOptionLabel={(option) => option?.name}
-                      options={customers}
+                      options={customersWithAllOption}
                       onChange={onCustomerChange}
                       renderInput={(params) => <TextField {...params} label="Customer" />}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <Autocomplete
+                      value={state.currency}
                       getOptionLabel={(option) => option?.abbreviation}
-                      options={currencies}
+                      options={currenciesWithAllOption}
                       onChange={onCurrencyChange}
                       renderInput={(params) => <TextField {...params} label="Currency" />}
                     />

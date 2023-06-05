@@ -9,7 +9,7 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import { dateFormat } from "../../utils/generic-functions";
+import { dateFormat, isTruthy } from "../../utils/generic-functions";
 
 const HistoryPage = ({ invoice }) => {
   const { name, currency, abbreviation, startDate, endDate, result } = invoice;
@@ -22,8 +22,13 @@ const HistoryPage = ({ invoice }) => {
 
       <Box marginBottom={2} display="flex" justifyContent="space-between">
         <Box>
-          <Typography variant="subtitle1">{`Customer: ${name}`}</Typography>
-          <Typography variant="body2">{`Currency: ${currency} (${abbreviation})`}</Typography>
+          <Typography variant="subtitle1">
+            {`Customer: ${isTruthy(name) ? name : "All Customers"}`}
+          </Typography>
+
+          <Typography variant="body2">
+            {`Currency: ${isTruthy(currency) ? `${currency} (${abbreviation})` : "All Currencies"}`}
+          </Typography>
         </Box>
         <Box>
           <Typography variant="body2">{`Period from: ${dateFormat(startDate)} to ${dateFormat(
@@ -32,7 +37,7 @@ const HistoryPage = ({ invoice }) => {
         </Box>
       </Box>
 
-      <TableContainer marginTop={2}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>

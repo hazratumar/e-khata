@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Currency } from "src/currency/entities/currency.entity";
 import { Customer } from "src/customers/entities/customer.entity";
 import { Wallet } from "src/wallets/entities/wallet.entity";
 import { Repository } from "typeorm";
@@ -9,6 +10,8 @@ export class ReportService {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(Currency)
+    private readonly currencyRepository: Repository<Currency>,
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>
   ) {}
@@ -19,38 +22,22 @@ export class ReportService {
     startDate: Date,
     endDate: Date
   ) {
-    let customerQueryBuilder = this.customerRepository
+    const customerDetails = await this.customerRepository
       .createQueryBuilder("customer")
-      .select(["customer.name AS name", "customer.address AS address"]);
+      .select(["customer.name AS name", "customer.address AS address"])
+      .where("customer.id = :customerId", { customerId })
+      .getRawOne();
 
-    if (customerId !== 0) {
-      customerQueryBuilder = customerQueryBuilder.where(
-        "customer.id = :customerId",
-        { customerId }
-      );
-    }
-
-    const customerDetails = await customerQueryBuilder.getRawOne();
-
-    let currencyQueryBuilder = this.walletRepository
-      .createQueryBuilder("wallet")
-      .leftJoin("wallet.transaction", "transaction")
-      .leftJoin("transaction.currency", "currency")
+    const currencyDetails = await this.currencyRepository
+      .createQueryBuilder("currency")
       .select([
         "currency.name AS currency",
         "currency.abbreviation AS abbreviation",
-      ]);
+      ])
+      .where("currency.id = :currencyId", { currencyId })
+      .getRawOne();
 
-    if (currencyId !== 0) {
-      currencyQueryBuilder = currencyQueryBuilder.where(
-        "currency.id = :currencyId",
-        { currencyId }
-      );
-    }
-
-    const currency = await currencyQueryBuilder.getRawOne();
-
-    let walletQueryBuilder = this.walletRepository
+    let resultQueryBuilder = this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
       .leftJoin("wallet.customer", "customer")
@@ -63,34 +50,36 @@ export class ReportService {
         "from.name AS from",
         "wallet.type AS type",
         "currency.abbreviation AS currency",
-        "exCurrency.abbreviation AS exCurrency",
         "transaction.amount AS amount",
-        "transaction.exRate AS exRate",
+        "exCurrency.abbreviation AS excurrency",
+        "transaction.exRate AS exrate",
         "(transaction.amount * transaction.exRate) AS calculatedAmount",
       ])
       .where("transaction.createdAt >= :startDate", { startDate })
       .andWhere("transaction.createdAt <= :endDate", { endDate })
-      .orderBy("transaction.createdAt", "ASC");
+      .andWhere("wallet.type = :type", { type: "Credit" });
 
-    if (customerId !== 0) {
-      walletQueryBuilder = walletQueryBuilder.andWhere(
+    if (customerId > 0) {
+      resultQueryBuilder = resultQueryBuilder.andWhere(
         "customer.id = :customerId",
         { customerId }
       );
     }
 
-    if (currencyId !== 0) {
-      walletQueryBuilder = walletQueryBuilder.andWhere(
-        "transaction.currency = :currencyId",
+    if (currencyId > 0) {
+      resultQueryBuilder = resultQueryBuilder.andWhere(
+        "currency.id = :currencyId",
         { currencyId }
       );
     }
 
-    const result = await walletQueryBuilder.getRawMany();
+    const result = await resultQueryBuilder
+      .orderBy("transaction.createdAt", "ASC")
+      .getRawMany();
 
     return {
       ...customerDetails,
-      ...currency,
+      ...currencyDetails,
       startDate,
       endDate,
       result,

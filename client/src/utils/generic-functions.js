@@ -50,22 +50,14 @@ export function getNewUpdate(update1, update2) {
   return new Date(update1) > new Date(update2) ? update1 : update2;
 }
 
-export function validate(text) {
-  if (
-    text === "" ||
-    text === " " ||
-    text === "null" ||
-    text === null ||
-    text === "undefined" ||
-    text === undefined ||
-    text === false ||
-    text === "false" ||
-    text === 0 ||
-    Number.isNaN(text) ||
-    text === "invalid"
-  ) {
-    return false;
-  } else {
-    return true;
-  }
+export function isTruthy(value) {
+  return !["", " ", "null", null, "undefined", undefined, false, "false", 0, "invalid"].includes(
+    value
+  );
+}
+
+export function isNotTruthy(value) {
+  return ["", " ", "null", null, "undefined", undefined, false, "false", 0, "invalid"].includes(
+    value
+  );
 }

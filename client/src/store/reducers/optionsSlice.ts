@@ -1,13 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Option {
+interface CustomersOption {
+  id: number;
+  name: string;
+}
+
+interface CurrenciesOption {
   id: number;
   abbreviation: string;
 }
 
 interface OptionState {
-  customers: Option[];
-  currencies: Option[];
+  customers: CustomersOption[];
+  currencies: CurrenciesOption[];
 }
 
 const initialState: OptionState = {
@@ -19,10 +24,10 @@ const optionReducer = createSlice({
   name: "option",
   initialState,
   reducers: {
-    setCustomerOptions(state, action: PayloadAction<Option[]>) {
+    setCustomerOptions(state, action: PayloadAction<CustomersOption[]>) {
       state.customers = [...action.payload];
     },
-    setCurrencyOptions(state, action: PayloadAction<Option[]>) {
+    setCurrencyOptions(state, action: PayloadAction<CurrenciesOption[]>) {
       state.currencies = [...action.payload];
     },
   },

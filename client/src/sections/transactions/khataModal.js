@@ -22,7 +22,7 @@ import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { getDate, validate } from "src/utils/generic-functions";
+import { getDate, isNotTruthy } from "src/utils/generic-functions";
 import { CloudDownload, RotateLeft } from "@material-ui/icons";
 import { useDownloadKhataMutation } from "src/store/services/reportService";
 import { useCustomerKhataMutation } from "src/store/services/customerService";
@@ -84,7 +84,7 @@ export const KhataModal = () => {
     ];
 
     for (const [field, errorMessage] of validations) {
-      if (!validate(field)) {
+      if (isNotTruthy(field)) {
         toast.error(errorMessage);
         return false;
       }

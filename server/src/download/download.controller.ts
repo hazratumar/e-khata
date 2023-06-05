@@ -9,8 +9,8 @@ export class DownloadController {
   downloadHistory(
     @Param("customer") customer: number,
     @Param("currency") currency: number,
-    @Param("startDate") startDate: Date,
-    @Param("endDate") endDate: Date
+    @Param("startDate") startDate: string,
+    @Param("endDate") endDate: string
   ) {
     return this.downloadService.downloadHistory(
       customer,
@@ -23,8 +23,8 @@ export class DownloadController {
   downloadKhata(
     @Param("customer") customer: number,
     @Param("currency") currency: number,
-    @Param("startDate") startDate: Date,
-    @Param("endDate") endDate: Date
+    @Param("startDate") startDate: string,
+    @Param("endDate") endDate: string
   ) {
     return this.downloadService.downloadKhata(
       customer,

@@ -1,6 +1,7 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import HistoryPage from "src/sections/report/historyPage";
 import { useCustomerHistoryQuery } from "src/store/services/reportService";
+import { isNotTruthy } from "../../../../../utils/generic-functions";
 
 const HistoryList = ({ customer, currency, startDate, endDate }) => {
   const { data, isLoading, error } = useCustomerHistoryQuery({
@@ -39,14 +40,8 @@ const HistoryList = ({ customer, currency, startDate, endDate }) => {
       </Typography>
     );
   }
-  if (!data?.currency) {
-    return (
-      <Typography variant="h6" align="center">
-        We couldn't find the currency record.
-      </Typography>
-    );
-  }
-  if (data?.result.length === 0) {
+
+  if (isNotTruthy(data?.result.length)) {
     return (
       <Typography variant="h6" align="center">
         No records found in this date range.
