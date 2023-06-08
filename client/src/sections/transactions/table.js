@@ -30,8 +30,9 @@ export const TransactionsTable = (props) => {
                 <TableCell>Customer</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>Currency</TableCell>
-                <TableCell>Credit Amount</TableCell>
-                <TableCell>Debit Amount</TableCell>
+                <TableCell>Amount</TableCell>
+                {/* <TableCell>Credit Amount</TableCell>
+                <TableCell>Debit Amount</TableCell> */}
                 <TableCell>Exchange</TableCell>
                 <TableCell>Rate</TableCell>
                 <TableCell>Recent Updates</TableCell>
@@ -50,8 +51,9 @@ export const TransactionsTable = (props) => {
                     />
                   </TableCell>
                   <TableCell>{item?.transaction?.currency?.abbreviation}</TableCell>
-                  <TableCell>{item?.type === "Credit" ? item?.transaction?.amount : "0"}</TableCell>
-                  <TableCell>{item?.type === "Debit" ? item?.transaction?.amount : "0"}</TableCell>
+                  <TableCell>{item?.transaction?.amount}</TableCell>
+                  {/* <TableCell>{item?.type === "Credit" ? item?.transaction?.amount : "0"}</TableCell>
+                  <TableCell>{item?.type === "Debit" ? item?.transaction?.amount : "0"}</TableCell> */}
                   <TableCell>{item?.transaction?.exCurrency?.abbreviation}</TableCell>
                   <TableCell>{item?.transaction?.exRate}</TableCell>
                   <TableCell>
