@@ -36,12 +36,12 @@ const HistoryList = ({ customer, currency, startDate, endDate }) => {
   if (error) {
     return (
       <Typography variant="h6" align="center">
-        Error fetching invoices: {error.message}
+        Error fetching invoices: {error}
       </Typography>
     );
   }
 
-  if (isNotTruthy(data?.result.length)) {
+  if (isNotTruthy(data?.result?.length)) {
     return (
       <Typography variant="h6" align="center">
         No records found in this date range.
