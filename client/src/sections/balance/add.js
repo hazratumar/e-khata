@@ -1,13 +1,14 @@
-import { Autocomplete, Grid, TextField, Typography } from "@mui/material";
+import { Autocomplete, Grid, TextField } from "@mui/material";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useAddBalanceMutation } from "src/store/services/balanceService";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-export const WithdrawBalance = forwardRef((props, ref) => {
+export const AddBalance = forwardRef((props, ref) => {
   const [state, setState] = useState({
     customer: "",
     currency: "",
+    type: "",
     amount: "",
     description: "",
   });
@@ -24,7 +25,7 @@ export const WithdrawBalance = forwardRef((props, ref) => {
     return addBalance({
       wallet: {
         customer: state.customer.id,
-        type: "Withdraw",
+        type: state.type,
       },
       balance: {
         currency: state.currency.id,
@@ -40,7 +41,7 @@ export const WithdrawBalance = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Balance withdraw successfully!");
+      toast.success("Balance added successfully!");
     }
   }, [isSuccess]);
 
@@ -56,7 +57,7 @@ export const WithdrawBalance = forwardRef((props, ref) => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.name}
             options={customers}
@@ -64,7 +65,14 @@ export const WithdrawBalance = forwardRef((props, ref) => {
             renderInput={(params) => <TextField {...params} label="Customer" />}
           />
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
+          <Autocomplete
+            options={["Deposit", "Withdraw"]}
+            onChange={(event, value) => setState({ ...state, type: value })}
+            renderInput={(params) => <TextField {...params} label="Transaction Type" />}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
           <Autocomplete
             getOptionLabel={(option) => option.abbreviation}
             options={currencies}
@@ -72,7 +80,7 @@ export const WithdrawBalance = forwardRef((props, ref) => {
             renderInput={(params) => <TextField {...params} label="Currency" />}
           />
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
           <TextField
             type="number"
             value={state.amount}

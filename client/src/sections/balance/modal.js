@@ -15,19 +15,19 @@ import {
   ArrowUpTrayIcon,
   PencilSquareIcon,
   XMarkIcon,
+  ArrowsUpDownIcon,
 } from "@heroicons/react/24/solid";
 import { useRef, useState } from "react";
-import { DepositBalance } from "./deposit";
+import { AddBalance } from "./add";
 import { UpdateBalance } from "./update";
-import { WithdrawBalance } from "./withdraw";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "360px",
-  height: "500px",
+  maxWidth: "550px",
+  maxHeight: "500px",
   backgroundColor: "#fff",
   borderRadius: "10px",
   boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
@@ -35,32 +35,19 @@ const style = {
 };
 
 export const BalanceModal = ({ balanceId }) => {
-  const [modalType, setModalType] = useState();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
-  const depositBalanceRef = useRef(null);
-  const withdrawBalanceRef = useRef(null);
+  const addBalanceRef = useRef(null);
   const updateBalanceRef = useRef(null);
 
   const handleSubmit = async () => {
-    const balanceRef = balanceId
-      ? updateBalanceRef
-      : modalType === "deposit"
-      ? depositBalanceRef
-      : withdrawBalanceRef;
+    const balanceRef = balanceId ? updateBalanceRef : addBalanceRef;
     const { data } = await balanceRef.current.saveBalance();
     if (data) {
       handleOpen();
     }
   };
-  const handleDepositOpen = () => {
-    setModalType("deposit");
-    handleOpen();
-  };
-  const handleWithdrawOpen = () => {
-    setModalType("withdraw");
-    handleOpen();
-  };
+
   return (
     <div>
       {balanceId ? (
@@ -74,24 +61,13 @@ export const BalanceModal = ({ balanceId }) => {
           <Button
             startIcon={
               <SvgIcon fontSize="small">
-                <ArrowDownTrayIcon />
+                <ArrowsUpDownIcon />
               </SvgIcon>
             }
             variant="contained"
-            onClick={handleDepositOpen}
+            onClick={handleOpen}
           >
-            Deposit
-          </Button>
-          <Button
-            startIcon={
-              <SvgIcon fontSize="small">
-                <ArrowUpTrayIcon />
-              </SvgIcon>
-            }
-            variant="contained"
-            onClick={handleWithdrawOpen}
-          >
-            Withdraw
+            Add Balance
           </Button>
         </Stack>
       )}
@@ -107,9 +83,7 @@ export const BalanceModal = ({ balanceId }) => {
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
               subheader={`Please ${balanceId ? "Update" : "enter"} balance information`}
-              title={`${
-                balanceId ? "Update" : modalType === "deposit" ? "Deposit" : "Withdraw"
-              } Balance`}
+              title={`${balanceId ? "Update" : "Add"} Balance`}
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -123,21 +97,15 @@ export const BalanceModal = ({ balanceId }) => {
               <Box>
                 {balanceId ? (
                   <UpdateBalance ref={updateBalanceRef} balanceId={balanceId} />
-                ) : modalType === "deposit" ? (
-                  <DepositBalance ref={depositBalanceRef} />
                 ) : (
-                  <WithdrawBalance ref={withdrawBalanceRef} />
+                  <AddBalance ref={addBalanceRef} />
                 )}
               </Box>
             </CardContent>
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
               <Button onClick={handleSubmit} variant="contained" color="primary">
-                {balanceId
-                  ? "Update Balance"
-                  : modalType === "deposit"
-                  ? "Deposit Balance"
-                  : "Withdraw Balance"}
+                {balanceId ? "Update Balance" : "Add Balance"}
               </Button>
             </CardActions>
           </Box>

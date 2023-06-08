@@ -11,6 +11,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
   const [state, setState] = useState({
     walletId: "",
     customer: "",
+    type: "",
     balanceId: "",
     currency: "",
     amount: "",
@@ -31,6 +32,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
           id: data?.customer?.id,
           name: data?.customer?.name,
         },
+        type: data?.type,
         balanceId: data?.transaction?.id,
         currency: {
           id: data?.transaction?.currency?.id,
@@ -52,6 +54,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
       wallet: {
         id: state.walletId,
         customerId: state.customer.id,
+        type: state.type,
       },
       balance: {
         id: state.balanceId,
@@ -87,7 +90,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
           <Autocomplete
             value={state.customer}
             getOptionLabel={(option) => option.name}
@@ -96,7 +99,15 @@ export const UpdateBalance = forwardRef((props, ref) => {
             renderInput={(params) => <TextField {...params} label="Customer" />}
           />
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
+          <Autocomplete
+            value={state.type}
+            options={["Deposit", "Withdraw"]}
+            onChange={(event, value) => setState({ ...state, type: value })}
+            renderInput={(params) => <TextField {...params} label="Transaction Type" />}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
           <Autocomplete
             value={state.currency}
             getOptionLabel={(option) => option.abbreviation}
@@ -105,7 +116,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
             renderInput={(params) => <TextField {...params} label="Currency" />}
           />
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
           <TextField
             type="number"
             value={state.amount}
