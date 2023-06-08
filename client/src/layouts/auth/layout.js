@@ -27,28 +27,6 @@ export const Layout = (props) => {
             position: "relative",
           }}
         >
-          <Box
-            component="header"
-            sx={{
-              left: 0,
-              p: 3,
-              position: "fixed",
-              top: 0,
-              width: "100%",
-            }}
-          >
-            <Box
-              component={NextLink}
-              href="/"
-              sx={{
-                display: "inline-flex",
-                height: 32,
-                width: 32,
-              }}
-            >
-              <Logo />
-            </Box>
-          </Box>
           {children}
         </Grid>
         <Grid
@@ -78,13 +56,11 @@ export const Layout = (props) => {
             >
               Welcome to{" "}
               <Box component="a" sx={{ color: "#15B79E" }} target="_blank">
-                e-khata
+                Shinwari Enterprises
               </Box>
             </Typography>
-            <Typography align="center" sx={{ mb: 3 }} variant="subtitle1">
-              A professional kit that comes with ready-to-use MUI components.
-            </Typography>
-            <img alt="" src="/assets/auth-illustration.svg" />
+            <Typography align="center" sx={{ mb: 3 }} variant="subtitle1"></Typography>
+            <img alt="" src="/assets/login.png" />
           </Box>
         </Grid>
       </Grid>

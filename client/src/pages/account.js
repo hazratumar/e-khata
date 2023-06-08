@@ -43,15 +43,15 @@ const Page = () => {
             </div>
             <div>
               <Grid container spacing={3}>
-                <Grid xs={12} md={6} lg={4}>
+                {/* <Grid xs={12} md={6} lg={4}>
                   <AccountProfile user={state} />
-                </Grid>
-                <Grid xs={12} md={6} lg={8}>
+                </Grid> */}
+                <Grid xs={12} md={12} lg={12}>
                   <AccountProfileDetails user={state} />
                 </Grid>
-                <Grid xs={12} md={12} lg={12}>
+                {/* <Grid xs={12} md={12} lg={12}>
                   <SettingsPassword />
-                </Grid>
+                </Grid> */}
               </Grid>
             </div>
           </Stack>
