@@ -74,6 +74,8 @@ export const UpdateCustomer = (props) => {
   useEffect(() => {
     if (isSuccess) {
       setOpen(false);
+      toast.success("Customer updated successfully!");
+
       console.log("Update data", state);
     }
   }, [isSuccess]);

@@ -66,7 +66,7 @@ export const UpdateBalance = forwardRef((props, ref) => {
   }));
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Balance updated successfully");
+      toast.success("Balance updated successfully!");
     }
   }, [isSuccess]);
 

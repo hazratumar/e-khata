@@ -63,6 +63,8 @@ export const AddCustomer = () => {
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
+      toast.success("Customer added successfully!");
+
       console.log("Add data", state);
     }
   }, [isSuccess]);

@@ -40,7 +40,7 @@ export const DepositBalance = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Balance deposit successfully");
+      toast.success("Balance deposit successfully!");
     }
   }, [isSuccess]);
 

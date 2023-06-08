@@ -40,7 +40,7 @@ export const WithdrawBalance = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Balance withdraw successfully");
+      toast.success("Balance withdraw successfully!");
     }
   }, [isSuccess]);
 
