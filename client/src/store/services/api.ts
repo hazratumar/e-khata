@@ -1,6 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_URL = "http://localhost:3100";
+const BASE_URL = process.env.SERVER_URL;
 
 interface TokenState {
   auth: {
