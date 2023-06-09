@@ -82,7 +82,7 @@ export const Layout = (props) => {
               </Box>
             </Typography>
             <Typography align="center" sx={{ mb: 3 }} variant="subtitle1">
-              A professional kit that comes with ready-to-use MUI components.
+        
             </Typography>
             <img alt="" src="/assets/auth-illustration.svg" />
           </Box>
