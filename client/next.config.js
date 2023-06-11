@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
-dotenv.config();
+
+dotenv.config({ path: "../.env" });
 
 const serverUrl = new URL(process.env.SERVER_URL).hostname;
 
