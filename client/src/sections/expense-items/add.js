@@ -54,7 +54,6 @@ export const AddExpenseItem = () => {
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
-      console.log("Add data", formValues);
     }
   }, [isSuccess]);
 
@@ -64,7 +63,6 @@ export const AddExpenseItem = () => {
         ? error.data.message[0]
         : error.data?.message;
       toast.error(errorMessage);
-      console.log("Error Message", error);
     }
   }, [error]);
 

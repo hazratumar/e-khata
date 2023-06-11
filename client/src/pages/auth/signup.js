@@ -48,14 +48,12 @@ const Page = () => {
     if (isSuccess) {
       dispatch(setToken(data));
       router.push("/");
-      console.log("SignUp data", data);
     }
     if (error) {
       const errorMessage = Array.isArray(error?.data?.message)
         ? error.data.message[0]
         : error.data.message;
       toast.error(errorMessage);
-      console.log("Error Message", error.data);
     }
   }, [isSuccess, data, error, dispatch]);
 

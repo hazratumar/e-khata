@@ -34,7 +34,6 @@ const style = {
 
 export const UpdateExpenseItem = (props) => {
   const { expenseItem } = props;
-  console.log(expenseItem);
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(!open);
@@ -68,14 +67,12 @@ export const UpdateExpenseItem = (props) => {
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
-      console.log("Update data", state);
     }
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
         ? error.data.message[0]
         : error.data?.message;
       toast.error(errorMessage);
-      console.log("Error Message", error);
     }
   }, [isSuccess, error]);
   return (

@@ -67,14 +67,12 @@ export const UpdateCurrency = (props) => {
   useEffect(() => {
     if (isSuccess) {
       handleOpen();
-      console.log("Update data", state);
     }
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
         ? error.data.message[0]
         : error.data?.message;
       toast.error(errorMessage);
-      console.log("Error Message", error);
     }
   }, [isSuccess, error]);
   return (

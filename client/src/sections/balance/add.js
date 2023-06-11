@@ -51,7 +51,6 @@ export const AddBalance = forwardRef((props, ref) => {
         ? error.data.message[0]
         : error.data.message;
       toast.error(errorMessage);
-      console.log("Error Message", error);
     }
   }, [error]);
   return (

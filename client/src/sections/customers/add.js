@@ -64,8 +64,6 @@ export const AddCustomer = () => {
     if (isSuccess) {
       handleOpen();
       toast.success("Customer added successfully!");
-
-      console.log("Add data", state);
     }
   }, [isSuccess]);
 
@@ -75,7 +73,6 @@ export const AddCustomer = () => {
         ? error.data.message[0]
         : error.data?.message;
       toast.error(errorMessage);
-      console.log("Error Message", error);
     }
   }, [error]);
   return (

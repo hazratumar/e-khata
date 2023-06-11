@@ -11,18 +11,15 @@ const Page = () => {
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    console.log(email);
   };
 
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
-    console.log(otp);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSend(!send);
-    console.log(send);
   };
   return (
     <>

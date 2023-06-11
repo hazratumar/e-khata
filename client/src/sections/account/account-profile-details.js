@@ -47,14 +47,12 @@ export const AccountProfileDetails = ({ user }) => {
     if (isSuccess) {
       dispatch(setToken(data));
       toast.success("Your data successfully updated");
-      console.log("Update User", data);
     }
     if (error) {
       const errorMessage = Array.isArray(error.data.message)
         ? error.data.message[0]
         : error.data.message;
       toast.error(errorMessage);
-      console.log("Error Message", error.data);
     }
   }, [isSuccess, error, data, dispatch]);
 

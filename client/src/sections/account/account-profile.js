@@ -51,14 +51,12 @@ export const AccountProfile = () => {
     if (isSuccess) {
       dispatch(setToken(data));
       toast.success("Picture successfully uploaded");
-      console.log("Update User", data);
     }
     if (error) {
       const errorMessage = Array.isArray(error.data.message)
         ? error.data.message[0]
         : error.data.message;
       toast.error(errorMessage);
-      console.log("Error Message", error.data);
     }
   }, [isSuccess, error, data, dispatch]);
   return (

@@ -28,9 +28,6 @@ export const SettingsPassword = () => {
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault();
-      // Add your logic for password update here
-      // For example, you can perform validation or make an API request
-      console.log(values); // Outputs the form values to the console
     },
     [values]
   );

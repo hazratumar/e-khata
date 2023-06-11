@@ -75,8 +75,6 @@ export const UpdateCustomer = (props) => {
     if (isSuccess) {
       setOpen(false);
       toast.success("Customer updated successfully!");
-
-      console.log("Update data", state);
     }
   }, [isSuccess]);
   useEffect(() => {
@@ -85,7 +83,6 @@ export const UpdateCustomer = (props) => {
         ? error.data.message[0]
         : error.data?.message;
       toast.error(errorMessage);
-      console.log("Error Message", error);
     }
   }, [error]);
   return (
