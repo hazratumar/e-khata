@@ -22,7 +22,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Overview | e-khata</title>
+        <title>Overview | Rahat Shinwari Enterprises</title>
       </Head>
       <Box component="main">
         <Container maxWidth="xl">

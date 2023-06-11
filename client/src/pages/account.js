@@ -27,7 +27,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Account | e-khata</title>
+        <title>Account | Rahat Shinwari Enterprises</title>
       </Head>
       <Box
         component="main"

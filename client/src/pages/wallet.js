@@ -63,7 +63,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Balance | e-khata</title>
+        <title>Balance | Rahat Shinwari Enterprises</title>
       </Head>
       <Box component="main" sx={{ flexGrow: 1, pt: 2, pb: 4 }}>
         <Container maxWidth="xl">

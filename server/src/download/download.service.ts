@@ -60,7 +60,7 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
     await page.goto(
       `${clientUrl}/history/${customer}/${currency}/${startDate}/${endDate}`
     );
-
+    await page.waitForLoadState("networkidle");
     await page.pdf({ path: filePath });
     await page.close();
     return fileUrl;

@@ -29,7 +29,7 @@ const App = (props) => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>e-khata</title>
+        <title>Rahat Shinwari Enterprises</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <Provider store={store}>
