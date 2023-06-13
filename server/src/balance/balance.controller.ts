@@ -65,6 +65,14 @@ export class BalanceController {
     return this.balanceService.getBalancesByDateRange(startDate, endDate);
   }
 
+  @Get("stock/:startDate/:endDate")
+  getSelfCostomersStock(
+    @Param("startDate") startDate: Date,
+    @Param("endDate") endDate: Date
+  ) {
+    return this.balanceService.getSelfCustomersStock(startDate, endDate);
+  }
+
   @Get(":page/:limit/:searchTerm?")
   getBalanceList(
     @Param("page", ParseIntPipe) page: number,
