@@ -37,6 +37,9 @@ export class ReportService {
       .where("currency.id = :currencyId", { currencyId })
       .getRawOne();
 
+    const endDateWithTime = new Date(endDate);
+    endDateWithTime.setHours(23, 59, 59);
+
     let resultQueryBuilder = this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
@@ -56,7 +59,9 @@ export class ReportService {
         "(transaction.amount * transaction.exRate) AS calculatedAmount",
       ])
       .where("transaction.createdAt >= :startDate", { startDate })
-      .andWhere("transaction.createdAt <= :endDate", { endDate })
+      .andWhere("transaction.createdAt <= :endDate", {
+        endDate: endDateWithTime,
+      })
       .andWhere("wallet.type = :type", { type: "Credit" });
 
     if (customerId > 0) {
@@ -109,6 +114,9 @@ export class ReportService {
       .where("currency.id = :currencyId", { currencyId })
       .getRawOne();
 
+    const endDateWithTime = new Date(endDate);
+    endDateWithTime.setHours(23, 59, 59);
+
     const result = await this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.transaction", "transaction")
@@ -130,7 +138,9 @@ export class ReportService {
       .where("customer.id = :customerId", { customerId })
       .andWhere("transaction.exCurrency = :currencyId", { currencyId })
       .andWhere("transaction.createdAt >= :startDate", { startDate })
-      .andWhere("transaction.createdAt <= :endDate", { endDate })
+      .andWhere("transaction.createdAt <= :endDate", {
+        endDate: endDateWithTime,
+      })
       .orderBy("transaction.createdAt", "ASC")
       .getRawMany();
 
