@@ -168,15 +168,17 @@ export class BalanceService {
     credit: Array<{ abbreviation: string; amount: number }>;
     debit: Array<{ abbreviation: string; amount: number }>;
   }> {
+    const endDateWithTime = new Date(endDate);
+    endDateWithTime.setHours(23, 59, 59);
     const creditBalances = await this.getBalancesOfTypeByDateRange(
       "Credit",
       startDate,
-      endDate
+      endDateWithTime
     );
     const debitBalances = await this.getBalancesOfTypeByDateRange(
       "Debit",
       startDate,
-      endDate
+      endDateWithTime
     );
 
     const creditParsedBalances = this.parseBalances(creditBalances);

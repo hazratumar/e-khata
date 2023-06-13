@@ -3,27 +3,27 @@ import { api } from "./api";
 
 export const BalanceService = createApi({
   reducerPath: "balanceService",
-  tagTypes: ["balances"],
+  tagTypes: ["balance"],
   baseQuery: api,
   endpoints: (builder) => ({
     addBalance: builder.mutation({
       query: (payload) => ({
-        url: `/balances`,
+        url: `/balance`,
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["balances"],
+      invalidatesTags: ["balance"],
     }),
     getOneBalance: builder.query({
       query: ({ balanceId }) => ({
-        url: `/balances/${balanceId}`,
+        url: `/balance/${balanceId}`,
         method: "GET",
       }),
-      providesTags: ["balances"],
+      providesTags: ["balance"],
     }),
     getBalance: builder.query({
       query: ({ page, rowsPerPage, searchTerm }) => {
-        let url = `/balances/${page}/${rowsPerPage}`;
+        let url = `/balance/${page}/${rowsPerPage}`;
         if (searchTerm) {
           url += `/${searchTerm}`;
         }
@@ -32,29 +32,29 @@ export const BalanceService = createApi({
           method: "GET",
         };
       },
-      providesTags: ["balances"],
+      providesTags: ["balance"],
     }),
     getBalanceByCurrency: builder.query({
       query: () => ({
-        url: "balances/by_currency",
+        url: "balance/by_currency",
         method: "GET",
       }),
-      providesTags: ["balances"],
+      providesTags: ["balance"],
     }),
     getCreditByDateRange: builder.query({
       query: ({ startDate, endDate }) => ({
-        url: `balances/credit_by_date/${startDate}/${endDate}`,
+        url: `balance/dashboard/${startDate}/${endDate}`,
         method: "GET",
       }),
-      providesTags: ["balances"],
+      providesTags: ["balance"],
     }),
     updateBalance: builder.mutation({
       query: (payload) => ({
-        url: `/balances`,
+        url: `/balance`,
         method: "PUT",
         body: payload,
       }),
-      invalidatesTags: ["balances"],
+      invalidatesTags: ["balance"],
     }),
   }),
 });

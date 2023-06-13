@@ -21,7 +21,7 @@ import {
 import { XMarkIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
 import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { getDateRange, getCustomDate } from "src/utils/generic-functions";
+import { getDateRange, getCustomDate, getProjectStartDate } from "src/utils/generic-functions";
 
 const style = {
   position: "absolute",
@@ -37,7 +37,7 @@ const style = {
 };
 
 export const FilterModal = ({ filterDashboard }) => {
-  const startDate = new Date(1 - 1 - 1900);
+  const startDate = getProjectStartDate();
   const endDate = new Date();
   const [open, setOpen] = useState(false);
   const [selection, setSelection] = useState("static");

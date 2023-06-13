@@ -1,31 +1,29 @@
 import { subDays, format } from "date-fns";
 const DATEFORMAT = "yyyy-MM-dd";
 const PAKDATEFORMAT = "dd-MM-yyyy";
-const DATEFORMATwITHTIME = `${DATEFORMAT} HH:mm:ss`;
 
-export function getDateRange(days) {
+export const getDateRange = (days) => {
   const today = new Date();
   let startDate = new Date(today);
   let endDate = new Date(today);
 
   if (days === 7) {
-    startDate = subDays(today, 7);
+    startDate = subDays(today, 6);
   } else if (days === 30) {
-    startDate = subDays(today, 30);
+    startDate = subDays(today, 29);
   } else if (days === 365) {
-    startDate = subDays(today, 365);
+    startDate = subDays(today, 364);
   }
 
   const startDateFormatted = format(startDate, DATEFORMAT);
-  const endDateFormatted =
-    days === 1 ? format(endDate, DATEFORMATwITHTIME) : format(endDate, DATEFORMAT);
+  const endDateFormatted = format(endDate, DATEFORMAT);
 
   return {
     startDate: startDateFormatted,
     endDate: endDateFormatted,
   };
-}
-export function getCustomDate(startDate, endDate) {
+};
+export const getCustomDate = (startDate, endDate) => {
   const startDateObject = new Date(startDate);
   const endDateObject = new Date(endDate);
 
@@ -33,31 +31,26 @@ export function getCustomDate(startDate, endDate) {
   const formattedEndDate = format(endDateObject, DATEFORMAT);
 
   return { startDate: formattedStartDate, endDate: formattedEndDate };
-}
+};
 
-export function getDate(date) {
-  const state = format(date, DATEFORMAT);
-  return state;
-}
+export const getDate = (date) => {
+  const formattedDate = format(date, DATEFORMAT);
+  return formattedDate;
+};
 
-export function dateFormat(inputDate) {
+export const dateFormat = (inputDate) => {
   const stringDate = new Date(inputDate);
   const formattedDate = format(stringDate, PAKDATEFORMAT);
   return formattedDate;
-}
+};
 
-export function getNewUpdate(update1, update2) {
-  return new Date(update1) > new Date(update2) ? update1 : update2;
-}
+export const getNewUpdate = (update1, update2) =>
+  new Date(update1) > new Date(update2) ? update1 : update2;
 
-export function isTruthy(value) {
-  return !["", " ", "null", null, "undefined", undefined, false, "false", 0, "invalid"].includes(
-    value
-  );
-}
+export const isTruthy = (value) =>
+  !["", " ", "null", null, "undefined", undefined, false, "false", 0, "invalid"].includes(value);
 
-export function isNotTruthy(value) {
-  return ["", " ", "null", null, "undefined", undefined, false, "false", 0, "invalid"].includes(
-    value
-  );
-}
+export const isNotTruthy = (value) =>
+  ["", " ", "null", null, "undefined", undefined, false, "false", 0, "invalid"].includes(value);
+
+export const getProjectStartDate = () => new Date(2023, 0, 1);

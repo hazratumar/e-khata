@@ -22,7 +22,7 @@ import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { getDate, isNotTruthy } from "src/utils/generic-functions";
+import { getDate, isNotTruthy, getProjectStartDate } from "src/utils/generic-functions";
 import { CloudDownload, RotateLeft } from "@material-ui/icons";
 import { useDownloadHistoryMutation } from "src/store/services/reportService";
 import download from "downloadjs";
@@ -41,7 +41,7 @@ const style = {
 };
 
 export const HistoryModal = () => {
-  const startDate = new Date(1 - 1 - 1900);
+  const startDate = getProjectStartDate();
   const endDate = new Date();
 
   const [open, setOpen] = useState(false);

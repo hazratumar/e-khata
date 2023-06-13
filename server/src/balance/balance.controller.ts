@@ -16,7 +16,7 @@ import { BalanceService } from "./balance.service";
 import { UpdateBalanceDto } from "./dto/update-balance.dto";
 import { UpdateWalletDto } from "./dto/update-wallet.dto";
 
-@Controller("balances")
+@Controller("balance")
 export class BalanceController {
   constructor(
     private readonly balanceService: BalanceService,
@@ -57,7 +57,7 @@ export class BalanceController {
     return this.balanceService.getBalancesByCustomer();
   }
 
-  @Get("credit_by_date/:startDate/:endDate")
+  @Get("dashboard/:startDate/:endDate")
   async getCreditByDateRange(
     @Param("startDate") startDate: Date,
     @Param("endDate") endDate: Date
