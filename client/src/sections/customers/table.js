@@ -44,9 +44,12 @@ export const CustomersTable = (props) => {
                   <TableCell>{customer.name}</TableCell>
                   <TableCell>{customer.nickname}</TableCell>
                   <TableCell>
-                    {customer.isSelf && <Badge badgeContent={"Self"} color={"primary"} />}
+                    {customer.isSelf ? (
+                      <Badge badgeContent={"Self"} color={"primary"} />
+                    ) : (
+                      <Badge badgeContent={"Other"} color={"secondary"} />
+                    )}
                   </TableCell>
-
                   <TableCell>{customer.phone}</TableCell>
                   <TableCell>{customer.address}</TableCell>
                   <TableCell>{moment(customer.updatedAt).fromNow()}</TableCell>
