@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import HistoryPage from "src/sections/report/historyPage";
 import { useCustomerHistoryQuery } from "src/store/services/reportService";
-import { isNotTruthy } from "../../../../../utils/generic-functions";
+import { isNotTruthy } from "src/utils/generic-functions";
 
 const HistoryList = ({ customer, currency, startDate, endDate }) => {
   const { data, isLoading, error } = useCustomerHistoryQuery({
@@ -52,7 +52,7 @@ const HistoryList = ({ customer, currency, startDate, endDate }) => {
   return <HistoryPage invoice={data} />;
 };
 
-export async function getServerSideProps({ query }) {
+export const getServerSideProps = ({ query }) => {
   const { customer, currency, startDate, endDate } = query;
 
   return {
@@ -63,6 +63,6 @@ export async function getServerSideProps({ query }) {
       endDate,
     },
   };
-}
+};
 
 export default HistoryList;

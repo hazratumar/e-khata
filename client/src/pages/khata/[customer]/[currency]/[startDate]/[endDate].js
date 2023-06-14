@@ -58,7 +58,7 @@ const KhataList = ({ customer, currency, startDate, endDate }) => {
   return <KhataPage invoice={data} />;
 };
 
-export async function getServerSideProps({ query }) {
+export const getServerSideProps = ({ query }) => {
   const { customer, currency, startDate, endDate } = query;
 
   return {
@@ -69,6 +69,6 @@ export async function getServerSideProps({ query }) {
       endDate,
     },
   };
-}
+};
 
 export default KhataList;
