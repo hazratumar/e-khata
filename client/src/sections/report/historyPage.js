@@ -31,7 +31,7 @@ const HistoryPage = ({ invoice }) => {
           </Typography>
         </Box>
         <Box>
-          <Typography variant="body2">{`Period from: ${dateFormat(startDate)} to ${dateFormat(
+          <Typography variant="body2">{`Timeframe from ${dateFormat(startDate)} to ${dateFormat(
             endDate
           )}`}</Typography>
         </Box>
@@ -41,27 +41,23 @@ const HistoryPage = ({ invoice }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Currency</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Exchange</TableCell>
-              <TableCell>Rate</TableCell>
-              <TableCell>Calculated</TableCell>
+              <TableCell sx={{ fontSize: 12 }}>Date</TableCell>
+              <TableCell sx={{ fontSize: 12 }}>Description</TableCell>
+              <TableCell sx={{ fontSize: 12 }}>Currency</TableCell>
+              <TableCell sx={{ fontSize: 12 }}>Amount</TableCell>
+              <TableCell sx={{ fontSize: 12 }}>Rate</TableCell>
+              <TableCell sx={{ fontSize: 12 }}>Total</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {result.map((item, index) => (
               <TableRow key={index}>
-                <TableCell>{dateFormat(item.date)}</TableCell>
-                <TableCell>
-                  {item.customer} to {item.from}
-                </TableCell>
-                <TableCell>{item.currency}</TableCell>
-                <TableCell>{item.amount}</TableCell>
-                <TableCell>{item.excurrency}</TableCell>
-                <TableCell>{item.exrate}</TableCell>
-                <TableCell>{item.calculatedamount}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>{dateFormat(item.date)}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>{`${item.customer} to ${item.from}`}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>{item.currency}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>{item.amount}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>{`${item.exrate} ${item.excurrency}`}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>{item.calculatedamount}</TableCell>
               </TableRow>
             ))}
           </TableBody>

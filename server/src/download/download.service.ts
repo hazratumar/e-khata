@@ -54,14 +54,18 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
       );
     }
 
-    const browser = await chromium.launch();
-    const page = await browser.newPage(); // 2
-    await page.setViewportSize({ width: 1280, height: 800 }); // 3
+    const context = await this.browser.newContext();
+    const page = await context.newPage();
+
+    await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto(
       `${clientUrl}/history/${customer}/${currency}/${startDate}/${endDate}`
     );
     await page.waitForLoadState("networkidle");
-    await page.pdf({ path: filePath });
+    await page.pdf({
+      path: filePath,
+      format: "a4",
+    });
     await page.close();
     return fileUrl;
   }
@@ -81,11 +85,10 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
       url: `${serverUrl}/assets/khata/${filename}`,
     };
 
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
-
     const filePath = join(directory, filename);
+
+    const context = await this.browser.newContext();
+    const page = await context.newPage();
 
     try {
       // Create the directory if it doesn't exist
@@ -116,7 +119,7 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
       });
       await page.setViewportSize({ width: 1280, height: 720 });
 
-      await browser.close();
+      await context.close();
       return fileUrl;
     } catch (error) {
       console.error("Error occurred while generating the PDF:", error);

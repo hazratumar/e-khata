@@ -1,38 +1,7 @@
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import HistoryPage from "src/sections/report/historyPage";
-import { useCustomerHistoryQuery } from "src/store/services/reportService";
-import { isNotTruthy } from "src/utils/generic-functions";
 
-const HistoryList = ({ customer, currency, startDate, endDate }) => {
-  const { data, isLoading, error } = useCustomerHistoryQuery({
-    customer,
-    currency,
-    startDate,
-    endDate,
-  });
-
-  if (isLoading) {
-    return (
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        style={{ minHeight: "100vh" }}
-      >
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <CircularProgress size={"10vh"} thickness={4} />
-          <Box sx={{ marginTop: "20px" }}>
-            <Typography variant="h6" align="center">
-              Loading...
-            </Typography>
-          </Box>
-        </Box>
-      </Grid>
-    );
-  }
-
+const HistoryList = ({ data, error }) => {
   if (error) {
     return (
       <Typography variant="h6" align="center">
@@ -41,28 +10,27 @@ const HistoryList = ({ customer, currency, startDate, endDate }) => {
     );
   }
 
-  if (isNotTruthy(data?.result?.length)) {
-    return (
-      <Typography variant="h6" align="center">
-        No records found in this date range.
-      </Typography>
-    );
+  if (!data) {
+    return null;
   }
 
   return <HistoryPage invoice={data} />;
 };
 
-export const getServerSideProps = ({ query }) => {
+export const getServerSideProps = async ({ query }) => {
   const { customer, currency, startDate, endDate } = query;
+  const BASE_URL = process.env.SERVER_URL;
 
-  return {
-    props: {
-      customer,
-      currency,
-      startDate,
-      endDate,
-    },
-  };
+  try {
+    const res = await fetch(
+      `${BASE_URL}/report/history/${customer}/${currency}/${startDate}/${endDate}`
+    );
+    const data = await res.json();
+    return { props: { data, error: null } };
+  } catch (error) {
+    console.error(error);
+    return { props: { data: null, error } };
+  }
 };
 
 export default HistoryList;
