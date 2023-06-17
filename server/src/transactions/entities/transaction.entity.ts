@@ -35,6 +35,7 @@ export class Transaction {
     onDelete: "CASCADE",
   })
   exCurrency?: Currency;
+
   @Column({ type: "float", default: 1 })
   exRate?: number;
 

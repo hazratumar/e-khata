@@ -161,13 +161,7 @@ export class BalanceService {
     return amountByCurrency;
   }
 
-  async getDataByDateRange(
-    startDate: Date,
-    endDate: Date
-  ): Promise<{
-    credit: Array<{ abbreviation: string; amount: number }>;
-    debit: Array<{ abbreviation: string; amount: number }>;
-  }> {
+  async getDataByDateRange(startDate, endDate) {
     const creditBalances = await this.getBalancesOfTypeByDateRange(
       "Credit",
       startDate,
@@ -184,6 +178,79 @@ export class BalanceService {
 
     const currencies = await this.currencyService.getCurrenciesAbbreviation();
 
+    const endDateWithTime = new Date(endDate);
+    endDateWithTime.setHours(23, 59, 59);
+
+    // Execute both credit and debit queries concurrently
+    const [creditResult, debitResult] = await Promise.all([
+      this.walletRepository
+        .createQueryBuilder("wallet")
+        .leftJoin("wallet.customer", "customer")
+        .leftJoin("wallet.transaction", "transaction")
+        .leftJoin("transaction.currency", "currency")
+        .leftJoin("transaction.exCurrency", "exCurrency")
+        .where("transaction.createdAt >= :startDate", { startDate })
+        .andWhere("transaction.createdAt <= :endDate", {
+          endDate: endDateWithTime,
+        })
+        .andWhere("wallet.type = :type", { type: "Credit" })
+        .andWhere("customer.isSelf = :isSelf", { isSelf: true })
+        .select("currency.abbreviation", "currency")
+        .addSelect("exCurrency.abbreviation", "exCurrency")
+        .addSelect("SUM(transaction.amount)", "credit")
+        .addSelect("SUM(transaction.exRate * transaction.amount)", "debit")
+        .groupBy("currency.abbreviation, exCurrency.abbreviation")
+        .getRawMany(),
+
+      this.walletRepository
+        .createQueryBuilder("wallet")
+        .leftJoin("wallet.customer", "customer")
+        .leftJoin("wallet.transaction", "transaction")
+        .leftJoin("transaction.currency", "currency")
+        .leftJoin("transaction.exCurrency", "exCurrency")
+        .where("transaction.createdAt >= :startDate", { startDate })
+        .andWhere("transaction.createdAt <= :endDate", {
+          endDate: endDateWithTime,
+        })
+        .andWhere("wallet.type = :type", { type: "Debit" })
+        .andWhere("customer.isSelf = :isSelf", { isSelf: true })
+        .select("currency.abbreviation", "currency")
+        .addSelect("exCurrency.abbreviation", "exCurrency")
+        .addSelect("SUM(transaction.amount)", "debit")
+        .addSelect("SUM(transaction.exRate * transaction.amount)", "credit")
+        .groupBy("currency.abbreviation, exCurrency.abbreviation")
+        .getRawMany(),
+    ]);
+
+    const sumOfCredits = {};
+    const sumOfDebits = {};
+
+    currencies.forEach((currency) => {
+      sumOfCredits[currency] = 0;
+      sumOfDebits[currency] = 0;
+    });
+
+    creditResult.forEach((result) => {
+      const currency = result.currency;
+      const exCurrency = result.exCurrency;
+      const credit = parseFloat(result.credit) || 0;
+      const debit = parseFloat(result.debit) || 0;
+
+      sumOfCredits[currency] += credit;
+      sumOfDebits[exCurrency] += debit;
+    });
+
+    debitResult.forEach((result) => {
+      const currency = result.currency;
+      const exCurrency = result.exCurrency;
+      const credit = parseFloat(result.credit) || 0;
+      const debit = parseFloat(result.debit) || 0;
+
+      sumOfCredits[currency] += credit;
+      sumOfDebits[exCurrency] += debit;
+    });
+
+    // Update creditParsedBalances and debitParsedBalances with missing currencies
     currencies.forEach((currency) => {
       if (
         !creditParsedBalances.find(
@@ -210,6 +277,8 @@ export class BalanceService {
     return {
       credit: creditParsedBalances,
       debit: debitParsedBalances,
+      sumOfCredits,
+      sumOfDebits,
     };
   }
 
