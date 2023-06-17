@@ -20,6 +20,15 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
     await this.browser.close();
   }
 
+  private deleteFilesWithPrefix(directory: string, prefix: string): void {
+    const files = readdirSync(directory);
+    files.forEach((file) => {
+      if (file.startsWith(prefix)) {
+        unlinkSync(join(directory, file));
+      }
+    });
+  }
+
   async downloadHistory(
     customer: number,
     currency: number,
@@ -30,29 +39,18 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
     const serverUrl = this.configService.get<string>("app.serverUrl");
 
     const directory = join(__dirname, "..", "assets", "history");
+    const prefix = "history_";
     const filename = `history_${startDate}_to_${endDate}.pdf`;
+    const filePath = join(directory, filename);
     const fileUrl = {
       url: `${serverUrl}/assets/history/${filename}`,
     };
 
-    const filePath = join(directory, filename);
-
-    // Create the directory if it doesn't exist
     if (!existsSync(directory)) {
       mkdirSync(directory, { recursive: true });
     }
 
-    // Unlink (delete) any existing files in the directory with the same prefix
-    const files = readdirSync(directory);
-    if (files) {
-      await Promise.all(
-        files.map(async (file) => {
-          if (file.startsWith("history_")) {
-            unlinkSync(join(directory, file));
-          }
-        })
-      );
-    }
+    this.deleteFilesWithPrefix(directory, prefix);
 
     const context = await this.browser.newContext();
     const page = await context.newPage();
@@ -67,6 +65,7 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
       format: "a4",
     });
     await page.close();
+
     return fileUrl;
   }
 
@@ -80,50 +79,36 @@ export class DownloadService implements OnModuleInit, OnModuleDestroy {
     const serverUrl = this.configService.get<string>("app.serverUrl");
 
     const directory = join(__dirname, "..", "assets", "khata");
+    const prefix = "khata_";
     const filename = `khata_${startDate}_to_${endDate}.pdf`;
     const fileUrl = {
       url: `${serverUrl}/assets/khata/${filename}`,
     };
 
-    const filePath = join(directory, filename);
+    if (!existsSync(directory)) {
+      mkdirSync(directory, { recursive: true });
+    }
+
+    this.deleteFilesWithPrefix(directory, prefix);
 
     const context = await this.browser.newContext();
     const page = await context.newPage();
 
-    try {
-      // Create the directory if it doesn't exist
-      if (!existsSync(directory)) {
-        mkdirSync(directory, { recursive: true });
-      }
+    await page.setViewportSize({ width: 1880, height: 720 });
 
-      // Unlink (delete) any existing files in the directory with the same prefix
-      const files = readdirSync(directory);
-      if (files) {
-        await Promise.all(
-          files.map(async (file) => {
-            if (file.startsWith("khata_")) {
-              unlinkSync(join(directory, file));
-            }
-          })
-        );
-      }
+    await page.goto(
+      `${clientUrl}/khata/${customer}/${currency}/${startDate}/${endDate}`
+    );
+    await page.waitForLoadState("networkidle");
 
-      await page.goto(
-        `${clientUrl}/khata/${customer}/${currency}/${startDate}/${endDate}`
-      );
-      await page.waitForLoadState("networkidle");
+    await page.pdf({
+      path: join(directory, filename),
+      format: "a4",
+    });
 
-      await page.pdf({
-        path: filePath,
-        format: "a4",
-      });
-      await page.setViewportSize({ width: 1280, height: 720 });
+    await page.close();
+    await context.close();
 
-      await context.close();
-      return fileUrl;
-    } catch (error) {
-      console.error("Error occurred while generating the PDF:", error);
-      throw new Error("Failed to generate the PDF.");
-    }
+    return fileUrl;
   }
 }

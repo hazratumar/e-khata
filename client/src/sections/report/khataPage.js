@@ -53,8 +53,7 @@ const KhataPage = ({ invoice }) => {
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontSize: 12 }}>Date</TableCell>
-              <TableCell sx={{ fontSize: 12 }}>Customer</TableCell>
-              <TableCell sx={{ fontSize: 12 }}>Currency</TableCell>
+              <TableCell sx={{ fontSize: 12 }}>Description</TableCell>
               <TableCell sx={{ fontSize: 12 }}>Amount</TableCell>
               <TableCell sx={{ fontSize: 12 }}>Rate</TableCell>
               <TableCell sx={{ fontSize: 12 }}>Debit</TableCell>
@@ -73,8 +72,9 @@ const KhataPage = ({ invoice }) => {
                       ? item.customer + " to " + item.from
                       : item.from + " to " + item.customer}
                   </TableCell>
-                  <TableCell sx={{ fontSize: 12 }}>{item.currency}</TableCell>
-                  <TableCell sx={{ fontSize: 12 }}>{item.amount}</TableCell>
+                  <TableCell sx={{ fontSize: 12 }}>
+                    {item.amount} {item.currency}
+                  </TableCell>
                   <TableCell sx={{ fontSize: 12 }}>{item.exrate}</TableCell>
                   <TableCell sx={{ fontSize: 12 }}>
                     {item.type === "Debit" ? item.calculatedamount : 0}
