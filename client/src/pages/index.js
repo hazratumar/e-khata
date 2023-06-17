@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Container, Grid, CircularProgress, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { OverviewBudget } from "src/sections/overview/overview-budget";
@@ -11,19 +11,16 @@ import { dateFormat } from "../utils/generic-functions";
 
 const Page = () => {
   const [selectedOption, setSelectedOption] = useState(getDateRange(1));
-  const { data, isLoading } = useGetDashboardDataQuery(selectedOption);
+  const { data, isLoading, refetch } = useGetDashboardDataQuery(selectedOption);
   const { data: currenciesData } = useGetCurrenciesQuery({ page: 0, rowsPerPage: 100 });
 
   const currencyAbbreviations = currenciesData?.currencies.map((currency) => currency.abbreviation);
-
-  const sumOfDebits = calculateSum(data?.sumOfDebits);
-  const sumOfCredits = calculateSum(data?.sumOfCredits);
 
   const filterDashboard = (data) => {
     setSelectedOption(data);
   };
 
-  function calculateSum(amounts) {
+  const calculateSum = (amounts) => {
     if (!amounts) {
       return 0;
     }
@@ -33,7 +30,14 @@ const Page = () => {
       }
       return sum;
     }, 0);
-  }
+  };
+
+  const sumOfDebits = calculateSum(data?.sumOfDebits);
+  const sumOfCredits = calculateSum(data?.sumOfCredits);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <>

@@ -27,7 +27,13 @@ export class WalletService {
     const user = await this.usersService.findOne(userId);
     const transaction = await this.transactionsService.findOne(transactionId);
 
-    const wallets = new Wallet({ ...wallet, user, transaction, from });
+    const wallets = {
+      ...wallet,
+      user,
+      transaction,
+      from,
+    };
+
     return this.walletRepository.save(wallets);
   }
 
