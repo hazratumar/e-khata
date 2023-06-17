@@ -26,13 +26,13 @@ export class CurrencyService {
 
     const newCurrency = new Currency({ ...currency, user });
     try {
-      return this.currencyRepository.save(newCurrency);
+      return await this.currencyRepository.save(newCurrency);
     } catch (error) {
       if (error.code === "23505") {
         // check if the error is a duplicate key error
         const columnName = error.detail.match(/\((.*?)\)/)[1]; // extract the column name from the error detail
         throw new ConflictException(
-          `Customer with this ${columnName} already exists`
+          `Currency with this ${columnName} already exists`
         );
       }
       throw error;
