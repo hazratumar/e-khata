@@ -25,13 +25,12 @@ export class WalletService {
     from?: any
   ): Promise<Wallet> {
     const user = await this.usersService.findOne(userId);
-    const transaction = await this.transactionsService.findOne(transactionId);
 
     const wallets = {
       ...wallet,
+      ...from,
+      transaction: transactionId,
       user,
-      transaction,
-      from,
     };
 
     return this.walletRepository.save(wallets);
