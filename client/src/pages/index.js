@@ -42,11 +42,10 @@ const Page = () => {
       </Head>
       <Box component="main">
         <Container maxWidth="xl">
-          <Grid container spacing={3} my={1} alignItems="center">
+          <Grid container spacing={3} py={1} alignItems="center">
             <Grid item xs={12} md={6}>
               <Typography variant="h6" component="h1">
-                Debit and Credit from: {dateFormat(selectedOption.startDate)} to{" "}
-                {dateFormat(selectedOption.endDate)}
+                From {dateFormat(selectedOption.startDate)} to {dateFormat(selectedOption.endDate)}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6} display="flex" justifyContent="flex-end">
