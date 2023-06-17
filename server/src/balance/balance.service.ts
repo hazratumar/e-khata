@@ -161,7 +161,7 @@ export class BalanceService {
     return amountByCurrency;
   }
 
-  async getBalancesByDateRange(
+  async getDataByDateRange(
     startDate: Date,
     endDate: Date
   ): Promise<{

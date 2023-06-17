@@ -18,7 +18,7 @@ export class ExpenseItem {
   @Column()
   name: string;
 
-  @Column()
+  @Column("float")
   price: number;
 
   @Column()

@@ -26,7 +26,7 @@ export class Transaction {
   })
   currency: Currency;
 
-  @Column({ default: 0 })
+  @Column({ type: "float", default: 0 })
   amount: number;
 
   @ManyToOne(() => Currency, (currency) => currency.transactions, {
@@ -35,8 +35,7 @@ export class Transaction {
     onDelete: "CASCADE",
   })
   exCurrency?: Currency;
-
-  @Column({ default: 1 })
+  @Column({ type: "float", default: 1 })
   exRate?: number;
 
   @Column()

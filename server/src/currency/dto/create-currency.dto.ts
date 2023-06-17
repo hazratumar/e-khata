@@ -1,8 +1,4 @@
-import {
-  IsNotEmpty,
-  IsOptional,
-  MaxLength,
-} from "class-validator";
+import { IsNotEmpty, IsOptional, MaxLength } from "class-validator";
 
 export class CreateCurrencyDto {
   @IsNotEmpty({ message: "Currency name is required" })
@@ -13,8 +9,11 @@ export class CreateCurrencyDto {
 
   @IsNotEmpty({ message: "Abbreviation name is required" })
   @MaxLength(20, {
-    message: "Currency Abbreviation must be less than or equal to 20 characters",
+    message:
+      "Currency Abbreviation must be less than or equal to 20 characters",
   })
-  @IsOptional()
   abbreviation: string;
+
+  @IsNotEmpty({ message: "Rate is required" })
+  rate: number;
 }

@@ -9,14 +9,12 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
-  MenuItem,
   SvgIcon,
   TextField,
 } from "@mui/material";
-import { PencilSquareIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useUpdateCurrencyMutation } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
@@ -27,7 +25,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "350px",
-  height: "360px",
+  height: "430px",
   backgroundColor: "#fff",
   borderRadius: "10px",
   boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
@@ -51,6 +49,7 @@ export const UpdateCurrency = (props) => {
     id: currency.id,
     name: currency.name,
     abbreviation: currency.abbreviation,
+    rate: currency.rate,
   });
   const [UpdateCurrency, { isSuccess, isLoading, error }] = useUpdateCurrencyMutation();
 
@@ -123,6 +122,16 @@ export const UpdateCurrency = (props) => {
                       label="Abbreviation"
                       name="abbreviation"
                       value={state.abbreviation}
+                      onChange={handleChange}
+                    />
+                  </Grid>{" "}
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      type="number"
+                      label="Rate"
+                      name="rate"
+                      value={state.rate}
                       onChange={handleChange}
                     />
                   </Grid>

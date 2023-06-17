@@ -29,7 +29,7 @@ export const AddBalance = forwardRef((props, ref) => {
       },
       balance: {
         currency: state.currency.id,
-        amount: parseInt(state.amount, 10),
+        amount: state.amount,
         description: state.description,
       },
     });

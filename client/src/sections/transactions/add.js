@@ -35,9 +35,9 @@ export const AddTransaction = forwardRef((props, ref) => {
       },
       transaction: {
         currency: state.currency.id,
-        amount: parseInt(state.amount, 10),
+        amount: state.amount,
         exCurrency: state.exCurrency.id,
-        exRate: parseInt(state.exRate, 10),
+        exRate: state.exRate,
         description: state.description,
       },
     });

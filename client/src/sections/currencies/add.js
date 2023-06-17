@@ -22,7 +22,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "350px",
-  height: "360px",
+  height: "410px",
   backgroundColor: "#fff",
   borderRadius: "10px",
   boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
@@ -36,6 +36,7 @@ export const AddCurrency = () => {
   const [formValues, setFormValues] = useState({
     name: "",
     abbreviation: "",
+    rate: 0,
   });
 
   const [AddCurrency, { isSuccess, isLoading, error }] = useAddCurrencyMutation();
@@ -117,6 +118,17 @@ export const AddCurrency = () => {
                       required
                       label="Abbreviation"
                       name="abbreviation"
+                      onChange={handleChange}
+                    />
+                  </Grid>{" "}
+                  <Grid item xs={12}>
+                    <TextField
+                      type="number"
+                      value={formValues.rate}
+                      fullWidth
+                      required
+                      label="Rate"
+                      name="rate"
                       onChange={handleChange}
                     />
                   </Grid>

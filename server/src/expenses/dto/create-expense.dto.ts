@@ -13,7 +13,6 @@ export class CreateExpenseDto {
 
   @ValidateIf((o) => o.quantity !== "")
   @IsNotEmpty({ message: "Expense quantity is required" })
-  @IsNumber({}, { message: "Expense quantity must be a number" })
   @MaxLength(10, {
     message: "Expense quantity must be less than or equal to 10 digits",
   })

@@ -18,6 +18,9 @@ export class Currency {
   @Column({ unique: true })
   name: string;
 
+  @Column("float")
+  rate: number;
+
   @Column({ unique: true })
   abbreviation: string;
 

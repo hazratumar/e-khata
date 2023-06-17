@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsNumberString,
-  IsOptional,
-  IsString,
-} from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateBalanceDto {
   @IsNotEmpty()
@@ -12,7 +6,6 @@ export class CreateBalanceDto {
   currency: number;
 
   @IsNotEmpty({ message: "Amount must not be empty" })
-  @IsNumber({}, { message: "Amount must be a valid number" })
   amount: number;
 
   @IsOptional()

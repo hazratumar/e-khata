@@ -26,6 +26,7 @@ export const CurrenciesTable = (props) => {
                 <TableCell>ID</TableCell>
                 <TableCell>Currency</TableCell>
                 <TableCell>Abbreviation</TableCell>
+                <TableCell>Rate</TableCell>
                 <TableCell>Recent Updates</TableCell>
                 <TableCell>Update</TableCell>
               </TableRow>
@@ -36,6 +37,7 @@ export const CurrenciesTable = (props) => {
                   <TableCell>{currency.id}</TableCell>
                   <TableCell>{currency.name}</TableCell>
                   <TableCell>{currency.abbreviation}</TableCell>
+                  <TableCell>{currency.rate}</TableCell>
                   <TableCell>{moment(currency.updatedAt).fromNow()}</TableCell>
                   <TableCell>
                     <UpdateCurrency currency={currency} />

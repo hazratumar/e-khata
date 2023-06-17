@@ -58,11 +58,11 @@ export class BalanceController {
   }
 
   @Get("dashboard/:startDate/:endDate")
-  async getCreditByDateRange(
+  async getDataByDateRange(
     @Param("startDate") startDate: Date,
     @Param("endDate") endDate: Date
   ) {
-    return this.balanceService.getBalancesByDateRange(startDate, endDate);
+    return this.balanceService.getDataByDateRange(startDate, endDate);
   }
 
   @Get("stock/:startDate/:endDate")

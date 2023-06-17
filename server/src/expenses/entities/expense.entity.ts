@@ -15,10 +15,10 @@ export class Expense {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column("float")
   price: number;
 
-  @Column()
+  @Column("float")
   quantity: number;
 
   @Column()
