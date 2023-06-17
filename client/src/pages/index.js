@@ -7,6 +7,7 @@ import { useGetDashboardDataQuery } from "src/store/services/balanceService";
 import { getDateRange } from "src/utils/generic-functions";
 import { FilterModal } from "src/sections/overview/filterModal";
 import { useGetCurrenciesQuery } from "src/store/services/currencyService";
+import { dateFormat } from "../utils/generic-functions";
 
 const Page = () => {
   const [selectedOption, setSelectedOption] = useState(getDateRange(1));
@@ -41,8 +42,16 @@ const Page = () => {
       </Head>
       <Box component="main">
         <Container maxWidth="xl">
-          <Grid container spacing={3} my={1} justifyContent="flex-end">
-            <FilterModal filterDashboard={filterDashboard} />
+          <Grid container spacing={3} my={1} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" component="h1">
+                Debit and Credit from: {dateFormat(selectedOption.startDate)} to{" "}
+                {dateFormat(selectedOption.endDate)}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6} display="flex" justifyContent="flex-end">
+              <FilterModal filterDashboard={filterDashboard} />
+            </Grid>
           </Grid>
           <Grid container spacing={3}>
             {isLoading ? (

@@ -1,6 +1,6 @@
 import { subDays, format } from "date-fns";
 const DATEFORMAT = "yyyy-MM-dd";
-const PAKDATEFORMAT = "dd-MM-yyyy";
+const PAKDATEFORMAT = "dd MMMM, yyyy";
 
 export const getDateRange = (days) => {
   const today = new Date();
