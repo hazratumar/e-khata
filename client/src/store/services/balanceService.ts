@@ -41,7 +41,7 @@ export const BalanceService = createApi({
       }),
       providesTags: ["balance"],
     }),
-    getCreditByDateRange: builder.query({
+    getDashboardData: builder.query({
       query: ({ startDate, endDate }) => ({
         url: `balance/dashboard/${startDate}/${endDate}`,
         method: "GET",
@@ -63,7 +63,7 @@ export const {
   useAddBalanceMutation,
   useGetBalanceQuery,
   useGetBalanceByCurrencyQuery,
-  useGetCreditByDateRangeQuery,
+  useGetDashboardDataQuery,
   useGetOneBalanceQuery,
   useUpdateBalanceMutation,
 } = BalanceService;
