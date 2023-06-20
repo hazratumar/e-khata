@@ -18,32 +18,31 @@ import { GetCurrentUserId } from "src/common/decorators";
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // Create a new user
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
-  // Get all users
+  @HttpCode(HttpStatus.OK)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
-  // Get a single user by ID
+  @HttpCode(HttpStatus.OK)
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.usersService.findOne(+id);
   }
 
-  // Update an existing user
-  @Put()
   @HttpCode(HttpStatus.OK)
+  @Put()
   update(@GetCurrentUserId() id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  // Delete a user by ID
+  @HttpCode(HttpStatus.OK)
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.usersService.remove(+id);

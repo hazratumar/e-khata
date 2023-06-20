@@ -1,11 +1,11 @@
 import Head from "next/head";
-import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
+import { Box, Container, Stack, Typography, Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { AccountProfile } from "src/sections/account/account-profile";
-import { AccountProfileDetails } from "src/sections/account/account-profile-details";
+import { ProfileImage } from "src/sections/account/profileImage";
+import { ProfileDetails } from "src/sections/account/profileDetails";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { SettingsPassword } from "../sections/account/settings-password";
+import { ChangePassword } from "../sections/account/changePassword";
 
 const Page = () => {
   const { user } = useSelector((state) => state.auth);
@@ -29,31 +29,19 @@ const Page = () => {
       <Head>
         <title>Account | Rahat Shinwari Enterprises</title>
       </Head>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
+      <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
         <Container maxWidth="lg">
           <Stack spacing={3}>
-            <div>
-              <Typography variant="h4">Account</Typography>
-            </div>
-            <div>
-              <Grid container spacing={3}>
-                {/* <Grid xs={12} md={6} lg={4}>
-                  <AccountProfile user={state} />
-                </Grid> */}
-                <Grid xs={12} md={12} lg={12}>
-                  <AccountProfileDetails user={state} />
-                </Grid>
-                {/* <Grid xs={12} md={12} lg={12}>
-                  <SettingsPassword />
-                </Grid> */}
-              </Grid>
-            </div>
+            <Typography variant="h4">Account</Typography>
+            <Grid item xs={12} md={6} lg={6}>
+              <ProfileImage user={state} />
+            </Grid>
+            <Grid item xs={12} md={6} lg={6}>
+              <ProfileDetails user={state} />
+            </Grid>
+            <Grid item xs={12} md={6} lg={6}>
+              <ChangePassword />
+            </Grid>
           </Stack>
         </Container>
       </Box>

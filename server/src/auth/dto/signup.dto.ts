@@ -1,12 +1,9 @@
-import { Transform } from "class-transformer";
 import {
   IsEmail,
   IsNotEmpty,
   IsString,
-  Matches,
+  MaxLength,
   MinLength,
-  validate,
-  ValidationError,
 } from "class-validator";
 
 export class SignUpDto {
@@ -18,24 +15,13 @@ export class SignUpDto {
   @IsNotEmpty()
   email: string;
 
-  @MinLength(6)
-  password: string;
+  @MinLength(6, { message: "New password must be at least 6 characters long." })
+  @MaxLength(10, { message: "New password cannot exceed 10 characters." })
+  newPassword: string;
 
-  @MinLength(6)
+  @MinLength(6, {
+    message: "Confirm password must be at least 6 characters long.",
+  })
+  @MaxLength(10, { message: "Confirm password cannot exceed 10 characters." })
   confirmPassword: string;
-
-  async validate(): Promise<ValidationError[]> {
-    const errors = await validate(this);
-    if (this.password !== this.confirmPassword) {
-      errors.push({
-        target: this,
-        property: "confirmPassword",
-        value: this.confirmPassword,
-        constraints: {
-          matchesPassword: "Password and confirm password fields do not match",
-        },
-      });
-    }
-    return errors;
-  }
 }

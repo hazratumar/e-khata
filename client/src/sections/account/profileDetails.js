@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  Box,
   Button,
   Card,
   CardActions,
@@ -8,14 +7,14 @@ import {
   CardHeader,
   Divider,
   TextField,
-  Unstable_Grid2 as Grid,
+  Stack,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setToken } from "../../store/reducers/authSlice";
-import { useUpdateUserMutation } from "../../store/services/userService";
+import { setToken } from "src/store/reducers/authSlice";
+import { useUpdateUserMutation } from "src/store/services/userService";
 import { toast } from "react-hot-toast";
 
-export const AccountProfileDetails = ({ user }) => {
+export const ProfileDetails = ({ user }) => {
   const dispatch = useDispatch();
 
   const [formValues, setFormValues] = useState({
@@ -57,35 +56,29 @@ export const AccountProfileDetails = ({ user }) => {
   }, [isSuccess, error, data, dispatch]);
 
   return (
-    <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader subheader="The information can be edited" title="Profile" />
         <CardContent sx={{ pt: 0 }}>
-          <Box sx={{ m: -1.5 }}>
-            <Grid container spacing={3}>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  helperText="Please specify the full name"
-                  label="Full name"
-                  name="name"
-                  onChange={handleChange}
-                  required
-                  value={formValues.name}
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Email Address"
-                  name="email"
-                  onChange={handleChange}
-                  required
-                  value={formValues.email}
-                />
-              </Grid>
-            </Grid>
-          </Box>
+          <Stack spacing={3} sx={{ maxWidth: 400 }}>
+            <TextField
+              fullWidth
+              helperText="Please specify the full name"
+              label="Full name"
+              name="name"
+              onChange={handleChange}
+              required
+              value={formValues.name}
+            />
+            <TextField
+              fullWidth
+              label="Email Address"
+              name="email"
+              onChange={handleChange}
+              required
+              value={formValues.email}
+            />
+          </Stack>
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>

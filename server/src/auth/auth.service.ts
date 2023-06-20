@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   HttpException,
   HttpStatus,
@@ -9,86 +10,112 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as argon from "argon2";
-
 import { LoginDto, SignUpDto } from "./dto";
 import { JwtPayload, Tokens } from "./types";
 import { UsersService } from "src/users/users.service";
 import { User } from "src/users/entities/user.entity";
+import { ResetPasswordDto } from "./dto/resetPassword.dto";
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     @Inject(forwardRef(() => UsersService))
-    private readonly UsersService: UsersService
+    private readonly usersService: UsersService
   ) {}
 
-  async signup(dto: SignUpDto): Promise<Tokens> {
-    const user = await this.UsersService.create(dto);
+  async signup(signUpDto: SignUpDto): Promise<Tokens> {
+    await this.isPasswordSame(signUpDto.newPassword, signUpDto.confirmPassword);
+
+    const user = await this.usersService.create(signUpDto);
     const tokens = await this.getTokens(user);
-    await this.updateRtHash(user.id, tokens.refresh_token);
+    await this.updateRefreshTokenHash(user.id, tokens.refresh_token);
     return tokens;
   }
 
+  async isPasswordSame(
+    newPassword: string,
+    confirmPassword: string
+  ): Promise<void> {
+    if (newPassword !== confirmPassword) {
+      throw new HttpException(
+        "New password and confirm password do not match.",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
   async login(dto: LoginDto): Promise<Tokens> {
-    const user = await this.UsersService.findByEmail(dto.email);
+    const user = await this.usersService.findByEmail(dto.email);
 
     const passwordMatches = await argon.verify(user.password, dto.password);
-    if (!passwordMatches)
+    if (!passwordMatches) {
       throw new ForbiddenException(
         "Authentication failed - incorrect password"
       );
+    }
 
     const tokens = await this.getTokens(user);
-    await this.updateRtHash(user.id, tokens.refresh_token);
+    await this.updateRefreshTokenHash(user.id, tokens.refresh_token);
     return tokens;
   }
 
   async logout(id: number): Promise<boolean> {
-    await this.UsersService.findOne(id);
-    await this.UsersService.refreshToken(id, null);
+    await this.usersService.findOne(id);
+    await this.usersService.refreshToken(id, null);
     return true;
   }
 
   async refreshTokens(userId: number, rt: string): Promise<Tokens> {
-    const user = await this.UsersService.findOne(userId);
+    const user = await this.usersService.findOne(userId);
 
-    if (!user || !user.refreshToken)
+    if (!user || !user.refreshToken) {
       throw new ForbiddenException("Access Denied");
+    }
 
     const rtMatches = await argon.verify(user.refreshToken, rt);
-    if (!rtMatches) throw new ForbiddenException("Access Denied");
+    if (!rtMatches) {
+      throw new ForbiddenException("Access Denied");
+    }
 
     const tokens = await this.getTokens(user);
-    await this.updateRtHash(user.id, tokens.refresh_token);
+    await this.updateRefreshTokenHash(user.id, tokens.refresh_token);
 
     return tokens;
   }
 
-  async changePassword(
-    email: string,
-    oldPassword: string,
-    newPassword: string
+  async resetPassword(
+    userId: number,
+    resetPasswordDto: ResetPasswordDto
   ): Promise<Tokens> {
-    const user = await this.UsersService.findByEmail(email);
-    const oldPasswordMatches = await argon.verify(user.password, oldPassword);
+    await this.isPasswordSame(
+      resetPasswordDto.newPassword,
+      resetPasswordDto.confirmPassword
+    );
+
+    const user = await this.usersService.findOne(userId);
+    const oldPasswordMatches = await argon.verify(
+      user.password,
+      resetPasswordDto.oldPassword
+    );
 
     if (!oldPasswordMatches) {
-      throw new ForbiddenException(
-        "Your old password is incorrect. Please try again."
+      throw new HttpException(
+        "Your old password is incorrect. Please try again.",
+        HttpStatus.UNAUTHORIZED
       );
     }
 
-    const hash = await argon.hash(newPassword);
-    await this.UsersService.update(user.id, { password: hash });
+    const hash = await argon.hash(resetPasswordDto.newPassword);
+    await this.usersService.update(user.id, { password: hash });
 
     const tokens = await this.getTokens(user);
-    await this.updateRtHash(user.id, tokens.refresh_token);
+    await this.updateRefreshTokenHash(user.id, tokens.refresh_token);
 
     return tokens;
   }
 
-  generateOTP() {
+  generateOTP(): string {
     const digits = "0123456789";
     let otp = "";
     for (let i = 0; i < 6; i++) {
@@ -128,27 +155,28 @@ export class AuthService {
   // }
 
   async sendOTP(email: string): Promise<string> {
-    const user = await this.UsersService.findByEmail(email);
+    const user = await this.usersService.findByEmail(email);
 
     const oneTimePassword = await this.generateOTP();
 
     const hash = await argon.hash(oneTimePassword);
 
-    await this.UsersService.update(user.id, { otp: hash });
+    await this.usersService.update(user.id, { otp: hash });
 
     // await this.sendOTPEmail(user, oneTimePassword);
 
     return oneTimePassword;
   }
-  isOtpExpired(updatedAt): boolean {
+
+  isOTPExpired(updatedAt: Date): boolean {
     const expiryTime = new Date(updatedAt);
-    expiryTime.setMinutes(expiryTime.getMinutes() + 2); // add 2 minutes
+    expiryTime.setMinutes(expiryTime.getMinutes() + 2);
     const currentTime = new Date();
     return expiryTime < currentTime;
   }
 
   async submitOTP(email: string, otp: string): Promise<Tokens> {
-    const user = await this.UsersService.findByEmail(email);
+    const user = await this.usersService.findByEmail(email);
 
     if (!user?.otp) {
       throw new HttpException(
@@ -162,23 +190,26 @@ export class AuthService {
       throw new ForbiddenException("Your OTP is incorrect. Please try again.");
     }
 
-    if (this.isOtpExpired(user.updatedAt)) {
+    if (this.isOTPExpired(user.updatedAt)) {
       throw new ForbiddenException(
         "Your OTP has expired. Please request a new OTP and try again."
       );
     }
 
-    await this.UsersService.update(user.id, { otp: null });
+    await this.usersService.update(user.id, { otp: null });
 
     const tokens = await this.getTokens(user);
-    await this.updateRtHash(user.id, tokens.refresh_token);
+    await this.updateRefreshTokenHash(user.id, tokens.refresh_token);
 
     return tokens;
   }
 
-  async updateRtHash(userId: number, rt: string): Promise<void> {
-    const hash = await argon.hash(rt);
-    await this.UsersService.refreshToken(userId, hash);
+  async updateRefreshTokenHash(
+    userId: number,
+    refreshToken: string
+  ): Promise<void> {
+    const hash = await argon.hash(refreshToken);
+    await this.usersService.refreshToken(userId, hash);
   }
 
   async getTokens(user: User): Promise<Tokens> {
@@ -191,7 +222,7 @@ export class AuthService {
       image: user.image,
     };
 
-    const [at, rt] = await Promise.all([
+    const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: process.env.SECRET_KEY,
         expiresIn: "15h",
@@ -203,8 +234,8 @@ export class AuthService {
     ]);
 
     return {
-      access_token: at,
-      refresh_token: rt,
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 }

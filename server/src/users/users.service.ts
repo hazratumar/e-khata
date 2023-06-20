@@ -19,6 +19,7 @@ import { extname } from "path";
 export class UsersService {
   private readonly allowedExtensions = [".jpg", ".jpeg", ".png"];
   private readonly maxFileSizeInBytes = 5242880; // 5 MB
+
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -27,7 +28,11 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const hash = await argon.hash(createUserDto.password);
+    await this.authService.isPasswordSame(
+      createUserDto.newPassword,
+      createUserDto.confirmPassword
+    );
+    const hash = await argon.hash(createUserDto.newPassword);
     const existingUser = await this.userRepository.findOne({
       where: [{ email: createUserDto.email }],
     });
@@ -42,56 +47,30 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    // Find all users in the database
     const users = await this.userRepository.find();
-
     if (users.length === 0) {
-      // If no users are found, throw an error
       throw new HttpException("No users found", HttpStatus.NOT_FOUND);
     }
-
     return users;
   }
 
   async findOne(id: number): Promise<User> {
-    // Find a user by their ID
-    const user = await this.userRepository.findOne({ where: { id } });
-
-    if (!user) {
-      // If no user with the given ID is found, throw an error
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-    }
-
-    return user;
+    return this.findUserById(id);
   }
 
   async findByEmail(email: string): Promise<User> {
-    // Find a user by their email
-    const user = await this.userRepository.findOne({ where: { email } });
-
-    if (!user) {
-      // If no user with the given email is found, throw an error
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-    }
-
-    return user;
+    return this.findUserByEmail(email);
   }
-  async refreshToken(id: number, token: string): Promise<User> {
-    // Find the existing user in the database
-    const existingUser = await this.userRepository.findOne({ where: { id } });
-    if (!existingUser) {
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-    }
-    // Merge the existing user with the new data
-    const updatedUser = { ...existingUser, token };
 
-    // Save the updated user to the database
+  async refreshToken(id: number, token: string): Promise<User> {
+    const existingUser = await this.findUserById(id);
+    const updatedUser = { ...existingUser, token };
     return this.userRepository.save(updatedUser);
   }
 
   validateBase64Image(image: string): void {
-    const base64regex = /^data:image\/(png|jpg|jpeg);base64,/;
-    if (!base64regex.test(image)) {
+    const base64Regex = /^data:image\/(png|jpg|jpeg);base64,/;
+    if (!base64Regex.test(image)) {
       throw new HttpException("Invalid image format", HttpStatus.BAD_REQUEST);
     }
 
@@ -113,42 +92,54 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<Tokens> {
-    if (updateUserDto?.image) {
-      await this.validateBase64Image(updateUserDto?.image);
+    if (updateUserDto.image) {
+      this.validateBase64Image(updateUserDto.image);
     }
-    // Find the existing user in the database
-    const existingUser = await this.userRepository.findOne({ where: { id } });
-    if (!existingUser) {
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-    }
-
-    // Check if the provided email already exists for another user
+    const existingUser = await this.findUserById(id);
     const { email } = updateUserDto;
-
-    const userWithSameEmail = await this.userRepository.findOne({
-      where: { email },
-    });
-    if (userWithSameEmail && userWithSameEmail.id !== id) {
-      throw new HttpException("Email already taken", HttpStatus.CONFLICT);
-    }
-
-    // Merge the existing user with the new data
+    await this.checkEmailAvailability(email, id);
     const updatedUser = { ...existingUser, ...updateUserDto };
-
-    // Save the updated user to the database
     const user = await this.userRepository.save(updatedUser);
     const tokens = await this.authService.getTokens(user);
-    await this.authService.updateRtHash(user.id, tokens.refresh_token);
+    await this.authService.updateRefreshTokenHash(
+      user.id,
+      tokens.refresh_token
+    );
     return tokens;
   }
 
   async remove(id: number): Promise<void> {
-    // Delete the user from the database
-    const result = await this.userRepository.delete({ id });
-
-    // If no user was affected (i.e. the user doesn't exist), throw an error
+    const result = await this.userRepository.delete(id);
     if (result.affected === 0) {
       throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+    }
+  }
+
+  private async findUserById(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+
+  private async findUserByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+
+  private async checkEmailAvailability(
+    email: string,
+    userId: number
+  ): Promise<void> {
+    const userWithSameEmail = await this.userRepository.findOne({
+      where: { email },
+    });
+    if (userWithSameEmail && userWithSameEmail.id !== userId) {
+      throw new HttpException("Email already taken", HttpStatus.CONFLICT);
     }
   }
 }

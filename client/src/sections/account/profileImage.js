@@ -15,7 +15,7 @@ import { setToken } from "../../store/reducers/authSlice";
 import { useUpdateUserMutation } from "../../store/services/userService";
 import { toast } from "react-hot-toast";
 
-export const AccountProfile = () => {
+export const ProfileImage = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.auth.user);
@@ -86,8 +86,11 @@ export const AccountProfile = () => {
         </Box>
       </CardContent>
       <Divider />
-      <CardActions sx={{ justifyContent: "center" }}>
-        <label htmlFor="image-upload" style={{ width: "100%" }}>
+      <CardActions>
+        <label
+          htmlFor="image-upload"
+          style={{ width: "100%", display: "flex", justifyContent: "center" }}
+        >
           <input
             id="image-upload"
             type="file"
@@ -95,7 +98,7 @@ export const AccountProfile = () => {
             style={{ display: "none" }}
             onChange={handleImage}
           />
-          <Button fullWidth component="span">
+          <Button fullWidth component="span" sx={{ maxWidth: 400 }}>
             {isLoading ? "Uploading..." : "Upload Picture"}
           </Button>
         </label>
