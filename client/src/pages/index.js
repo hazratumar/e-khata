@@ -14,6 +14,10 @@ const Page = () => {
   const { data, isLoading, refetch } = useGetDashboardDataQuery(selectedOption);
   const { data: currenciesData } = useGetCurrenciesQuery({ page: 0, rowsPerPage: 100 });
 
+  useEffect(() => {
+    refetch();
+  }, [selectedOption]);
+
   const currencyAbbreviations = currenciesData?.currencies.map((currency) => currency.abbreviation);
 
   const filterDashboard = (data) => {
@@ -34,10 +38,7 @@ const Page = () => {
 
   const sumOfDebits = calculateSum(data?.sumOfDebits);
   const sumOfCredits = calculateSum(data?.sumOfCredits);
-
-  useEffect(() => {
-    refetch();
-  }, []);
+  const netProfit = sumOfDebits - sumOfCredits;
 
   return (
     <>
@@ -75,11 +76,42 @@ const Page = () => {
                     <OverviewBudget type="Debit" abbreviation={abbreviation} value={amount} />
                   </Grid>
                 ))}
-                <Grid key={1} item xs={12} sm={12} md={12} lg={12} pb={3}>
+                <Grid item xs={12} pb={3}>
                   <Box bgcolor="#f5f5f5" p={2} borderRadius={4}>
-                    <Typography variant="h5" component="h2" align="center">
-                      Net Profit in Dirham: {sumOfDebits - sumOfCredits}
-                    </Typography>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="h6" align="center">
+                          Total Credit in Dirham
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="h6" align="center">
+                          Total Debit in Dirham
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="h6" align="center">
+                          Net Profit in Dirham
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="h6" align="center">
+                          {sumOfCredits}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="h6" align="center">
+                          {sumOfDebits}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="h6" align="center">
+                          {netProfit}
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Box>
                 </Grid>
               </>

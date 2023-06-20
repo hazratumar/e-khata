@@ -246,8 +246,8 @@ export class BalanceService {
       const credit = parseFloat(result.credit) || 0;
       const debit = parseFloat(result.debit) || 0;
 
-      sumOfCredits[currency] += credit;
-      sumOfDebits[exCurrency] += debit;
+      sumOfCredits[exCurrency] += credit;
+      sumOfDebits[currency] += debit;
     });
 
     // Update creditParsedBalances and debitParsedBalances with missing currencies
