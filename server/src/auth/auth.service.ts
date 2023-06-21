@@ -1,11 +1,9 @@
 import {
-  BadRequestException,
   ForbiddenException,
   HttpException,
   HttpStatus,
   Inject,
   Injectable,
-  InternalServerErrorException,
   forwardRef,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
@@ -15,6 +13,7 @@ import { JwtPayload, Tokens } from "./types";
 import { UsersService } from "src/users/users.service";
 import { User } from "src/users/entities/user.entity";
 import { ResetPasswordDto } from "./dto/resetPassword.dto";
+import * as nodemailer from "nodemailer";
 
 @Injectable()
 export class AuthService {
@@ -122,35 +121,80 @@ export class AuthService {
     return otp;
   }
 
-  // async sendOTPEmail(user, oneTimePassword) {
-  //   var transport = nodemailer.createTransport({
-  //     service: "gmail",
-  //     port: 465,
-  //     secure: false,
-  //     auth: {
-  //      type: 'OAuth2',
-  //       user: process.env.MAIL_USERNAME,
-  //       pass: process.env.MAIL_PASSWORD,
-  //       clientId: process.env.OAUTH_CLIENTID,
-  //       clientSecret: process.env.OAUTH_CLIENT_SECRET,
-  //       refreshToken: process.env.OAUTH_REFRESH_TOKEN
-  //     }
-  //   });
-  //   var mailOptions = {
-  //     from: `${emailSender[0]?.email}`,
-  //     to: `${user?.email}`,
-  //     subject: `Recovery email verified for your ${emailSender[0]?.longName} account`,
-  //     text: `Dear Sir/Madam ${user?.name} please collect your ${emailSender[0]?.longName} account verification code ${oneTimePassword}.`
-  //   };
-  //   transport.sendMail(mailOptions, (error, info) => {
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       console.log('The verification email has been successfully sent.: ' + info.response);
-  //       return res.status(200).json({ msg: "The verification email successfully sent", email: response?.email });
-  //     }
-  //   });
-  // }
+  async sendOtpThroughEmail(user, oneTimePassword) {
+    try {
+      let transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false,
+        auth: {
+          user: "ronny80@ethereal.email",
+          pass: "W4a6qPPT1hKEg71VkA",
+        },
+      });
+
+      let htmlContent = `
+      <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              color: #333;
+            }
+            h1 {
+              color: #333;
+              margin-bottom: 20px;
+            }
+            p {
+              font-size: 16px;
+              line-height: 1.5;
+              margin-bottom: 10px;
+            }
+            .otp-container {
+              background-color: #f1f1f1;
+              padding: 10px;
+              border-radius: 4px;
+              font-size: 18px;
+              margin-bottom: 20px;
+            }
+            .otp-label {
+              color: #555;
+              font-weight: bold;
+              margin-bottom: 5px;
+            }
+            .btn {
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #007bff;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 4px;
+              margin-right: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Rahat Shinwari Enterprises - OTP Verification</h1>
+          <p>Dear ${user?.name},</p>
+          <p>Your One Time Password (OTP) for verification is: ${oneTimePassword}</p>
+          <p>Please use this OTP to complete your verification process.</p>
+        </body>
+      </html>
+    `;
+
+      let info = await transporter.sendMail({
+        from: "noreplay@gmail.com",
+        to: user.email,
+        subject: "OTP Verification",
+        html: htmlContent,
+      });
+
+      console.log("Message sent: %s", info.messageId);
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async sendOTP(email: string): Promise<string> {
     const user = await this.usersService.findByEmail(email);
@@ -159,11 +203,11 @@ export class AuthService {
 
     const hash = await argon.hash(oneTimePassword);
 
+    await this.sendOtpThroughEmail(user, oneTimePassword);
+
     await this.usersService.update(user.id, { otp: hash });
 
-    // await this.sendOTPEmail(user, oneTimePassword);
-
-    return oneTimePassword;
+    return "OTP sent successfully.";
   }
 
   isOTPExpired(updatedAt: Date): boolean {

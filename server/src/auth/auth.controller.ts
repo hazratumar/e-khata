@@ -13,6 +13,7 @@ import { AuthService } from "./auth.service";
 import { Tokens } from "./types";
 import { LoginDto, SignUpDto } from "./dto";
 import { ResetPasswordDto } from "./dto/resetPassword.dto";
+import { ForgotPasswordDto } from "./dto/forgotPassword.dto.ts";
 
 @Controller("auth")
 export class AuthController {
@@ -60,14 +61,14 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Put("forget")
-  sendOTP(@Body("email") email: string): Promise<string> {
-    return this.authService.sendOTP(email);
+  @Post("forget-password")
+  sendOTP(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<string> {
+    return this.authService.sendOTP(forgotPasswordDto?.email);
   }
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post("forget")
+  @Post("submit-otp")
   submitOTP(
     @Body("email") email: string,
     @Body("otp") otp: string
