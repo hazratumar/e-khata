@@ -76,16 +76,18 @@ export class BalanceService {
 
   async updateWallet(userId: number, wallet: UpdateWalletDto): Promise<Wallet> {
     const user = await this.usersService.findOne(userId);
-    const customer = await this.customersService.findOne(wallet?.customer);
+    const customer = await this.customersService.findOne(wallet?.customerId);
     const existingWallet = await this.walletRepository.findOne({
-      where: { id: wallet.id },
+      where: { id: wallet?.id },
     });
 
     if (!existingWallet) {
-      throw new NotFoundException(`Wallet with ID ${wallet?.id} not found`);
+      throw new NotFoundException(`Wallet with ID ${wallet.id} not found`);
     }
 
-    Object.assign(existingWallet, wallet, customer, user);
+    existingWallet.user = user;
+    existingWallet.customer = customer;
+    Object.assign(existingWallet, wallet);
 
     return this.walletRepository.save(existingWallet);
   }
