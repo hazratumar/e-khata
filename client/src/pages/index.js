@@ -66,16 +66,18 @@ const Page = () => {
               </Grid>
             ) : (
               <>
-                {data?.credit.map(({ abbreviation, amount }) => (
-                  <Grid key={abbreviation} item xs={12} sm={6} md={4} lg={2.4}>
-                    <OverviewBudget type="Credit" abbreviation={abbreviation} value={amount} />
-                  </Grid>
-                ))}
-                {data?.debit.map(({ abbreviation, amount }) => (
-                  <Grid key={abbreviation} item xs={12} sm={6} md={4} lg={2.4}>
-                    <OverviewBudget type="Debit" abbreviation={abbreviation} value={amount} />
-                  </Grid>
-                ))}
+                {data &&
+                  data.credit.map(({ abbreviation, amount }) => (
+                    <Grid key={abbreviation} item xs={12} sm={6} md={4} lg={2.4}>
+                      <OverviewBudget type="Credit" abbreviation={abbreviation} value={amount} />
+                    </Grid>
+                  ))}
+                {data &&
+                  data.debit.map(({ abbreviation, amount }) => (
+                    <Grid key={abbreviation} item xs={12} sm={6} md={4} lg={2.4}>
+                      <OverviewBudget type="Debit" abbreviation={abbreviation} value={amount} />
+                    </Grid>
+                  ))}
                 <Grid item xs={12} pb={3}>
                   <Box bgcolor="#f5f5f5" p={2} borderRadius={4}>
                     <Grid container spacing={3}>
