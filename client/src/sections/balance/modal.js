@@ -34,14 +34,14 @@ const style = {
   padding: "10px",
 };
 
-export const BalanceModal = ({ balanceId }) => {
+export const BalanceModal = ({ item }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const addBalanceRef = useRef(null);
   const updateBalanceRef = useRef(null);
 
   const handleSubmit = async () => {
-    const balanceRef = balanceId ? updateBalanceRef : addBalanceRef;
+    const balanceRef = item ? updateBalanceRef : addBalanceRef;
     const { data } = await balanceRef.current.saveBalance();
     if (data) {
       handleOpen();
@@ -50,7 +50,7 @@ export const BalanceModal = ({ balanceId }) => {
 
   return (
     <div>
-      {balanceId ? (
+      {item ? (
         <Button onClick={handleOpen}>
           <SvgIcon fontSize="small">
             <PencilSquareIcon />
@@ -82,8 +82,8 @@ export const BalanceModal = ({ balanceId }) => {
         <Fade in={open}>
           <Box sx={{ ...style, overflowY: "auto" }}>
             <CardHeader
-              subheader={`Please ${balanceId ? "Update" : "enter"} balance information`}
-              title={`${balanceId ? "Update" : "Add"} Balance`}
+              subheader={`Please ${item ? "Update" : "enter"} balance information`}
+              title={`${item ? "Update" : "Add"} Balance`}
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
                   <SvgIcon fontSize="small">
@@ -95,8 +95,8 @@ export const BalanceModal = ({ balanceId }) => {
             />
             <CardContent sx={{ pt: 0 }}>
               <Box>
-                {balanceId ? (
-                  <UpdateBalance ref={updateBalanceRef} balanceId={balanceId} />
+                {item ? (
+                  <UpdateBalance ref={updateBalanceRef} item={item} />
                 ) : (
                   <AddBalance ref={addBalanceRef} />
                 )}
@@ -105,7 +105,7 @@ export const BalanceModal = ({ balanceId }) => {
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
               <Button onClick={handleSubmit} variant="contained" color="primary">
-                {balanceId ? "Update Balance" : "Add Balance"}
+                {item ? "Update Balance" : "Add Balance"}
               </Button>
             </CardActions>
           </Box>

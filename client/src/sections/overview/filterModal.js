@@ -17,7 +17,7 @@ import {
   MenuItem,
   CardActions,
 } from "@mui/material";
-
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { XMarkIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
 import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -76,10 +76,8 @@ export const FilterModal = ({ filterDashboard }) => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>
-        <SvgIcon>
-          <AdjustmentsHorizontalIcon />
-        </SvgIcon>
+      <Button onClick={handleOpen} startIcon={<FilterAltIcon />}>
+        Filter
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"

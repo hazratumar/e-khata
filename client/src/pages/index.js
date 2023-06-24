@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { Box, Container, Grid, CircularProgress, Typography } from "@mui/material";
+import SyncIcon from "@mui/icons-material/Sync";
+import { Box, Container, Grid, CircularProgress, Typography, Button, SvgIcon } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { OverviewBudget } from "src/sections/overview/overview-budget";
 import { useGetDashboardDataQuery } from "src/store/services/balanceService";
@@ -20,7 +21,7 @@ const Page = () => {
   useEffect(() => {
     refetch();
   }, [selectedOption]);
-
+  const handleRefresh = () => refetch();
   const currencyAbbreviations = currenciesData?.currencies.map((currency) => currency.abbreviation);
   const credits = data?.credits || [];
   const debits = data?.debits || [];
@@ -66,6 +67,9 @@ const Page = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6} display="flex" justifyContent="flex-end">
+              <Button onClick={handleRefresh} startIcon={<SyncIcon />}>
+                Refresh
+              </Button>
               <FilterModal filterDashboard={filterDashboard} />
             </Grid>
           </Grid>

@@ -11,7 +11,7 @@ import {
 import { Scrollbar } from "src/components/scrollbar";
 import { UpdateExpenseItem } from "src/sections/expense-items/update";
 import moment from "moment";
-import { options } from "../../utils/constant";
+import { options } from "src/utils/constant";
 export const ExpenseItemsTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
   const rowsPerPageOptions = options.filter((option) => option <= count);

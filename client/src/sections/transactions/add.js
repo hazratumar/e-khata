@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useAddTransactionMutation } from "src/store/services/transactionService";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { formatTwoDecimals } from "../../utils/generic-functions";
+import { formatTwoDecimals } from "src/utils/generic-functions";
 
 export const AddTransaction = forwardRef((props, ref) => {
   const [state, setState] = useState({

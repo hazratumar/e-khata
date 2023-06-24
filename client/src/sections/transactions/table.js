@@ -12,8 +12,8 @@ import {
 import { Scrollbar } from "src/components/scrollbar";
 import { TransactionModal } from "./modal";
 import moment from "moment";
-import { options } from "../../utils/constant";
-import { formatTwoDecimals, getNewUpdate } from "../../utils/generic-functions";
+import { options } from "src/utils/constant";
+import { formatTwoDecimals, getNewUpdate } from "src/utils/generic-functions";
 
 export const TransactionsTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;

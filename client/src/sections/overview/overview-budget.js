@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Card, CardContent, Stack, Typography } from "@mui/material";
-import { formatTwoDecimals, formatWithAbbreviation } from "../../utils/generic-functions";
+import { formatTwoDecimals, formatWithAbbreviation } from "src/utils/generic-functions";
 
 export const OverviewBudget = (props) => {
   const { type, abbreviation, value } = props;

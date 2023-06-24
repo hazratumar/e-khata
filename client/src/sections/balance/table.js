@@ -12,8 +12,8 @@ import {
 import { Scrollbar } from "src/components/scrollbar";
 import { BalanceModal } from "./modal";
 import moment from "moment";
-import { options } from "../../utils/constant";
-import { getNewUpdate } from "../../utils/generic-functions";
+import { options } from "src/utils/constant";
+import { getNewUpdate } from "src/utils/generic-functions";
 
 export const BalanceTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
@@ -52,7 +52,7 @@ export const BalanceTable = (props) => {
                     {moment(getNewUpdate(item?.updatedAt, item?.transaction?.updatedAt)).fromNow()}
                   </TableCell>
                   <TableCell>
-                    <BalanceModal balanceId={item?.id} />
+                    <BalanceModal item={item} />
                   </TableCell>
                 </TableRow>
               ))}

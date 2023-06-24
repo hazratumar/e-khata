@@ -4,7 +4,7 @@ import { useGetOneTransactionQuery } from "src/store/services/transactionService
 import { useUpdateTransactionMutation } from "src/store/services/transactionService";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { formatTwoDecimals } from "../../utils/generic-functions";
+import { formatTwoDecimals } from "src/utils/generic-functions";
 
 export const UpdateTransaction = forwardRef((props, ref) => {
   const { transactionId } = props;

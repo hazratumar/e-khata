@@ -9,7 +9,7 @@ import {
   TableBody,
   TableFooter,
 } from "@mui/material";
-import { dateFormat, formatTwoDecimals } from "../../utils/generic-functions";
+import { dateFormat, formatTwoDecimals } from "src/utils/generic-functions";
 
 const KhataPage = ({ invoice }) => {
   const { name, address, currency, abbreviation, openingBalance, startDate, endDate, result } =

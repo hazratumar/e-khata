@@ -18,6 +18,7 @@
     "@emotion/styled": "11.10.6",
     "@heroicons/react": "2.0.17",
     "@material-ui/icons": "^4.11.3",
+    "@mui/icons-material": "^5.11.16",
     "@mui/material": "5.11.16",
     "@mui/system": "5.11.16",
     "@mui/x-date-pickers": "^6.5.0",

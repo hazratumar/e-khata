@@ -9,7 +9,7 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import { dateFormat, formatTwoDecimals, isTruthy } from "../../utils/generic-functions";
+import { dateFormat, formatTwoDecimals, isTruthy } from "src/utils/generic-functions";
 
 const HistoryPage = ({ invoice }) => {
   const { name, currency, abbreviation, startDate, endDate, result } = invoice;

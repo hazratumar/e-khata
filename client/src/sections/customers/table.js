@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { UpdateCustomer } from "src/sections/customers/update";
-import { options } from "../../utils/constant";
+import { options } from "src/utils/constant";
 import moment from "moment";
 import { ViewCustomer } from "./view";
 

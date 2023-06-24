@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { UpdateExpense } from "src/sections/expenses/update";
-import { options } from "../../utils/constant";
+import { options } from "src/utils/constant";
 
 export const ExpensesTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;

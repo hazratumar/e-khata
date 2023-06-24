@@ -13,9 +13,9 @@ import {
 } from "@mui/material";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import { useLogInMutation } from "../../store/services/authService";
+import { useLogInMutation } from "src/store/services/authService";
 import { useDispatch } from "react-redux";
-import { setToken } from "../../store/reducers/authSlice";
+import { setToken } from "src/store/reducers/authSlice";
 import router from "next/router";
 import toast from "react-hot-toast";
 

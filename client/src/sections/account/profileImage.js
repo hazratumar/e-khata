@@ -11,8 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setToken } from "../../store/reducers/authSlice";
-import { useUpdateUserMutation } from "../../store/services/userService";
+import { setToken } from "src/store/reducers/authSlice";
+import { useUpdateUserMutation } from "src/store/services/userService";
 import { toast } from "react-hot-toast";
 
 export const ProfileImage = () => {

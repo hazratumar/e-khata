@@ -10,9 +10,9 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { UpdateCurrency } from "src/sections/currencies/update";
-import { options } from "../../utils/constant";
+import { options } from "src/ils/constant";
 import moment from "moment";
-import { formatTwoDecimals } from "../../utils/generic-functions";
+import { formatTwoDecimals } from "src/utils/generic-functions";
 export const CurrenciesTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
   const rowsPerPageOptions = options.filter((option) => option <= count);

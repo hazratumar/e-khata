@@ -76,7 +76,7 @@ export class BalanceService {
 
   async updateWallet(userId: number, wallet: UpdateWalletDto): Promise<Wallet> {
     const user = await this.usersService.findOne(userId);
-    const customer = await this.customersService.findOne(wallet?.customerId);
+    const customer = await this.customersService.findOne(wallet?.customer);
     const existingWallet = await this.walletRepository.findOne({
       where: { id: wallet?.id },
     });
