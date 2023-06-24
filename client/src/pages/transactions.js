@@ -11,7 +11,7 @@ import { useAllCurrenciesQuery } from "src/store/services/currencyService";
 import { setCustomerOptions, setCurrencyOptions } from "src/store/reducers/optionsSlice";
 import { useDispatch } from "react-redux";
 import { KhataModal } from "src/sections/transactions/khataModal";
-import { HistoryModal } from "../sections/transactions/historyModal";
+import { HistoryModal } from "src/sections/transactions/historyModal";
 
 const Page = () => {
   const dispatch = useDispatch();

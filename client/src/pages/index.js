@@ -8,7 +8,7 @@ import { useGetDashboardDataQuery } from "src/store/services/balanceService";
 import { getDateRange } from "src/utils/generic-functions";
 import { FilterModal } from "src/sections/overview/filterModal";
 import { useGetCurrenciesQuery } from "src/store/services/currencyService";
-import { dateFormat, formatTwoDecimals } from "../utils/generic-functions";
+import { dateFormat, formatTwoDecimals } from "src/utils/generic-functions";
 
 const Page = () => {
   const [selectedOption, setSelectedOption] = useState(getDateRange(1));

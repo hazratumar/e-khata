@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { UpdateCurrency } from "src/sections/currencies/update";
-import { options } from "src/ils/constant";
+import { options } from "src/utils/constant";
 import moment from "moment";
 import { formatTwoDecimals } from "src/utils/generic-functions";
 export const CurrenciesTable = (props) => {

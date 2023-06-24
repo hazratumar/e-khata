@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { CurrenciesTable } from "../sections/currencies/table";
+import { CurrenciesTable } from "src/sections/currencies/table";
 import { Search } from "src/components/search";
 import { AddCurrency } from "src/sections/currencies/add";
 import { useGetCurrenciesQuery } from "src/store/services/currencyService";

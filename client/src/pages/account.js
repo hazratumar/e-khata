@@ -5,7 +5,7 @@ import { ProfileImage } from "src/sections/account/profileImage";
 import { ProfileDetails } from "src/sections/account/profileDetails";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { ChangePassword } from "../sections/account/changePassword";
+import { ChangePassword } from "src/sections/account/changePassword";
 
 const Page = () => {
   const { user } = useSelector((state) => state.auth);

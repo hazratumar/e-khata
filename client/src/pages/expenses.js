@@ -3,7 +3,7 @@ import Head from "next/head";
 import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { ExpensesTable } from "../sections/expenses/table";
+import { ExpensesTable } from "src/sections/expenses/table";
 import { Search } from "src/components/search";
 import { AddExpense } from "src/sections/expenses/add";
 import { useGetExpensesQuery } from "src/store/services/expenseService";
