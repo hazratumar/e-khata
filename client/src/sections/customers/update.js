@@ -1,21 +1,20 @@
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from "react";
+import { useUpdateCustomerMutation } from "src/store/services/customerService";
+import toast from "react-hot-toast";
 import {
+  Box,
+  Button,
   CardActions,
   CardContent,
   CardHeader,
   Checkbox,
+  Fade,
   Grid,
   IconButton,
-  SvgIcon,
+  Modal,
   TextField,
 } from "@mui/material";
-import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
-import { useUpdateCustomerMutation } from "src/store/services/customerService";
-import toast from "react-hot-toast";
+import { Edit, Close } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -30,23 +29,8 @@ const style = {
   padding: "20px",
 };
 
-export const UpdateCustomer = (props) => {
-  const { customer } = props;
+export const UpdateCustomer = ({ customer }) => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(!open);
-    setState((prevValues) => ({
-      ...prevValues,
-      id: customer.id,
-      name: customer.name,
-      nickname: customer.nickname,
-      phone: customer.phone,
-      address: customer.address,
-      other: customer.other,
-      isSelf: customer.isSelf,
-    }));
-  };
-
   const [state, setState] = useState({
     id: customer.id,
     name: customer.name,
@@ -58,17 +42,21 @@ export const UpdateCustomer = (props) => {
   });
   const [updateCustomer, { isSuccess, isLoading, error }] = useUpdateCustomerMutation();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setState((prevValues) => ({ ...prevValues, [name]: value.trim() }));
-  };
-  const handleChangeCheckbox = (event) => {
-    setState((prevValues) => ({ ...prevValues, isSelf: event.target.checked }));
+  const handleOpen = () => {
+    setOpen(!open);
+    setState({
+      ...customer,
+    });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await updateCustomer(state);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleChangeCheckbox = (e) => {
+    const { checked } = e.target;
+    setState((prevState) => ({ ...prevState, isSelf: checked }));
   };
 
   useEffect(() => {
@@ -77,6 +65,7 @@ export const UpdateCustomer = (props) => {
       toast.success("Customer updated successfully!");
     }
   }, [isSuccess]);
+
   useEffect(() => {
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
@@ -85,12 +74,11 @@ export const UpdateCustomer = (props) => {
       toast.error(errorMessage);
     }
   }, [error]);
+
   return (
     <div>
       <Button onClick={handleOpen}>
-        <SvgIcon fontSize="small">
-          <PencilSquareIcon />
-        </SvgIcon>
+        <Edit />
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -106,9 +94,7 @@ export const UpdateCustomer = (props) => {
               title="Update Customer"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}
@@ -177,7 +163,7 @@ export const UpdateCustomer = (props) => {
             </CardContent>
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
-              <Button onClick={handleSubmit} variant="contained" color="primary">
+              <Button onClick={() => updateCustomer(state)} variant="contained" color="primary">
                 {isLoading ? "Loading..." : "Update Customer"}
               </Button>
             </CardActions>

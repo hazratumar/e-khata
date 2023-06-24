@@ -15,18 +15,16 @@ import {
 import toast from "react-hot-toast";
 import { setToken } from "src/store/reducers/authSlice";
 import { useResetPasswordMutation } from "src/store/services/authService";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export const ChangePassword = () => {
   const dispatch = useDispatch();
-
   const [show, setShow] = useState(false);
   const [state, setState] = useState({
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-
   const [resetPassword, { isSuccess, isLoading, error, data }] = useResetPasswordMutation();
 
   const handleChange = (event) => {
@@ -36,7 +34,6 @@ export const ChangePassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     await resetPassword(state);
   };
 
@@ -68,8 +65,8 @@ export const ChangePassword = () => {
         <CardContent>
           <Stack spacing={3} sx={{ maxWidth: 400 }}>
             <TextField
-              label={"Old Password"}
-              name={"oldPassword"}
+              label="Old Password"
+              name="oldPassword"
               onChange={handleChange}
               value={state.oldPassword}
               type={show ? "text" : "password"}
@@ -84,8 +81,8 @@ export const ChangePassword = () => {
               }}
             />
             <TextField
-              label={"New Password"}
-              name={"newPassword"}
+              label="New Password"
+              name="newPassword"
               onChange={handleChange}
               value={state.newPassword}
               type={show ? "text" : "password"}
@@ -100,8 +97,8 @@ export const ChangePassword = () => {
               }}
             />
             <TextField
-              label={"Confirm Password"}
-              name={"confirmPassword"}
+              label="Confirm Password"
+              name="confirmPassword"
               onChange={handleChange}
               value={state.confirmPassword}
               type={show ? "text" : "password"}

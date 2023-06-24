@@ -8,12 +8,11 @@ import {
   CardContent,
   CardActions,
   IconButton,
-  SvgIcon,
   Box,
 } from "@mui/material";
-import { ArrowPathIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useCustomerDetailMutation } from "src/store/services/customerService";
 import { formatTwoDecimals } from "src/utils/generic-functions";
+import { Close, RemoveRedEye, Sync } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -40,18 +39,14 @@ export const ViewCustomer = ({ id }) => {
   if (isLoading) {
     return (
       <Button onClick={handleOpen}>
-        <SvgIcon fontSize="small">
-          <ArrowPathIcon />
-        </SvgIcon>
+        <Sync />
       </Button>
     );
   }
   return (
     <div>
       <Button onClick={handleOpen}>
-        <SvgIcon fontSize="small">
-          <EyeIcon />
-        </SvgIcon>
+        <RemoveRedEye />
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -68,9 +63,7 @@ export const ViewCustomer = ({ id }) => {
                 subheader={data?.other}
                 action={
                   <IconButton aria-label="close" onClick={handleOpen}>
-                    <SvgIcon fontSize="small">
-                      <XMarkIcon />
-                    </SvgIcon>
+                    <Close />
                   </IconButton>
                 }
               />

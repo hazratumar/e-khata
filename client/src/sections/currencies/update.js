@@ -1,23 +1,19 @@
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import React, { useState, useEffect } from "react";
 import {
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
+  Button,
   IconButton,
   SvgIcon,
   TextField,
+  Modal,
+  Fade,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Grid,
 } from "@mui/material";
-import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
+import { Close, Edit } from "@mui/icons-material";
 import { useUpdateCurrencyMutation } from "src/store/services/currencyService";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const style = {
   position: "absolute",
@@ -32,30 +28,19 @@ const style = {
   padding: "20px",
 };
 
-export const UpdateCurrency = (props) => {
-  const { currency } = props;
+export const UpdateCurrency = ({ currency }) => {
   const [open, setOpen] = useState(false);
+  const [state, setState] = useState(currency);
+  const [UpdateCurrency, { isLoading, isSuccess, error }] = useUpdateCurrencyMutation();
+
   const handleOpen = () => {
     setOpen(!open);
-    setState((prevValues) => ({
-      ...prevValues,
-      id: currency.id,
-      name: currency.name,
-      abbreviation: currency.abbreviation,
-    }));
+    setState(currency);
   };
-
-  const [state, setState] = useState({
-    id: currency.id,
-    name: currency.name,
-    abbreviation: currency.abbreviation,
-    rate: currency.rate,
-  });
-  const [UpdateCurrency, { isSuccess, isLoading, error }] = useUpdateCurrencyMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setState((prevValues) => ({ ...prevValues, [name]: value }));
+    setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -67,19 +52,21 @@ export const UpdateCurrency = (props) => {
     if (isSuccess) {
       handleOpen();
     }
+  }, [isSuccess]);
+
+  useEffect(() => {
     if (error) {
       const errorMessage = Array.isArray(error.data?.message)
         ? error.data.message[0]
         : error.data?.message;
       toast.error(errorMessage);
     }
-  }, [isSuccess, error]);
+  }, [error]);
+
   return (
     <div>
       <Button onClick={handleOpen}>
-        <SvgIcon fontSize="small">
-          <PencilSquareIcon />
-        </SvgIcon>
+        <Edit />
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -89,54 +76,50 @@ export const UpdateCurrency = (props) => {
         closeAfterTransition
       >
         <Fade in={open}>
-          <Box sx={{ ...style, overflowY: "auto" }}>
+          <div style={style}>
             <CardHeader
               subheader="Please update currency information"
               title="Update Currency"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}
             />
             <CardContent sx={{ pt: 0 }}>
-              <Box sx={{ m: -1.5 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      required
-                      label="Name"
-                      name="name"
-                      value={state.name}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      disabled
-                      label="Abbreviation"
-                      name="abbreviation"
-                      value={state.abbreviation}
-                      onChange={handleChange}
-                    />
-                  </Grid>{" "}
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label="Rate"
-                      name="rate"
-                      value={state.rate}
-                      onChange={handleChange}
-                    />
-                  </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    required
+                    label="Name"
+                    name="name"
+                    value={state.name}
+                    onChange={handleChange}
+                  />
                 </Grid>
-              </Box>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Abbreviation"
+                    name="abbreviation"
+                    value={state.abbreviation}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Rate"
+                    name="rate"
+                    value={state.rate}
+                    onChange={handleChange}
+                  />
+                </Grid>
+              </Grid>
             </CardContent>
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
@@ -144,7 +127,7 @@ export const UpdateCurrency = (props) => {
                 {isLoading ? "Loading..." : "Update Currency"}
               </Button>
             </CardActions>
-          </Box>
+          </div>
         </Fade>
       </Modal>
     </div>

@@ -1,23 +1,20 @@
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from "react";
+import { useAddCustomerMutation } from "src/store/services/customerService";
+import toast from "react-hot-toast";
 import {
-  Card,
+  Box,
+  Button,
   CardActions,
   CardContent,
   CardHeader,
   Checkbox,
-  Divider,
+  Fade,
   Grid,
   IconButton,
-  SvgIcon,
+  Modal,
   TextField,
 } from "@mui/material";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
-import { useAddCustomerMutation } from "src/store/services/customerService";
-import toast from "react-hot-toast";
+import { Add, Close } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -34,7 +31,10 @@ const style = {
 
 export const AddCustomer = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = () => {
+    setOpen(!open);
+    state.isSelf = false;
+  };
 
   const [addCustomer, { isSuccess, isLoading, error }] = useAddCustomerMutation();
 
@@ -49,15 +49,12 @@ export const AddCustomer = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setState((prevValues) => ({ ...prevValues, [name]: value }));
-  };
-  const handleChangeCheckbox = (event) => {
-    setState((prevValues) => ({ ...prevValues, isSelf: event.target.checked }));
+    setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await addCustomer(state);
+  const handleChangeCheckbox = (e) => {
+    const { checked } = e.target;
+    setState((prevState) => ({ ...prevState, isSelf: checked }));
   };
 
   useEffect(() => {
@@ -75,17 +72,10 @@ export const AddCustomer = () => {
       toast.error(errorMessage);
     }
   }, [error]);
+
   return (
     <div>
-      <Button
-        starticon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={handleOpen}
-      >
+      <Button startIcon={<Add />} variant="contained" onClick={handleOpen}>
         Add Customer
       </Button>
       <Modal
@@ -102,9 +92,7 @@ export const AddCustomer = () => {
               title="Add Customer"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}
@@ -158,7 +146,7 @@ export const AddCustomer = () => {
             </CardContent>
             <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
               <Button onClick={handleOpen}>Cancel</Button>
-              <Button onClick={handleSubmit} variant="contained" color="primary">
+              <Button onClick={() => addCustomer(state)} variant="contained" color="primary">
                 {isLoading ? "Loading..." : "Add Customer"}
               </Button>
             </CardActions>

@@ -23,7 +23,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { getDate, isNotTruthy, getProjectStartDate } from "src/utils/generic-functions";
-import { CloudDownload, RotateLeft } from "@material-ui/icons";
+import { CloudDownload, RotateLeft } from "@mui/icons-material";
 import { useDownloadKhataMutation } from "src/store/services/reportService";
 import { useCustomerKhataMutation } from "src/store/services/customerService";
 import download from "downloadjs";

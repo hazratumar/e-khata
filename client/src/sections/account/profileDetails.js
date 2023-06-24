@@ -16,23 +16,18 @@ import { toast } from "react-hot-toast";
 
 export const ProfileDetails = ({ user }) => {
   const dispatch = useDispatch();
-
   const [formValues, setFormValues] = useState({
     name: user?.name,
     email: user?.email,
   });
-
   const [updateUser, { isSuccess, isLoading, error, data }] = useUpdateUserMutation();
 
-  const handleChange = useCallback(
-    (e) => {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [e.target.name]: e.target.value,
-      }));
-    },
-    [setFormValues]
-  );
+  const handleChange = (e) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const handleSubmit = useCallback(
     async (e) => {
@@ -45,7 +40,7 @@ export const ProfileDetails = ({ user }) => {
   useEffect(() => {
     if (isSuccess) {
       dispatch(setToken(data));
-      toast.success("Your data successfully updated");
+      toast.success("Your data has been updated successfully!");
     }
     if (error) {
       const errorMessage = Array.isArray(error.data.message)

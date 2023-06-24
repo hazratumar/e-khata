@@ -1,18 +1,17 @@
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from "react";
 import {
+  Box,
+  Button,
   CardActions,
   CardContent,
   CardHeader,
   Grid,
   IconButton,
-  SvgIcon,
+  Modal,
   TextField,
+  Fade,
 } from "@mui/material";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
+import { Add, Close } from "@mui/icons-material";
 import { useAddCurrencyMutation } from "src/store/services/currencyService";
 import toast from "react-hot-toast";
 
@@ -31,7 +30,14 @@ const style = {
 
 export const AddCurrency = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = () => {
+    setOpen(!open);
+    setFormValues({
+      name: "",
+      abbreviation: "",
+      rate: 0,
+    });
+  };
 
   const [formValues, setFormValues] = useState({
     name: "",
@@ -39,7 +45,7 @@ export const AddCurrency = () => {
     rate: 0,
   });
 
-  const [AddCurrency, { isSuccess, isLoading, error }] = useAddCurrencyMutation();
+  const [addCurrency, { isSuccess, isLoading, error }] = useAddCurrencyMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +54,7 @@ export const AddCurrency = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await AddCurrency(formValues);
+    await addCurrency(formValues);
   };
 
   useEffect(() => {
@@ -66,17 +72,11 @@ export const AddCurrency = () => {
     }
   }, [error]);
 
+  const { name, abbreviation, rate } = formValues;
+
   return (
     <div>
-      <Button
-        starticon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={handleOpen}
-      >
+      <Button startIcon={<Add />} variant="contained" onClick={handleOpen}>
         Add Currency
       </Button>
       <Modal
@@ -93,9 +93,7 @@ export const AddCurrency = () => {
               title="Add Currency"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}
@@ -109,6 +107,7 @@ export const AddCurrency = () => {
                       required
                       label="Name"
                       name="name"
+                      value={name}
                       onChange={handleChange}
                     />
                   </Grid>
@@ -118,17 +117,18 @@ export const AddCurrency = () => {
                       required
                       label="Abbreviation"
                       name="abbreviation"
+                      value={abbreviation}
                       onChange={handleChange}
                     />
-                  </Grid>{" "}
+                  </Grid>
                   <Grid item xs={12}>
                     <TextField
                       type="number"
-                      value={formValues.rate}
                       fullWidth
                       required
                       label="Rate"
                       name="rate"
+                      value={rate}
                       onChange={handleChange}
                     />
                   </Grid>

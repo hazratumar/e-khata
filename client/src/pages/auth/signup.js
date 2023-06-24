@@ -12,7 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useSignUpMutation } from "src/store/services/authService";
 import { useDispatch } from "react-redux";
 import { setToken } from "src/store/reducers/authSlice";

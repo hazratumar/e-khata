@@ -18,7 +18,7 @@ import {
   CardActions,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { XMarkIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { getDateRange, getCustomDate, getProjectStartDate } from "src/utils/generic-functions";

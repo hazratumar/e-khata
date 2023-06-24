@@ -10,13 +10,7 @@ import {
   CardActions,
   Stack,
 } from "@mui/material";
-import {
-  ArrowDownTrayIcon,
-  ArrowUpTrayIcon,
-  PencilSquareIcon,
-  XMarkIcon,
-  ArrowsUpDownIcon,
-} from "@heroicons/react/24/solid";
+import { Add, Edit, Close } from "@mui/icons-material";
 import { useRef, useState } from "react";
 import { AddBalance } from "./add";
 import { UpdateBalance } from "./update";
@@ -52,21 +46,11 @@ export const BalanceModal = ({ item }) => {
     <div>
       {item ? (
         <Button onClick={handleOpen}>
-          <SvgIcon fontSize="small">
-            <PencilSquareIcon />
-          </SvgIcon>
+          <Edit />
         </Button>
       ) : (
         <Stack direction="row" spacing={2}>
-          <Button
-            startIcon={
-              <SvgIcon fontSize="small">
-                <ArrowsUpDownIcon />
-              </SvgIcon>
-            }
-            variant="contained"
-            onClick={handleOpen}
-          >
+          <Button startIcon={<Add />} variant="contained" onClick={handleOpen}>
             Add Balance
           </Button>
         </Stack>
@@ -86,9 +70,7 @@ export const BalanceModal = ({ item }) => {
               title={`${item ? "Update" : "Add"} Balance`}
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}

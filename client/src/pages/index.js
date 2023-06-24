@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import SyncIcon from "@mui/icons-material/Sync";
-import { Box, Container, Grid, CircularProgress, Typography, Button, SvgIcon } from "@mui/material";
+import { Box, Container, Grid, CircularProgress, Typography, Button } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { OverviewBudget } from "src/sections/overview/overview-budget";
 import { useGetDashboardDataQuery } from "src/store/services/balanceService";

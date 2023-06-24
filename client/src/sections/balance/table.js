@@ -14,6 +14,7 @@ import { BalanceModal } from "./modal";
 import moment from "moment";
 import { options } from "src/utils/constant";
 import { getNewUpdate } from "src/utils/generic-functions";
+import { formatTwoDecimals } from "src/utils/generic-functions";
 
 export const BalanceTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
@@ -47,7 +48,7 @@ export const BalanceTable = (props) => {
                     />
                   </TableCell>
                   <TableCell>{item?.transaction?.currency?.abbreviation}</TableCell>
-                  <TableCell>{item?.transaction?.amount}</TableCell>
+                  <TableCell>{formatTwoDecimals(item?.transaction?.amount)}</TableCell>
                   <TableCell>
                     {moment(getNewUpdate(item?.updatedAt, item?.transaction?.updatedAt)).fromNow()}
                   </TableCell>
