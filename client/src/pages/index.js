@@ -7,18 +7,23 @@ import { useGetDashboardDataQuery } from "src/store/services/balanceService";
 import { getDateRange } from "src/utils/generic-functions";
 import { FilterModal } from "src/sections/overview/filterModal";
 import { useGetCurrenciesQuery } from "src/store/services/currencyService";
-import { dateFormat } from "../utils/generic-functions";
+import { dateFormat, formatTwoDecimals } from "../utils/generic-functions";
 
 const Page = () => {
   const [selectedOption, setSelectedOption] = useState(getDateRange(1));
   const { data, isLoading, refetch } = useGetDashboardDataQuery(selectedOption);
-  const { data: currenciesData } = useGetCurrenciesQuery({ page: 0, rowsPerPage: 100 });
+  const { data: currenciesData, isLoading: isCurrenciesLoading } = useGetCurrenciesQuery({
+    page: 0,
+    rowsPerPage: 100,
+  });
 
   useEffect(() => {
     refetch();
   }, [selectedOption]);
 
   const currencyAbbreviations = currenciesData?.currencies.map((currency) => currency.abbreviation);
+  const credits = data?.credits || [];
+  const debits = data?.debits || [];
 
   const filterDashboard = (data) => {
     setSelectedOption(data);
@@ -28,16 +33,23 @@ const Page = () => {
     if (!amounts) {
       return 0;
     }
-    return currenciesData?.currencies.reduce((sum, currency) => {
-      if (currencyAbbreviations.includes(currency.abbreviation) && amounts[currency.abbreviation]) {
-        return sum + currency.rate * amounts[currency.abbreviation];
+    const currencyAbbreviations = amounts.map((amount) => amount.currency);
+    return currenciesData?.currencies?.reduce((sum, currency) => {
+      if (
+        currencyAbbreviations.includes(currency.abbreviation) &&
+        amounts.find((amount) => amount.currency === currency.abbreviation)
+      ) {
+        return (
+          sum +
+          currency.rate * amounts.find((amount) => amount.currency === currency.abbreviation).amount
+        );
       }
       return sum;
     }, 0);
   };
 
-  const sumOfDebits = calculateSum(data?.sumOfDebits);
-  const sumOfCredits = calculateSum(data?.sumOfCredits);
+  const sumOfDebits = calculateSum(data?.debits);
+  const sumOfCredits = calculateSum(data?.credits);
   const netProfit = sumOfDebits - sumOfCredits;
 
   return (
@@ -58,7 +70,7 @@ const Page = () => {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            {isLoading ? (
+            {isLoading | isCurrenciesLoading ? (
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="center" my={4}>
                   <CircularProgress />
@@ -66,29 +78,38 @@ const Page = () => {
               </Grid>
             ) : (
               <>
-                {data &&
-                  data.credit.map(({ abbreviation, amount }) => (
+                {currencyAbbreviations?.map((abbreviation) => {
+                  const credit = credits.find((c) => c.currency === abbreviation);
+                  const amount = credit ? credit.amount : 0;
+
+                  return (
                     <Grid key={abbreviation} item xs={12} sm={6} md={4} lg={2.4}>
                       <OverviewBudget type="Credit" abbreviation={abbreviation} value={amount} />
                     </Grid>
-                  ))}
-                {data &&
-                  data.debit.map(({ abbreviation, amount }) => (
+                  );
+                })}
+                {currencyAbbreviations?.map((abbreviation) => {
+                  const debit = debits.find((d) => d.currency === abbreviation);
+                  const amount = debit ? debit.amount : 0;
+
+                  return (
                     <Grid key={abbreviation} item xs={12} sm={6} md={4} lg={2.4}>
                       <OverviewBudget type="Debit" abbreviation={abbreviation} value={amount} />
                     </Grid>
-                  ))}
+                  );
+                })}
+
                 <Grid item xs={12} pb={3}>
                   <Box bgcolor="#f5f5f5" p={2} borderRadius={4}>
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={4}>
                         <Typography variant="h6" align="center">
-                          Total Credit in Dirham
+                          Total Debit in Dirham
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <Typography variant="h6" align="center">
-                          Total Debit in Dirham
+                          Total Credit in Dirham
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={4}>
@@ -100,17 +121,17 @@ const Page = () => {
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={4}>
                         <Typography variant="h6" align="center">
-                          {sumOfCredits}
+                          {formatTwoDecimals(sumOfDebits)}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <Typography variant="h6" align="center">
-                          {sumOfDebits}
+                          {formatTwoDecimals(sumOfCredits)}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <Typography variant="h6" align="center">
-                          {netProfit}
+                          {formatTwoDecimals(netProfit)}
                         </Typography>
                       </Grid>
                     </Grid>

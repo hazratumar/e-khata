@@ -1,4 +1,5 @@
 import { subDays, format } from "date-fns";
+import numeral from "numeral";
 const DATEFORMAT = "yyyy-MM-dd";
 const PAKDATEFORMAT = "dd MMMM, yyyy";
 
@@ -54,3 +55,6 @@ export const isNotTruthy = (value) =>
   ["", " ", "null", null, "undefined", undefined, false, "false", 0, "invalid"].includes(value);
 
 export const getProjectStartDate = () => new Date(2023, 0, 1);
+
+export const formatTwoDecimals = (value) => numeral(value).format("0,0.00");
+export const formatWithAbbreviation = (value) => numeral(value).format("0,0.0a");

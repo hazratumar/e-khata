@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Card, CardContent, Stack, Typography } from "@mui/material";
-import numeral from "numeral";
+import { formatTwoDecimals, formatWithAbbreviation } from "../../utils/generic-functions";
 
 export const OverviewBudget = (props) => {
   const { type, abbreviation, value } = props;
@@ -13,14 +13,12 @@ export const OverviewBudget = (props) => {
             <Typography color="text.secondary" variant="overline">
               {type}
             </Typography>
-            <Typography variant="h4">
-              {value < 999 ? value : numeral(value).format("0,0.0a")}
-            </Typography>
+            <Typography variant="h4">{formatWithAbbreviation(value)}</Typography>
           </Stack>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={2} sx={{ mt: 2 }}>
           <Typography color="text.secondary" variant="caption">
-            {`${abbreviation}: ${numeral(value).format("0,0.00")}`}
+            {`${abbreviation}: ${formatTwoDecimals(value)}`}
           </Typography>
         </Stack>
       </CardContent>
