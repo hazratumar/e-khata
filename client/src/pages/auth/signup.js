@@ -25,7 +25,7 @@ const Page = () => {
   const [formValues, setFormValues] = useState({
     name: "",
     email: "",
-    password: "",
+    newPassword: "",
     confirmPassword: "",
   });
   const [signUp, { isSuccess, isLoading, error, data }] = useSignUpMutation();
@@ -107,8 +107,8 @@ const Page = () => {
                 />
                 <TextField
                   fullWidth
-                  label="Password"
-                  name="password"
+                  label="New Password"
+                  name="newPassword"
                   type={show ? "text" : "password"}
                   InputProps={{
                     endAdornment: (
@@ -119,7 +119,7 @@ const Page = () => {
                       </InputAdornment>
                     ),
                   }}
-                  value={formValues.password}
+                  value={formValues.newPassword}
                   onChange={handleChange}
                 />
                 <TextField
