@@ -51,7 +51,7 @@ const Page = () => {
 
   const sumOfDebits = calculateSum(data?.debits);
   const sumOfCredits = calculateSum(data?.credits);
-  const netProfit = sumOfDebits - sumOfCredits;
+  const netProfit = sumOfDebits + sumOfCredits;
 
   return (
     <>

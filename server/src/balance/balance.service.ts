@@ -241,11 +241,11 @@ export class BalanceService {
         (debit) => debit.excurrency === result.excurrency
       );
       if (existingDebit) {
-        existingDebit.amount += -1 * result.debit;
+        existingDebit.amount += result.debit;
       } else {
         formattedResults.credits.debit.push({
           excurrency: result.excurrency,
-          amount: -1 * result.debit,
+          amount: result.debit,
         });
       }
     });
@@ -268,11 +268,11 @@ export class BalanceService {
         (credit) => credit.excurrency === result.excurrency
       );
       if (existingCredit) {
-        existingCredit.amount += result.credit;
+        existingCredit.amount = -1 * result.credit;
       } else {
         formattedResults.debits.credit.push({
           excurrency: result.excurrency,
-          amount: result.credit,
+          amount: -1 * result.credit,
         });
       }
     });
