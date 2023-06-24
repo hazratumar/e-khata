@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { ArrowPathIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useCustomerDetailMutation } from "src/store/services/customerService";
+import { formatTwoDecimals } from "../../utils/generic-functions";
 
 const style = {
   position: "absolute",
@@ -83,7 +84,7 @@ export const ViewCustomer = ({ id }) => {
                 <ul>
                   {data?.stock.map((item) => (
                     <li key={item.currency}>
-                      {item.currency} : {item.stock}
+                      {item.currency} : {formatTwoDecimals(item.stock)}
                     </li>
                   ))}
                 </ul>

@@ -26,12 +26,18 @@ export class TransactionsService {
     userId: number,
     createTransactionDto: CreateTransactionDto
   ): Promise<Transaction> {
-    const user = await this.usersService.findOne(userId);
-    const transactions = new Transaction({
-      ...createTransactionDto,
-      user,
-    });
-    return this.transactionRepository.save(transactions);
+    try {
+      const user = await this.usersService.findOne(userId);
+      const transaction = new Transaction({
+        ...createTransactionDto,
+        user,
+      });
+      return await this.transactionRepository.save(transaction);
+    } catch (error) {
+      // Handle the error appropriately
+      console.error("Error creating transaction:", error);
+      throw new Error("Failed to create transaction");
+    }
   }
 
   async update(

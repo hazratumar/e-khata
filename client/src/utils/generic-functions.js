@@ -56,5 +56,8 @@ export const isNotTruthy = (value) =>
 
 export const getProjectStartDate = () => new Date(2023, 0, 1);
 
-export const formatTwoDecimals = (value) => numeral(value).format("0,0.00");
-export const formatWithAbbreviation = (value) => numeral(value).format("0,0.0a");
+export const formatTwoDecimals = (value) =>
+  Number.isInteger(value) ? value : numeral(value).format("0,0.00");
+
+export const formatWithAbbreviation = (value) =>
+  Number.isInteger(value) ? value : numeral(value).format("0,0.0a");

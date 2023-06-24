@@ -76,7 +76,7 @@ const Page = () => {
             </Stack>
             <Search
               onSearch={onSearch}
-              item="transactions"
+              item="Customer"
               historyModal={<HistoryModal />}
               khataModal={<KhataModal />}
             />

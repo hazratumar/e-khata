@@ -9,7 +9,7 @@ import {
   TableBody,
   TableFooter,
 } from "@mui/material";
-import { dateFormat } from "../../utils/generic-functions";
+import { dateFormat, formatTwoDecimals } from "../../utils/generic-functions";
 
 const KhataPage = ({ invoice }) => {
   const { name, address, currency, abbreviation, openingBalance, startDate, endDate, result } =
@@ -41,7 +41,9 @@ const KhataPage = ({ invoice }) => {
           <Typography variant="body2">{`Currency: ${currency} (${abbreviation})`}</Typography>
         </Box>
         <Box>
-          <Typography variant="subtitle1">{`Opening Balance: ${abbreviation} ${openingBalance}`}</Typography>
+          <Typography variant="subtitle1">{`Opening Balance: ${abbreviation} ${formatTwoDecimals(
+            openingBalance
+          )}`}</Typography>
           <Typography variant="body2">{`Timeframe from: ${dateFormat(startDate)} to ${dateFormat(
             endDate
           )}`}</Typography>
@@ -73,16 +75,16 @@ const KhataPage = ({ invoice }) => {
                       : item.from + " to " + item.customer}
                   </TableCell>
                   <TableCell sx={{ fontSize: 12 }}>
-                    {item.amount} {item.currency}
+                    {formatTwoDecimals(item.amount)} {item.currency}
                   </TableCell>
-                  <TableCell sx={{ fontSize: 12 }}>{item.exrate}</TableCell>
+                  <TableCell sx={{ fontSize: 12 }}>{formatTwoDecimals(item.exrate)}</TableCell>
                   <TableCell sx={{ fontSize: 12 }}>
-                    {item.type === "Debit" ? item.calculatedamount : 0}
+                    {item.type === "Debit" ? formatTwoDecimals(item.calculatedamount) : 0}
                   </TableCell>
                   <TableCell sx={{ fontSize: 12 }}>
-                    {item.type === "Credit" ? item.calculatedamount : 0}
+                    {item.type === "Credit" ? formatTwoDecimals(item.calculatedamount) : 0}
                   </TableCell>
-                  <TableCell sx={{ fontSize: 12 }}>{balance}</TableCell>
+                  <TableCell sx={{ fontSize: 12 }}>{formatTwoDecimals(balance)}</TableCell>
                 </TableRow>
               );
             })}
@@ -93,12 +95,17 @@ const KhataPage = ({ invoice }) => {
                 Total Debits:
               </TableCell>
               <TableCell sx={{ fontSize: 12 }}>
-                {`${abbreviation} ${result.reduce((sum, item) => {
-                  if (item.type === "Debit") {
-                    return sum + item.calculatedamount;
-                  }
-                  return sum;
-                }, 0)}`}
+                {`${abbreviation} ${
+                  (formatTwoDecimals(
+                    result.reduce((sum, item) => {
+                      if (item.type === "Debit") {
+                        return sum + item.calculatedamount;
+                      }
+                      return sum;
+                    })
+                  ),
+                  0)
+                }`}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -106,20 +113,23 @@ const KhataPage = ({ invoice }) => {
                 Total Credits:
               </TableCell>
               <TableCell sx={{ fontSize: 12 }}>
-                {`${abbreviation} ${result.reduce((sum, item) => {
-                  if (item.type === "Credit") {
-                    return sum + item.calculatedamount;
-                  }
-                  return sum;
-                }, 0)}`}
+                {`${abbreviation} ${formatTwoDecimals(
+                  result.reduce((sum, item) => {
+                    if (item.type === "Credit") {
+                      return sum + item.calculatedamount;
+                    }
+                    return sum;
+                  }),
+                  0
+                )}`}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell sx={{ fontSize: 12 }} align="right">
                 Closing Balance:
               </TableCell>
-              <TableCell sx={{ fontSize: 12 }}>{`${abbreviation} ${calculateBalance(
-                result
+              <TableCell sx={{ fontSize: 12 }}>{`${abbreviation} ${formatTwoDecimals(
+                calculateBalance(result)
               )}`}</TableCell>
             </TableRow>
           </TableFooter>

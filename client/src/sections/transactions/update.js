@@ -4,6 +4,7 @@ import { useGetOneTransactionQuery } from "src/store/services/transactionService
 import { useUpdateTransactionMutation } from "src/store/services/transactionService";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { formatTwoDecimals } from "../../utils/generic-functions";
 
 export const UpdateTransaction = forwardRef((props, ref) => {
   const { transactionId } = props;
@@ -174,7 +175,8 @@ export const UpdateTransaction = forwardRef((props, ref) => {
         </Grid>
         <Grid item xs={12} md={12}>
           <Typography>
-            {state.exCurrency && "Calculated Amount: " + state.amount * state.exRate}
+            {state.exCurrency &&
+              "Calculated Amount: " + formatTwoDecimals(state.amount * state.exRate)}
           </Typography>
         </Grid>
       </Grid>

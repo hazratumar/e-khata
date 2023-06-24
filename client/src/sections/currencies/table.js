@@ -12,6 +12,7 @@ import { Scrollbar } from "src/components/scrollbar";
 import { UpdateCurrency } from "src/sections/currencies/update";
 import { options } from "../../utils/constant";
 import moment from "moment";
+import { formatTwoDecimals } from "../../utils/generic-functions";
 export const CurrenciesTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
   const rowsPerPageOptions = options.filter((option) => option <= count);
@@ -37,7 +38,7 @@ export const CurrenciesTable = (props) => {
                   <TableCell>{currency.id}</TableCell>
                   <TableCell>{currency.name}</TableCell>
                   <TableCell>{currency.abbreviation}</TableCell>
-                  <TableCell>{currency.rate}</TableCell>
+                  <TableCell>{formatTwoDecimals(currency.rate)}</TableCell>
                   <TableCell>{moment(currency.updatedAt).fromNow()}</TableCell>
                   <TableCell>
                     <UpdateCurrency currency={currency} />

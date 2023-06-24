@@ -131,7 +131,7 @@ export class CurrencyService {
 
     try {
       // Save the updated customer to the database
-      return this.currencyRepository.save(updatedCurrency);
+      return await this.currencyRepository.save(updatedCurrency);
     } catch (error) {
       if (error.code === "23505") {
         // check if the error is a duplicate key error

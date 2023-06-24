@@ -9,7 +9,7 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import { dateFormat, isTruthy } from "../../utils/generic-functions";
+import { dateFormat, formatTwoDecimals, isTruthy } from "../../utils/generic-functions";
 
 const HistoryPage = ({ invoice }) => {
   const { name, currency, abbreviation, startDate, endDate, result } = invoice;
@@ -55,9 +55,13 @@ const HistoryPage = ({ invoice }) => {
                 <TableCell sx={{ fontSize: 12 }}>{dateFormat(item.date)}</TableCell>
                 <TableCell sx={{ fontSize: 12 }}>{`${item.customer} to ${item.from}`}</TableCell>
                 <TableCell sx={{ fontSize: 12 }}>{item.currency}</TableCell>
-                <TableCell sx={{ fontSize: 12 }}>{item.amount}</TableCell>
-                <TableCell sx={{ fontSize: 12 }}>{`${item.exrate} ${item.excurrency}`}</TableCell>
-                <TableCell sx={{ fontSize: 12 }}>{item.calculatedamount}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>{formatTwoDecimals(item.amount)}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>{`${formatTwoDecimals(item.exrate)} ${
+                  item.excurrency
+                }`}</TableCell>
+                <TableCell sx={{ fontSize: 12 }}>
+                  {formatTwoDecimals(item.calculatedamount)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

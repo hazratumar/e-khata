@@ -24,11 +24,17 @@ export class WalletService {
     transactionId: number,
     from?: any
   ): Promise<Wallet> {
-    const user = await this.usersService.findOne(userId);
-    const transaction = await this.transactionsService.findOne(transactionId);
+    try {
+      const user = await this.usersService.findOne(userId);
+      const transaction = await this.transactionsService.findOne(transactionId);
 
-    const wallets = new Wallet({ ...wallet, user, transaction, from });
-    return this.walletRepository.save(wallets);
+      const wallets = new Wallet({ ...wallet, user, transaction, from });
+      return await this.walletRepository.save(wallets);
+    } catch (error) {
+      // Handle the error appropriately
+      console.error("Error creating wallet:", error);
+      throw new Error("Failed to create wallet");
+    }
   }
 
   async update(
@@ -36,20 +42,26 @@ export class WalletService {
     wallet: UpdateWalletDto,
     from?: any
   ): Promise<Wallet> {
-    const user = await this.usersService.findOne(userId);
-    const customer = await this.customersService.findOne(wallet?.customer);
-    const existingWallet = await this.findOne(wallet?.id);
+    try {
+      const user = await this.usersService.findOne(userId);
+      const customer = await this.customersService.findOne(wallet?.customer);
+      const existingWallet = await this.findOne(wallet?.id);
 
-    if (!existingWallet) {
-      throw new NotFoundException(`Wallet with ID ${wallet?.id} not found`);
+      if (!existingWallet) {
+        throw new NotFoundException(`Wallet with ID ${wallet?.id} not found`);
+      }
+
+      existingWallet.customer = customer;
+      existingWallet.user = user;
+      existingWallet.from = from;
+
+      const updatedWallet = await this.walletRepository.save(existingWallet);
+      return updatedWallet;
+    } catch (error) {
+      // Handle the error appropriately
+      console.error("Error updating wallet:", error);
+      throw new Error("Failed to update wallet");
     }
-
-    existingWallet.customer = customer;
-    existingWallet.user = user;
-    existingWallet.from = from;
-
-    const updatedWallet = await this.walletRepository.save(existingWallet);
-    return updatedWallet;
   }
 
   async findAll(): Promise<Wallet[]> {

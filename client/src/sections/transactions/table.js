@@ -13,7 +13,7 @@ import { Scrollbar } from "src/components/scrollbar";
 import { TransactionModal } from "./modal";
 import moment from "moment";
 import { options } from "../../utils/constant";
-import { getNewUpdate } from "../../utils/generic-functions";
+import { formatTwoDecimals, getNewUpdate } from "../../utils/generic-functions";
 
 export const TransactionsTable = (props) => {
   const { count, items = [], onPageChange, onRowsPerPageChange, page, rowsPerPage } = props;
@@ -33,8 +33,8 @@ export const TransactionsTable = (props) => {
                 <TableCell>Amount</TableCell>
                 {/* <TableCell>Credit Amount</TableCell>
                 <TableCell>Debit Amount</TableCell> */}
-                <TableCell>Exchange</TableCell>
                 <TableCell>Rate</TableCell>
+                <TableCell>Total</TableCell>
                 <TableCell>Recent Updates</TableCell>
                 <TableCell>Update</TableCell>
               </TableRow>
@@ -51,11 +51,16 @@ export const TransactionsTable = (props) => {
                     />
                   </TableCell>
                   <TableCell>{item?.transaction?.currency?.abbreviation}</TableCell>
-                  <TableCell>{item?.transaction?.amount}</TableCell>
+                  <TableCell>{formatTwoDecimals(item?.transaction?.amount)}</TableCell>
                   {/* <TableCell>{item?.type === "Credit" ? item?.transaction?.amount : "0"}</TableCell>
                   <TableCell>{item?.type === "Debit" ? item?.transaction?.amount : "0"}</TableCell> */}
-                  <TableCell>{item?.transaction?.exCurrency?.abbreviation}</TableCell>
-                  <TableCell>{item?.transaction?.exRate}</TableCell>
+                  <TableCell>
+                    {formatTwoDecimals(item?.transaction?.exRate)}{" "}
+                    {item?.transaction?.exCurrency?.abbreviation}
+                  </TableCell>
+                  <TableCell>
+                    {formatTwoDecimals(item?.transaction?.exRate * item?.transaction?.amount)}
+                  </TableCell>
                   <TableCell>
                     {moment(getNewUpdate(item?.updatedAt, item?.transaction?.updatedAt)).fromNow()}
                   </TableCell>
