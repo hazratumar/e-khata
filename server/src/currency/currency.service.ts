@@ -80,19 +80,18 @@ export class CurrencyService {
     // Apply search filter if search term is provided
     if (search?.trim()) {
       queryBuilder.where(
-        new Brackets((qb) => {
-          qb.where("currency.name ILIKE :search", {
-            search: `%${search}%`,
-          }).orWhere("currency.rate ILIKE :search", {
-            search: `%${search}%`,
-          });
-        })
+        "currency.name ILIKE :search OR currency.abbreviation ILIKE :search",
+        { search: `%${search}%` }
       );
     }
 
-    const length = await queryBuilder.getCount();
+    const [currencies, total] = await queryBuilder
+      .orderBy("currency.updatedAt", "DESC")
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
 
-    const totalPages = Math.ceil(length / limit);
+    const totalPages = Math.ceil(total / limit);
 
     // Handle case when page number is greater than total pages
     if (totalPages > 0 && page > totalPages) {
@@ -101,13 +100,7 @@ export class CurrencyService {
       );
     }
 
-    const currencies = await queryBuilder
-      .orderBy("currency.updatedAt", "DESC")
-      .skip(skip)
-      .take(limit)
-      .getMany();
-
-    return { currencies, total: length, page, totalPages };
+    return { currencies, total, page, totalPages };
   }
 
   async findOne(id: number): Promise<Currency> {
