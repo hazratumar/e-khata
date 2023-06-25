@@ -37,8 +37,8 @@ export class TransactionsController {
     const t = await this.transactionsService.create(+userId, transaction);
 
     await Promise.all([
-      this.walletService.create(+userId, credit, t.id, db),
-      this.walletService.create(+userId, debit, t.id, cr),
+      this.walletService.create(+userId, credit, t?.id, db),
+      this.walletService.create(+userId, debit, t?.id, cr),
     ]);
 
     return t;

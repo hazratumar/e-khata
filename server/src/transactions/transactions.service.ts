@@ -28,7 +28,7 @@ export class TransactionsService {
   ): Promise<Transaction> {
     try {
       const user = await this.usersService.findOne(userId);
-      const transaction = new Transaction({
+      const transaction = this.transactionRepository.create({
         ...createTransactionDto,
         user,
       });
@@ -87,7 +87,6 @@ export class TransactionsService {
   async find(): Promise<Transaction[]> {
     return this.transactionRepository.find();
   }
-
   async findOne(id: number): Promise<Transaction> {
     try {
       const transaction = await this.transactionRepository.findOne({

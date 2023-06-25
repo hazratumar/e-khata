@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { FindManyOptions, In, IsNull, Not, Raw, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsersService } from "src/users/users.service";
@@ -28,12 +32,16 @@ export class WalletService {
       const user = await this.usersService.findOne(userId);
       const transaction = await this.transactionsService.findOne(transactionId);
 
-      const wallets = new Wallet({ ...wallet, user, transaction, from });
+      const wallets = await this.walletRepository.create({
+        ...wallet,
+        user,
+        transaction,
+        from,
+      });
       return await this.walletRepository.save(wallets);
     } catch (error) {
-      // Handle the error appropriately
       console.error("Error creating wallet:", error);
-      throw new Error("Failed to create wallet");
+      throw new InternalServerErrorException("Failed to create wallet");
     }
   }
 

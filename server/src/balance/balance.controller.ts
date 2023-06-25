@@ -37,6 +37,7 @@ export class BalanceController {
     await this.walletService.create(+userId, wallet, savedTransaction?.id);
     return savedTransaction;
   }
+
   @Put()
   async updateBalance(
     @GetCurrentUserId() userId: string,
