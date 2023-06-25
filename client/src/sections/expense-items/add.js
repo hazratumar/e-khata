@@ -2,19 +2,11 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import {
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  IconButton,
-  SvgIcon,
-  TextField,
-} from "@mui/material";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { CardActions, CardContent, CardHeader, Grid, IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAddExpenseItemMutation } from "src/store/services/expenseItemService";
 import toast from "react-hot-toast";
+import { Add, Close } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -68,15 +60,7 @@ export const AddExpenseItem = () => {
 
   return (
     <div>
-      <Button
-        starticon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={handleOpen}
-      >
+      <Button starticon={<Add />} variant="contained" onClick={handleOpen}>
         Add Expense Item
       </Button>
       <Modal
@@ -93,9 +77,7 @@ export const AddExpenseItem = () => {
               title="Add Expense Item"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}

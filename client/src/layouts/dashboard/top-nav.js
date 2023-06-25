@@ -1,19 +1,10 @@
 import PropTypes from "prop-types";
-import Bars3Icon from "@heroicons/react/24/solid/Bars3Icon";
-import {
-  Avatar,
-  Badge,
-  Box,
-  IconButton,
-  Stack,
-  SvgIcon,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Avatar, Box, IconButton, Stack, Typography, useMediaQuery } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { usePopover } from "src/hooks/use-popover";
 import { AccountPopover } from "./account-popover";
 import { useSelector } from "react-redux";
+import { Menu } from "@mui/icons-material";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -54,9 +45,7 @@ export const TopNav = (props) => {
           <Stack alignItems="center" direction="row" spacing={2}>
             {!lgUp && (
               <IconButton onClick={onNavOpen}>
-                <SvgIcon fontSize="small">
-                  <Bars3Icon />
-                </SvgIcon>
+                <Menu />
               </IconButton>
             )}
           </Stack>

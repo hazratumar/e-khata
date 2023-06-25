@@ -7,7 +7,6 @@ import {
   CardContent,
   CardHeader,
   IconButton,
-  SvgIcon,
   Modal,
   FormControl,
   CardActions,
@@ -16,14 +15,12 @@ import {
   TextField,
   Stack,
 } from "@mui/material";
-
-import { XMarkIcon } from "@heroicons/react/24/solid";
-import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
+import { Close } from "@mui/icons-material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { getDate, isNotTruthy, getProjectStartDate } from "src/utils/generic-functions";
-import { CloudDownload, RotateLeft } from "@material-ui/icons";
+import { CloudDownload, RotateLeft } from "@mui/icons-material";
 import { useDownloadHistoryMutation } from "src/store/services/reportService";
 import download from "downloadjs";
 
@@ -154,9 +151,7 @@ export const HistoryModal = () => {
                 title="Customer History"
                 action={
                   <IconButton aria-label="close" onClick={handleOpen}>
-                    <SvgIcon fontSize="small">
-                      <XMarkIcon />
-                    </SvgIcon>
+                    <Close />
                   </IconButton>
                 }
               />
@@ -165,7 +160,7 @@ export const HistoryModal = () => {
                   <Grid item xs={12}>
                     <Autocomplete
                       value={state.customer}
-                      getOptionLabel={(option) => option?.name}
+                      getOptionLabel={(option) => option?.name || ""}
                       options={customersWithAllOption}
                       onChange={onCustomerChange}
                       renderInput={(params) => <TextField {...params} label="Customer" />}
@@ -174,7 +169,7 @@ export const HistoryModal = () => {
                   <Grid item xs={12}>
                     <Autocomplete
                       value={state.currency}
-                      getOptionLabel={(option) => option?.abbreviation}
+                      getOptionLabel={(option) => option?.abbreviation || ""}
                       options={currenciesWithAllOption}
                       onChange={onCurrencyChange}
                       renderInput={(params) => <TextField {...params} label="Currency" />}
@@ -182,24 +177,20 @@ export const HistoryModal = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Start Date"
-                          value={state?.startDate}
-                          onChange={onStartDateChange}
-                        />
-                      </LocalizationProvider>
+                      <DatePicker
+                        label="Start Date"
+                        value={state?.startDate}
+                        onChange={onStartDateChange}
+                      />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="End Date"
-                          value={state?.endDate}
-                          onChange={onEndDateChange}
-                        />
-                      </LocalizationProvider>
+                      <DatePicker
+                        label="End Date"
+                        value={state?.endDate}
+                        onChange={onEndDateChange}
+                      />
                     </FormControl>
                   </Grid>
                 </Grid>

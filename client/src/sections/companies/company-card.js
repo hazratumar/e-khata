@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
-import ClockIcon from "@heroicons/react/24/solid/ClockIcon";
-import { Avatar, Box, Card, CardContent, Divider, Stack, SvgIcon, Typography } from "@mui/material";
+import { Avatar, Box, Card, CardContent, Divider, Stack, Typography } from "@mui/material";
+import { SaveAlt, Schedule } from "@mui/icons-material";
 
 export const CompanyCard = (props) => {
   const { company } = props;
@@ -41,17 +40,13 @@ export const CompanyCard = (props) => {
         sx={{ p: 2 }}
       >
         <Stack alignItems="center" direction="row" spacing={1}>
-          <SvgIcon color="action" fontSize="small">
-            <ClockIcon />
-          </SvgIcon>
+          <Schedule />
           <Typography color="text.secondary" display="inline" variant="body2">
             Updated 2hr ago
           </Typography>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={1}>
-          <SvgIcon color="action" fontSize="small">
-            <ArrowDownOnSquareIcon />
-          </SvgIcon>
+          <SaveAlt />
           <Typography color="text.secondary" display="inline" variant="body2">
             {company.downloads} Downloads
           </Typography>

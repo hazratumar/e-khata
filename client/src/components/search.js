@@ -1,5 +1,5 @@
-import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import { Box, Card, InputAdornment, OutlinedInput, SvgIcon } from "@mui/material";
+import { Search as SearchIcon } from "@mui/icons-material";
 import { useState } from "react";
 
 export const Search = ({ onSearch, item, historyModal, khataModal }) => {
@@ -20,9 +20,7 @@ export const Search = ({ onSearch, item, historyModal, khataModal }) => {
         onChange={handleSearch}
         startAdornment={
           <InputAdornment position="start">
-            <SvgIcon color="action" fontSize="small">
-              <MagnifyingGlassIcon />
-            </SvgIcon>
+            <SearchIcon />
           </InputAdornment>
         }
         sx={{ maxWidth: 500 }}

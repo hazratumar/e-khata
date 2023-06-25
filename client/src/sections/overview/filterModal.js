@@ -6,7 +6,6 @@ import {
   CardContent,
   CardHeader,
   IconButton,
-  SvgIcon,
   Modal,
   Radio,
   RadioGroup,
@@ -17,9 +16,7 @@ import {
   MenuItem,
   CardActions,
 } from "@mui/material";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { XMarkIcon } from "@heroicons/react/24/solid";
-import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
+import { FilterAlt, Close } from "@mui/icons-material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { getDateRange, getCustomDate, getProjectStartDate } from "src/utils/generic-functions";
 
@@ -76,7 +73,7 @@ export const FilterModal = ({ filterDashboard }) => {
 
   return (
     <div>
-      <Button onClick={handleOpen} startIcon={<FilterAltIcon />}>
+      <Button onClick={handleOpen} startIcon={<FilterAlt />}>
         Filter
       </Button>
       <Modal
@@ -92,9 +89,7 @@ export const FilterModal = ({ filterDashboard }) => {
               title="Filter Options"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}
@@ -128,14 +123,10 @@ export const FilterModal = ({ filterDashboard }) => {
                     <FormControlLabel value="custom" control={<Radio />} label="Custom Date" />
                     <Box>
                       <FormControl fullWidth sx={{ mt: 2 }}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker value={customStartDate} onChange={onCustomStartDateChange} />
-                        </LocalizationProvider>
+                        <DatePicker value={customStartDate} onChange={onCustomStartDateChange} />
                       </FormControl>
                       <FormControl fullWidth sx={{ mt: 2 }}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker value={customEndDate} onChange={onCustomEndDateChange} />
-                        </LocalizationProvider>
+                        <DatePicker value={customEndDate} onChange={onCustomEndDateChange} />
                       </FormControl>
                     </Box>
                   </RadioGroup>

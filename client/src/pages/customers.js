@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
-import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
-import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CustomersTable } from "src/sections/customers/table";
 import { Search } from "src/components/search";

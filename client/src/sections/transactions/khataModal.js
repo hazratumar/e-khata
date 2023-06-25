@@ -7,7 +7,6 @@ import {
   CardContent,
   CardHeader,
   IconButton,
-  SvgIcon,
   Modal,
   FormControl,
   CardActions,
@@ -17,8 +16,7 @@ import {
   Stack,
 } from "@mui/material";
 
-import { XMarkIcon } from "@heroicons/react/24/solid";
-import { AdapterDayjs, LocalizationProvider } from "@mui/x-date-pickers";
+import { Close } from "@mui/icons-material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -165,9 +163,7 @@ export const KhataModal = () => {
                 title="Customer Khata"
                 action={
                   <IconButton aria-label="close" onClick={handleOpen}>
-                    <SvgIcon fontSize="small">
-                      <XMarkIcon />
-                    </SvgIcon>
+                    <Close />
                   </IconButton>
                 }
               />
@@ -176,7 +172,7 @@ export const KhataModal = () => {
                   <Grid item xs={12}>
                     <Autocomplete
                       disableClearable={true}
-                      getOptionLabel={(option) => option?.name}
+                      getOptionLabel={(option) => option?.name || ""}
                       options={customers}
                       onChange={onCustomerChange}
                       renderInput={(params) => <TextField {...params} label="Customer" />}
@@ -185,7 +181,7 @@ export const KhataModal = () => {
                   <Grid item xs={12}>
                     <Autocomplete
                       disabled={disabled}
-                      getOptionLabel={(option) => option?.abbreviation}
+                      getOptionLabel={(option) => option?.abbreviation || ""}
                       options={currencies}
                       onChange={onCurrencyChange}
                       renderInput={(params) => <TextField {...params} label="Khata" />}
@@ -193,24 +189,20 @@ export const KhataModal = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Start Date"
-                          value={state?.startDate}
-                          onChange={onStartDateChange}
-                        />
-                      </LocalizationProvider>
+                      <DatePicker
+                        label="Start Date"
+                        value={state?.startDate}
+                        onChange={onStartDateChange}
+                      />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="End Date"
-                          value={state?.endDate}
-                          onChange={onEndDateChange}
-                        />
-                      </LocalizationProvider>
+                      <DatePicker
+                        label="End Date"
+                        value={state?.endDate}
+                        onChange={onEndDateChange}
+                      />
                     </FormControl>
                   </Grid>
                 </Grid>

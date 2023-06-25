@@ -3,21 +3,11 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import {
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  IconButton,
-  MenuItem,
-  SvgIcon,
-  TextField,
-} from "@mui/material";
-import { PencilSquareIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { CardActions, CardContent, CardHeader, Grid, IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useUpdateExpenseItemMutation } from "src/store/services/expenseItemService";
 import toast from "react-hot-toast";
+import { Edit } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -78,9 +68,7 @@ export const UpdateExpenseItem = (props) => {
   return (
     <div>
       <Button onClick={handleOpen}>
-        <SvgIcon fontSize="small">
-          <PencilSquareIcon />
-        </SvgIcon>
+        <Edit />
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -96,9 +84,7 @@ export const UpdateExpenseItem = (props) => {
               title="Update Expense Item"
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}

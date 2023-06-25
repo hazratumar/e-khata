@@ -1,5 +1,5 @@
-import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
-import { Card, InputAdornment, OutlinedInput, SvgIcon } from "@mui/material";
+import { Search } from "@mui/icons-material";
+import { Card, InputAdornment, OutlinedInput } from "@mui/material";
 
 export const CompaniesSearch = () => (
   <Card sx={{ p: 2 }}>
@@ -9,9 +9,7 @@ export const CompaniesSearch = () => (
       placeholder="Search company"
       startAdornment={
         <InputAdornment position="start">
-          <SvgIcon color="action" fontSize="small">
-            <MagnifyingGlassIcon />
-          </SvgIcon>
+          <Search />
         </InputAdornment>
       }
       sx={{ maxWidth: 500 }}

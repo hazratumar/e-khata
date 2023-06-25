@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
-import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
-import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { ExpenseItemsTable } from "src/sections/expense-items/table";
 import { Search } from "src/components/search";
@@ -51,9 +50,7 @@ const Page = () => {
           <Stack spacing={2}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Typography variant="h4">Expense Items</Typography>
-              <div>
-                <AddExpenseItem />
-              </div>
+              <AddExpenseItem />
             </Stack>
             <Search onSearch={onSearch} item="expense items" />
             <ExpenseItemsTable

@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import PropTypes from "prop-types";
-import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
 import {
   Box,
   Button,
@@ -8,7 +7,6 @@ import {
   CardActions,
   CardHeader,
   Divider,
-  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -17,6 +15,7 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
+import { ArrowForward } from "@mui/icons-material";
 
 const statusMap = {
   pending: "warning",
@@ -62,16 +61,7 @@ export const OverviewLatestOrders = (props) => {
       </Scrollbar>
       <Divider />
       <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button
-          color="inherit"
-          endIcon={
-            <SvgIcon fontSize="small">
-              <ArrowRightIcon />
-            </SvgIcon>
-          }
-          size="small"
-          variant="text"
-        >
+        <Button color="inherit" endIcon={<ArrowForward />} size="small" variant="text">
           View all
         </Button>
       </CardActions>

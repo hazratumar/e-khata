@@ -1,18 +1,8 @@
 import PropTypes from "prop-types";
-import ComputerDesktopIcon from "@heroicons/react/24/solid/ComputerDesktopIcon";
-import DeviceTabletIcon from "@heroicons/react/24/solid/DeviceTabletIcon";
-import PhoneIcon from "@heroicons/react/24/solid/PhoneIcon";
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Stack,
-  SvgIcon,
-  Typography,
-  useTheme,
-} from "@mui/material";
+
+import { Box, Card, CardContent, CardHeader, Stack, Typography, useTheme } from "@mui/material";
 import { Chart } from "src/components/chart";
+import { Computer, PhoneAndroid, Tablet } from "@mui/icons-material";
 
 const useChartOptions = (labels) => {
   const theme = useTheme();
@@ -59,21 +49,9 @@ const useChartOptions = (labels) => {
 };
 
 const iconMap = {
-  Desktop: (
-    <SvgIcon>
-      <ComputerDesktopIcon />
-    </SvgIcon>
-  ),
-  Tablet: (
-    <SvgIcon>
-      <DeviceTabletIcon />
-    </SvgIcon>
-  ),
-  Phone: (
-    <SvgIcon>
-      <PhoneIcon />
-    </SvgIcon>
-  ),
+  Desktop: <Computer />,
+  Tablet: <Tablet />,
+  Phone: <PhoneAndroid />,
 };
 
 export const OverviewTraffic = (props) => {

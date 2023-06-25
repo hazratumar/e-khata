@@ -7,7 +7,6 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  SvgIcon,
   Typography,
   Divider,
   TableContainer,
@@ -18,9 +17,9 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
-
+import { Add, Close } from "@mui/icons-material";
 import { useState } from "react";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -33,6 +32,7 @@ const style = {
   boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)",
   padding: "10px",
 };
+
 export const ViewTransaction = (props) => {
   const { transaction } = props;
   const [open, setOpen] = useState(false);
@@ -47,15 +47,7 @@ export const ViewTransaction = (props) => {
 
   return (
     <div>
-      <MenuItem
-        starticon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={handleOpen}
-      >
+      <MenuItem starticon={<Add />} variant="contained" onClick={handleOpen}>
         View
       </MenuItem>
       <Modal
@@ -72,9 +64,7 @@ export const ViewTransaction = (props) => {
               title={transaction.type}
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}

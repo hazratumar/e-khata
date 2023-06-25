@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import ArrowDownIcon from "@heroicons/react/24/solid/ArrowDownIcon";
-import ArrowUpIcon from "@heroicons/react/24/solid/ArrowUpIcon";
-import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
+
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from "@mui/material";
+import { KeyboardArrowUp, KeyboardArrowDown, Person } from "@mui/icons-material";
 
 export const OverviewTotalCustomers = (props) => {
   const { difference, positive = false, sx, value } = props;
@@ -24,16 +23,14 @@ export const OverviewTotalCustomers = (props) => {
               width: 56,
             }}
           >
-            <SvgIcon>
-              <UsersIcon />
-            </SvgIcon>
+            <Person />
           </Avatar>
         </Stack>
         {difference && (
           <Stack alignItems="center" direction="row" spacing={2} sx={{ mt: 2 }}>
             <Stack alignItems="center" direction="row" spacing={0.5}>
               <SvgIcon color={positive ? "success" : "error"} fontSize="small">
-                {positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                {positive ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
               </SvgIcon>
               <Typography color={positive ? "success.main" : "error.main"} variant="body2">
                 {difference}%

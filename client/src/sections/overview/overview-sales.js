@@ -1,17 +1,8 @@
 import PropTypes from "prop-types";
-import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
-import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Divider,
-  SvgIcon,
-} from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardHeader, Divider } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
+import { ArrowForwardIos, Sync } from "@mui/icons-material";
 
 const useChartOptions = () => {
   const theme = useTheme();
@@ -112,15 +103,7 @@ export const OverviewSales = (props) => {
     <Card sx={sx}>
       <CardHeader
         action={
-          <Button
-            color="inherit"
-            size="small"
-            starticon={
-              <SvgIcon fontSize="small">
-                <ArrowPathIcon />
-              </SvgIcon>
-            }
-          >
+          <Button color="inherit" size="small" starticon={<Sync />}>
             Sync
           </Button>
         }
@@ -131,15 +114,7 @@ export const OverviewSales = (props) => {
       </CardContent>
       <Divider />
       <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button
-          color="inherit"
-          endIcon={
-            <SvgIcon fontSize="small">
-              <ArrowRightIcon />
-            </SvgIcon>
-          }
-          size="small"
-        >
+        <Button color="inherit" endIcon={<ArrowForwardIos />} size="small">
           Overview
         </Button>
       </CardActions>

@@ -5,11 +5,10 @@ import {
   Box,
   CardHeader,
   IconButton,
-  SvgIcon,
   Modal,
   CardActions,
 } from "@mui/material";
-import { PencilSquareIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { Add, Edit, Close } from "@mui/icons-material";
 import { useRef, useState } from "react";
 import { AddTransaction } from "./add";
 import { UpdateTransaction } from "./update";
@@ -45,20 +44,10 @@ export const TransactionModal = ({ transactionId }) => {
     <div>
       {transactionId ? (
         <Button onClick={handleOpen}>
-          <SvgIcon fontSize="small">
-            <PencilSquareIcon />
-          </SvgIcon>
+          <Edit />
         </Button>
       ) : (
-        <Button
-          startIcon={
-            <SvgIcon fontSize="small">
-              <PlusIcon />
-            </SvgIcon>
-          }
-          variant="contained"
-          onClick={handleOpen}
-        >
+        <Button startIcon={<Add />} variant="contained" onClick={handleOpen}>
           Add Transaction
         </Button>
       )}
@@ -77,9 +66,7 @@ export const TransactionModal = ({ transactionId }) => {
               title={`${transactionId ? "Update" : "Add"} Transaction`}
               action={
                 <IconButton aria-label="close" onClick={handleOpen}>
-                  <SvgIcon fontSize="small">
-                    <XMarkIcon />
-                  </SvgIcon>
+                  <Close />
                 </IconButton>
               }
               sx={{ width: "100%" }}
