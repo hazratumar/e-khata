@@ -33,9 +33,9 @@ const Page = () => {
         <Container maxWidth="lg">
           <Stack spacing={3}>
             <Typography variant="h4">Account</Typography>
-            {/* <Grid item xs={12} md={6} lg={6}>
+            <Grid item xs={12} md={6} lg={6}>
               <ProfileImage user={state} />
-            </Grid> */}
+            </Grid>
             <Grid item xs={12} md={6} lg={6}>
               <ProfileDetails user={state} />
             </Grid>

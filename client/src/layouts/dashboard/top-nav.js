@@ -5,6 +5,7 @@ import { usePopover } from "src/hooks/use-popover";
 import { AccountPopover } from "./account-popover";
 import { useSelector } from "react-redux";
 import { Menu } from "@mui/icons-material";
+import { getFirstLetters } from "src/utils/generic-functions";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -59,8 +60,9 @@ export const TopNav = (props) => {
                 height: 40,
                 width: 40,
               }}
-              src={user?.image}
-            />
+            >
+              {getFirstLetters(user?.name)}
+            </Avatar>
           </Stack>
         </Stack>
       </Box>

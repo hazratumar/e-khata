@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { setToken } from "src/store/reducers/authSlice";
 import { useUpdateUserMutation } from "src/store/services/userService";
 import { toast } from "react-hot-toast";
+import { getFirstLetters } from "src/utils/generic-functions";
 
 export const ProfileImage = () => {
   const dispatch = useDispatch();
@@ -70,13 +71,15 @@ export const ProfileImage = () => {
           }}
         >
           <Avatar
-            src={state.image}
             sx={{
+              fontSize: 30,
               height: 80,
               mb: 2,
               width: 80,
             }}
-          />
+          >
+            {getFirstLetters(state.name)}
+          </Avatar>
           <Typography gutterBottom variant="h5">
             {state.name}
           </Typography>
@@ -85,7 +88,7 @@ export const ProfileImage = () => {
           </Typography>
         </Box>
       </CardContent>
-      <Divider />
+      {/* <Divider />
       <CardActions>
         <label
           htmlFor="image-upload"
@@ -102,7 +105,7 @@ export const ProfileImage = () => {
             {isLoading ? "Uploading..." : "Upload Picture"}
           </Button>
         </label>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 };

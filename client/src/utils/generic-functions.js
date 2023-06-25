@@ -65,3 +65,11 @@ export const formatWithAbbreviation = (value) => {
   }
   return numeral(value).format("0.0a");
 };
+
+export const getFirstLetters = (name) => {
+  const [firstName, lastName] = name.split(" ");
+  const firstLetter = firstName ? firstName.charAt(0).toUpperCase() : "";
+  const lastLetter = lastName ? lastName.charAt(0).toUpperCase() : "";
+
+  return `${firstLetter}${lastLetter}`;
+};
