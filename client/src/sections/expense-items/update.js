@@ -1,4 +1,3 @@
-import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
@@ -7,7 +6,7 @@ import { CardActions, CardContent, CardHeader, Grid, IconButton, TextField } fro
 import { useEffect, useState } from "react";
 import { useUpdateExpenseItemMutation } from "src/store/services/expenseItemService";
 import toast from "react-hot-toast";
-import { Edit } from "@mui/icons-material";
+import { Close, Edit } from "@mui/icons-material";
 
 const style = {
   position: "absolute",

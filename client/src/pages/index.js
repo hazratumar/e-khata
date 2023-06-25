@@ -18,16 +18,14 @@ const Page = () => {
     rowsPerPage: 100,
   });
 
-  useEffect(() => {
-    refetch();
-  }, [selectedOption]);
   const handleRefresh = () => refetch();
   const currencyAbbreviations = currenciesData?.currencies.map((currency) => currency.abbreviation);
   const credits = data?.credits || [];
   const debits = data?.debits || [];
 
-  const filterDashboard = (data) => {
-    setSelectedOption(data);
+  const filterDashboard = async (data) => {
+    await setSelectedOption(data);
+    await refetch();
   };
 
   const calculateSum = (amounts) => {

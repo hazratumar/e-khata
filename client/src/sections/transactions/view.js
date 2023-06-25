@@ -98,7 +98,7 @@ export const ViewTransaction = (props) => {
                     <TableBody>
                       {multiItems.map((item) => {
                         return (
-                          <TableRow>
+                          <TableRow key={item.id}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.from.name}</TableCell>
                             <TableCell>{item.to.name}</TableCell>
