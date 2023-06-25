@@ -45,7 +45,7 @@ export const AddCurrency = () => {
     rate: 0,
   });
 
-  const [addCurrency, { isLoading, error }] = useAddCurrencyMutation();
+  const [addCurrency, { isSuccess, isLoading, error }] = useAddCurrencyMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,8 +55,13 @@ export const AddCurrency = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await addCurrency(formValues);
-    handleOpen();
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      handleOpen();
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
     if (error) {

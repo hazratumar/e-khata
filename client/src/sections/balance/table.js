@@ -48,7 +48,11 @@ export const BalanceTable = (props) => {
                     />
                   </TableCell>
                   <TableCell>{item?.transaction?.currency?.abbreviation}</TableCell>
-                  <TableCell>{formatTwoDecimals(item?.transaction?.amount)}</TableCell>
+                  <TableCell>
+                    {item?.type === "Withdraw" ? "-" : ""}
+                    {formatTwoDecimals(item?.transaction?.amount)}
+                  </TableCell>
+
                   <TableCell>
                     {moment(getNewUpdate(item?.updatedAt, item?.transaction?.updatedAt)).fromNow()}
                   </TableCell>
