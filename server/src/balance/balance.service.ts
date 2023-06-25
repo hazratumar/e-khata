@@ -280,6 +280,7 @@ export class BalanceService {
     const result = {
       credits: [],
       debits: [],
+      stocks: [],
     };
 
     formattedResults.credits.credit.forEach((credit) => {
@@ -352,6 +353,8 @@ export class BalanceService {
       a.currency.localeCompare(b.currency)
     );
 
+    const stocks = await this.getSelfCustomersStock(endDateWithTime);
+    result.stocks.push(...stocks);
     return result;
   }
 
@@ -512,36 +515,15 @@ export class BalanceService {
   // }
 
   async getSelfCustomersStock(
-    startDate: Date,
-    endDate: Date
-  ): Promise<{ currency: string; stock: number }[]> {
-    const startStock = await this.getStockForDate(startDate);
-    const endStock = await this.getStockForDate(endDate);
-
-    const stockChanges: { currency: string; stock: number }[] = [];
-    endStock.forEach((endItem) => {
-      const startItem = startStock.find(
-        (item) => item.currency === endItem.currency
-      );
-      const stockChange = startItem
-        ? endItem.stock - startItem.stock
-        : endItem.stock;
-      stockChanges.push({ currency: endItem.currency, stock: stockChange });
-    });
-
-    return stockChanges;
-  }
-
-  async getStockForDate(
     date: Date
   ): Promise<{ currency: string; stock: number }[]> {
     const stock = await this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.customer", "customer")
-      .where("customer.isSelf = :isSelf", { isSelf: true })
       .leftJoin("wallet.transaction", "transaction")
       .leftJoin("transaction.currency", "currency")
-      .where("transaction.createdAt <= :date", { date })
+      .where("customer.isSelf = :isSelf", { isSelf: true })
+      .andWhere("transaction.createdAt <= :date", { date })
       .select("currency.abbreviation", "currency")
       .addSelect(
         "SUM(CASE WHEN wallet.type = 'Credit' THEN -transaction.amount WHEN wallet.type = 'Withdraw' THEN -transaction.amount ELSE transaction.amount END)",

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Card, CardContent, Stack, Typography } from "@mui/material";
+import { Card, Stack, Typography } from "@mui/material";
 import { formatTwoDecimals, formatWithAbbreviation } from "src/utils/generic-functions";
 
 export const OverviewBudget = (props) => {
@@ -7,21 +7,15 @@ export const OverviewBudget = (props) => {
 
   return (
     <Card>
-      <CardContent>
-        <Stack alignItems="flex-start" direction="row" justifyContent="space-between" spacing={3}>
-          <Stack spacing={1}>
-            <Typography color="text.secondary" variant="overline">
-              {type}
-            </Typography>
-            <Typography variant="h4">{formatWithAbbreviation(value)}</Typography>
-          </Stack>
-        </Stack>
-        <Stack alignItems="center" direction="row" spacing={2} sx={{ mt: 2 }}>
-          <Typography color="text.secondary" variant="caption">
-            {`${abbreviation}: ${formatTwoDecimals(value)}`}
-          </Typography>
-        </Stack>
-      </CardContent>
+      <Stack alignItems="flex-start" justifyContent="center" spacing={1} sx={{ p: 2 }}>
+        <Typography variant="body1" color="text.secondary">
+          {type}
+        </Typography>
+        <Typography variant="h4">{formatWithAbbreviation(value)}</Typography>
+        <Typography variant="body2" color="text.secondary">
+          {`${abbreviation}: ${formatTwoDecimals(value)}`}
+        </Typography>
+      </Stack>
     </Card>
   );
 };

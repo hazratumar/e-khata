@@ -66,12 +66,9 @@ export class BalanceController {
     return this.balanceService.getDataByDateRange(startDate, endDate);
   }
 
-  @Get("stock/:startDate/:endDate")
-  getSelfCostomersStock(
-    @Param("startDate") startDate: Date,
-    @Param("endDate") endDate: Date
-  ) {
-    return this.balanceService.getSelfCustomersStock(startDate, endDate);
+  @Get("stock/:date")
+  getSelfCostomersStock(@Param("date") date: Date) {
+    return this.balanceService.getSelfCustomersStock(date);
   }
 
   @Get(":page/:limit/:searchTerm?")
