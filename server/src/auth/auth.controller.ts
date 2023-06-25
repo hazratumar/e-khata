@@ -14,6 +14,8 @@ import { Tokens } from "./types";
 import { LoginDto, SignUpDto } from "./dto";
 import { ResetPasswordDto } from "./dto/resetPassword.dto";
 import { ForgotPasswordDto } from "./dto/forgotPassword.dto.ts";
+import { SubmitOtpDto } from "./dto/submitOtp.dto.ts";
+import { NewPasswordDto } from "./dto/newPassword.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -61,18 +63,24 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post("forget-password")
-  sendOTP(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<string> {
+  @Put("forget-password")
+  sendOTP(
+    @Body() forgotPasswordDto: ForgotPasswordDto
+  ): Promise<{ message: string }> {
     return this.authService.sendOTP(forgotPasswordDto?.email);
   }
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post("submit-otp")
-  submitOTP(
-    @Body("email") email: string,
-    @Body("otp") otp: string
-  ): Promise<Tokens> {
-    return this.authService.submitOTP(email, otp);
+  @Put("submit-otp")
+  submitOTP(@Body() submitOtpDto: SubmitOtpDto): Promise<{ message: string }> {
+    return this.authService.submitOTP(submitOtpDto);
+  }
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Put("new-password")
+  newPassword(@Body() newPasswordDto: NewPasswordDto): Promise<Tokens> {
+    return this.authService.newPassword(newPasswordDto);
   }
 }

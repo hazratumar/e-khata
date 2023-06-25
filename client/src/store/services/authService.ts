@@ -30,6 +30,30 @@ export const AuthService = createApi({
       }),
       invalidatesTags: ["authentication"],
     }),
+    forgetPassword: builder.mutation({
+      query: (payload) => ({
+        url: "/auth/forget-password",
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["authentication"],
+    }),
+    submitOtp: builder.mutation({
+      query: (payload) => ({
+        url: "/auth/submit-otp",
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["authentication"],
+    }),
+    newPassword: builder.mutation({
+      query: (payload) => ({
+        url: "/auth/new-password",
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["authentication"],
+    }),
     logOut: builder.mutation({
       query: (payload) => ({
         url: "/auth/logout",
@@ -53,6 +77,9 @@ export const {
   useSignUpMutation,
   useLogInMutation,
   useResetPasswordMutation,
+  useForgetPasswordMutation,
+  useSubmitOtpMutation,
+  useNewPasswordMutation,
   useLogOutMutation,
   useRefreshAccessTokenMutation,
 } = AuthService;

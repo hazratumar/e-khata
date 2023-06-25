@@ -14,6 +14,9 @@ import { UsersService } from "src/users/users.service";
 import { User } from "src/users/entities/user.entity";
 import { ResetPasswordDto } from "./dto/resetPassword.dto";
 import * as nodemailer from "nodemailer";
+import { SubmitOtpDto } from "./dto/submitOtp.dto.ts";
+import { NewPasswordDto } from "./dto/newPassword.dto";
+import { async } from "rxjs";
 
 @Injectable()
 export class AuthService {
@@ -121,124 +124,174 @@ export class AuthService {
     return otp;
   }
 
-  async sendOtpThroughEmail(user, oneTimePassword) {
+  async sendOtpThroughGmail(user, oneTimePassword) {
     try {
       let transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
+        service: "gmail",
+        port: 465,
         secure: false,
         auth: {
-          user: "ronny80@ethereal.email",
-          pass: "W4a6qPPT1hKEg71VkA",
+          user: "helperstudio001@gmail.com",
+          pass: "ouqrwpmghwgvopxr",
         },
       });
 
-      let htmlContent = `
+      const htmlContent = `
       <html>
         <head>
           <style>
-            body {
-              font-family: Arial, sans-serif;
-              color: #333;
-            }
-            h1 {
-              color: #333;
-              margin-bottom: 20px;
-            }
-            p {
-              font-size: 16px;
-              line-height: 1.5;
-              margin-bottom: 10px;
-            }
-            .otp-container {
-              background-color: #f1f1f1;
-              padding: 10px;
-              border-radius: 4px;
-              font-size: 18px;
-              margin-bottom: 20px;
-            }
-            .otp-label {
-              color: #555;
-              font-weight: bold;
-              margin-bottom: 5px;
-            }
-            .btn {
-              display: inline-block;
-              padding: 10px 20px;
-              background-color: #007bff;
-              color: #fff;
-              text-decoration: none;
-              border-radius: 4px;
-              margin-right: 10px;
-            }
-          </style>
-        </head>
-        <body>
-          <h1>Rahat Shinwari Enterprises - OTP Verification</h1>
-          <p>Dear ${user?.name},</p>
-          <p>Your One Time Password (OTP) for verification is: ${oneTimePassword}</p>
-          <p>Please use this OTP to complete your verification process.</p>
-        </body>
-      </html>
-    `;
+          body {
+            font-family: Arial, sans-serif;
+            color: #333;
+          }
+          h1 {
+            color: #333;
+            margin-bottom: 20px;
+          }
+          p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+          }
+          .otp-container {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 18px;
+            margin-bottom: 20px;
+          }
+          .otp-label {
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+          .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+          }
+        </style>
+      </head>
+      <body>
+        <h3>Rahat Shinwari Enterprises - OTP Verification</h3>
+        <p>Dear ${user?.name},</p>
+        <p>Your One Time Password (OTP) for verification is: ${oneTimePassword}</p>
+        <p>Please use this OTP to complete your verification process.</p>
+      </body>
+    </html>`;
 
-      let info = await transporter.sendMail({
-        from: "noreplay@gmail.com",
+      await transporter.sendMail({
+        from: "noreply@gmail.com",
         to: user.email,
         subject: "OTP Verification",
         html: htmlContent,
       });
-
-      console.log("Message sent: %s", info.messageId);
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     } catch (error) {
-      console.error(error);
+      if (error?.errno === -3008) {
+        throw new HttpException(
+          "Check internet connection. Try again.",
+          HttpStatus.BAD_REQUEST
+        );
+      }
+      throw new HttpException(
+        "Failed to send OTP email.",
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
 
-  async sendOTP(email: string): Promise<string> {
-    const user = await this.usersService.findByEmail(email);
+  async sendOTP(email: string): Promise<{ message: string }> {
+    try {
+      const user = await this.usersService.findByEmail(email);
 
-    const oneTimePassword = await this.generateOTP();
+      if (!user) {
+        throw new Error("User not found");
+      }
 
-    const hash = await argon.hash(oneTimePassword);
+      const oneTimePassword = await this.generateOTP();
+      const hash = await argon.hash(oneTimePassword);
 
-    await this.sendOtpThroughEmail(user, oneTimePassword);
+      await this.sendOtpThroughGmail(user, oneTimePassword);
+      await this.usersService.update(user.id, { otp: hash });
 
-    await this.usersService.update(user.id, { otp: hash });
-
-    return "OTP sent successfully.";
+      return { message: "OTP has been successfully sent." };
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
-  isOTPExpired(updatedAt: Date): boolean {
-    const expiryTime = new Date(updatedAt);
-    expiryTime.setMinutes(expiryTime.getMinutes() + 2);
+  isOTPExpired(updatedAt: Date, expiryTime: number) {
+    const generateTime = new Date(updatedAt);
+    generateTime.setMinutes(generateTime.getMinutes() + expiryTime);
     const currentTime = new Date();
-    return expiryTime < currentTime;
+    return generateTime < currentTime;
   }
 
-  async submitOTP(email: string, otp: string): Promise<Tokens> {
-    const user = await this.usersService.findByEmail(email);
-
+  async checkOTPValidity(
+    user: User,
+    otp: string,
+    expiryTime: number
+  ): Promise<void> {
     if (!user?.otp) {
       throw new HttpException(
-        "Please check and try again with a valid OTP.",
+        "Check and try with valid OTP.",
         HttpStatus.NOT_FOUND
       );
     }
 
     const isOtpCorrect = await argon.verify(user.otp, otp);
     if (!isOtpCorrect) {
-      throw new ForbiddenException("Your OTP is incorrect. Please try again.");
-    }
-
-    if (this.isOTPExpired(user.updatedAt)) {
-      throw new ForbiddenException(
-        "Your OTP has expired. Please request a new OTP and try again."
+      throw new HttpException(
+        "Your OTP is incorrect. Try again.",
+        HttpStatus.FORBIDDEN
       );
     }
 
-    await this.usersService.update(user.id, { otp: null });
+    const isOtpExpired = this.isOTPExpired(user.updatedAt, expiryTime);
+    if (isOtpExpired) {
+      throw new HttpException("Your OTP has expired.", HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async submitOTP(submitOtpDto: SubmitOtpDto): Promise<{ message: string }> {
+    try {
+      const user = await this.usersService.findByEmail(submitOtpDto.email);
+
+      await this.checkOTPValidity(user, submitOtpDto.otp, 2);
+
+      return { message: "OTP submitted successfully." };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new HttpException(
+          "An error occurred while submitting OTP.",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+    }
+  }
+
+  async newPassword(newPasswordDto: NewPasswordDto): Promise<Tokens> {
+    const user = await this.usersService.findByEmail(newPasswordDto.email);
+
+    await this.checkOTPValidity(user, newPasswordDto.otp, 5);
+
+    await this.isPasswordSame(
+      newPasswordDto.newPassword,
+      newPasswordDto.confirmPassword
+    );
+
+    const hash = await argon.hash(newPasswordDto.newPassword);
+
+    await this.usersService.update(user.id, {
+      password: hash,
+      otp: null,
+    });
 
     const tokens = await this.getTokens(user);
     await this.updateRefreshTokenHash(user.id, tokens.refresh_token);
