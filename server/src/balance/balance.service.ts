@@ -163,10 +163,11 @@ export class BalanceService {
     return amountByCurrency;
   }
 
-  async getDataByDateRange(startDate, endDate) {
-    const endDateWithTime = new Date(endDate);
-    endDateWithTime.setHours(23, 59, 59);
-
+  async getDataByDateRange(startDate: Date, endDate: Date) {
+    const startDateTime = new Date(startDate);
+    startDateTime.setHours(0, 0, 0, 0);
+    const endDateTime = new Date(endDate);
+    endDateTime.setHours(23, 59, 59, 999);
     const creditQuery = this.walletRepository
       .createQueryBuilder("wallet")
       .leftJoin("wallet.customer", "customer")
@@ -179,10 +180,8 @@ export class BalanceService {
         "SUM(transaction.amount) AS credit",
         "SUM(transaction.exRate * transaction.amount) AS debit",
       ])
-      .where("transaction.createdAt >= :startDate", { startDate })
-      .andWhere("transaction.createdAt <= :endDate", {
-        endDate: endDateWithTime,
-      })
+      .where("transaction.createdAt >= :startDateTime", { startDateTime })
+      .andWhere("transaction.createdAt <= :endDateTime", { endDateTime })
       .andWhere("wallet.type = :type", { type: "Credit" })
       .andWhere("customer.isSelf = :isSelf", { isSelf: true })
       .groupBy("currency.abbreviation, exCurrency.abbreviation");
@@ -199,10 +198,8 @@ export class BalanceService {
         "SUM(transaction.amount) AS debit",
         "SUM(transaction.exRate * transaction.amount) AS credit",
       ])
-      .where("transaction.createdAt >= :startDate", { startDate })
-      .andWhere("transaction.createdAt <= :endDate", {
-        endDate: endDateWithTime,
-      })
+      .where("transaction.createdAt >= :startDateTime", { startDateTime })
+      .andWhere("transaction.createdAt <= :endDateTime", { endDateTime })
       .andWhere("wallet.type = :type", { type: "Debit" })
       .andWhere("customer.isSelf = :isSelf", { isSelf: true })
       .groupBy("currency.abbreviation, exCurrency.abbreviation");
@@ -353,7 +350,7 @@ export class BalanceService {
       a.currency.localeCompare(b.currency)
     );
 
-    const stocks = await this.getSelfCustomersStock(endDateWithTime);
+    const stocks = await this.getSelfCustomersStock(endDateTime);
     result.stocks.push(...stocks);
     return result;
   }
