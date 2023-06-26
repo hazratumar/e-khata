@@ -16,11 +16,12 @@ import { ResetPasswordDto } from "./dto/resetPassword.dto";
 import * as nodemailer from "nodemailer";
 import { SubmitOtpDto } from "./dto/submitOtp.dto.ts";
 import { NewPasswordDto } from "./dto/newPassword.dto";
-import { async } from "rxjs";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly configService: ConfigService,
     private jwtService: JwtService,
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService
@@ -125,14 +126,17 @@ export class AuthService {
   }
 
   async sendOtpThroughGmail(user, oneTimePassword) {
+    const authUser = this.configService.get<string>("email.authUser");
+    const authPass = this.configService.get<string>("email.authPass");
+
     try {
       let transporter = nodemailer.createTransport({
         service: "gmail",
         port: 465,
         secure: false,
         auth: {
-          user: "helperstudio001@gmail.com",
-          pass: "ouqrwpmghwgvopxr",
+          user: authUser,
+          pass: authPass,
         },
       });
 
@@ -185,7 +189,7 @@ export class AuthService {
     </html>`;
 
       await transporter.sendMail({
-        from: "noreply@gmail.com",
+        from: authUser,
         to: user.email,
         subject: "OTP Verification",
         html: htmlContent,

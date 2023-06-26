@@ -9,7 +9,7 @@ const bootstrap = async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
 
-  const appUrl = configService.get<any>("app.clientUrl");
+  const appUrl = configService.get<string>("app.clientUrl");
 
   // Middleware
   app.enableCors({ origin: [appUrl], credentials: true });
