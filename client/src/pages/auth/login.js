@@ -11,7 +11,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { Layout as AuthLayout } from "src/layouts/auth/layout";
+import { Layout } from "src/layouts/auth/layout";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useLogInMutation } from "src/store/services/authService";
 import { useDispatch } from "react-redux";
@@ -75,7 +75,8 @@ const Page = () => {
             <Stack spacing={1} sx={{ mb: 3 }}>
               <Typography variant="h4"> Login </Typography>
               <Typography color="text.secondary" variant="body2">
-                Don&apos;t have an account? &nbsp;
+                Open the Door to Your Account
+                {/* Don&apos;t have an account? &nbsp;
                 <Link
                   component={NextLink}
                   href="/auth/signup"
@@ -83,7 +84,7 @@ const Page = () => {
                   variant="subtitle2"
                 >
                   SignUp
-                </Link>
+                </Link> */}
               </Typography>
             </Stack>
             <form onSubmit={handleSubmit}>
@@ -130,6 +131,6 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
+Page.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default Page;

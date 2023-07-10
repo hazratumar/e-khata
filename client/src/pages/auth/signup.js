@@ -11,7 +11,7 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { Layout as AuthLayout } from "src/layouts/auth/layout";
+import { AuthLayout } from "src/layouts/auth/auth-layout";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useSignUpMutation } from "src/store/services/authService";
 import { useDispatch } from "react-redux";

@@ -1,7 +1,8 @@
 import { Typography } from "@mui/material";
 import KhataPage from "src/sections/report/khataPage";
+import { Layout } from "src/layouts/report/layout";
 
-const KhataList = ({ data, error }) => {
+const Page = ({ data, error }) => {
   if (error) {
     return (
       <Typography variant="h6" align="center">
@@ -32,5 +33,6 @@ export const getServerSideProps = async ({ query }) => {
     return { props: { data: null, error } };
   }
 };
+Page.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default KhataList;
+export default Page;

@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Layout as AuthLayout } from "src/layouts/auth/layout";
+import { Layout } from "src/layouts/auth/layout";
 import { useEffect, useState } from "react";
 import {
   useForgetPasswordMutation as useSendOtp,
@@ -140,7 +140,8 @@ const Page = () => {
             <Stack spacing={1} sx={{ mb: 3 }}>
               <Typography variant="h4">Forget Password</Typography>
               <Typography color="text.secondary" variant="body2">
-                No problem, you can reset it using our password recovery feature. If you don&apos;t
+                No problem, you can reset it using our password recovery feature.{" "}
+                {/*If you don&apos;t
                 have an account yet, you can easily create one by registering with us.&nbsp;
                 <Link
                   component={NextLink}
@@ -149,7 +150,7 @@ const Page = () => {
                   variant="subtitle2"
                 >
                   SignUp
-                </Link>
+                </Link> */}
               </Typography>
             </Stack>
             <form onSubmit={handleSubmit}>
@@ -237,6 +238,6 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
+Page.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default Page;
